@@ -1,0 +1,14 @@
+{
+  "$comment": "Single source of truth for the Utility Helpers site. Edit this file, then run `python3 scripts/build.py`. Tool entries are added by UH-BUILD-TOOLS once Edith's research lands (UH-RESEARCH).",
+  "site": {
+    "name": "Utility Helpers",
+    "baseUrl": "https://utility-helpers.netlify.app",
+    "tagline": "Free browser tools that run entirely on your device.",
+    "description": "Free, fast, private browser tools. Every utility runs entirely in your browser — nothing is uploaded, nothing is stored, no account required.",
+    "author": "Umang Mittal",
+    "github": "https://github.com/umangm05/utility-helpers",
+    "locale": "en_US",
+    "themeColor": "#f59e0b"
+  },
+  "tools": []
+}
