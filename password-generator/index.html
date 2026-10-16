@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Password Generator — Create Strong Random Passwords Online</title>
+    <meta name="description" content="Generate strong, secure random passwords instantly. Customize length, characters, and more. Free online password generator with no signup.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/password-generator/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Password Generator — Create Strong Random Passwords Online">
+    <meta property="og:description" content="Generate strong, secure random passwords instantly. Customize length, characters, and more. Free online password generator with no signup.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/password-generator/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Password Generator — Create Strong Random Passwords Online">
+    <meta name="twitter:description" content="Generate strong, secure random passwords instantly. Customize length, characters, and more. Free online password generator with no signup.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Password Generator",
+  "url": "https://utility-helpers.netlify.app/password-generator/",
+  "description": "With data breaches in the news constantly, people need to create unique passwords for new accounts and update old ones regularly.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Password Generator",
+      "item": "https://utility-helpers.netlify.app/password-generator/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this password generator safe to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Passwords are generated using your browser's built-in cryptographically secure random number generator and never leave your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes a password strong?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A strong password is at least 12 characters long and includes a mix of uppercase, lowercase, numbers, and symbols."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use the same password everywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Use a unique password for every account so a breach on one site does not compromise your other accounts."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> Password Generator
+    </nav>
+    <h1>Password Generator</h1>
+    <p class="lede">Password generator creates strong, random passwords that protect your online accounts from unauthorized access. You can customize the length and choose which character types to include — uppercase letters, lowercase letters, numbers, and symbols. Every password is generated locally in your browser using cryptographically secure random number generation, so your passwords are never sent over the internet or stored anywhere. Create unlimited passwords for free with no signup required. The tool works on any device with a modern web browser and runs completely offline after the page loads.</p>
+<div class="tool">
+  <div style="display:grid;gap:1rem;max-width:24rem">
+    <div>
+      <label for="pg-length">Password length</label>
+      <input type="number" id="pg-length" value="16" min="4" max="128" style="width:100%">
+    </div>
+    <div style="display:grid;gap:.5rem">
+      <label><input type="checkbox" id="pg-upper" checked> Uppercase (A-Z)</label>
+      <label><input type="checkbox" id="pg-lower" checked> Lowercase (a-z)</label>
+      <label><input type="checkbox" id="pg-numbers" checked> Numbers (0-9)</label>
+      <label><input type="checkbox" id="pg-symbols" checked> Symbols (!@#$...)</label>
+    </div>
+    <button id="pg-generate" type="button">Generate password</button>
+    <div>
+      <label for="pg-output">Generated password</label>
+      <input type="text" id="pg-output" readonly style="width:100%;font-family:monospace">
+    </div>
+    <button id="pg-copy" type="button" style="background:var(--panel-2);color:var(--fg);border-color:var(--border)">Copy to clipboard</button>
+  </div>
+</div>
+<script>
+(function() {
+  var len = document.getElementById('pg-length');
+  var upper = document.getElementById('pg-upper');
+  var lower = document.getElementById('pg-lower');
+  var numbers = document.getElementById('pg-numbers');
+  var symbols = document.getElementById('pg-symbols');
+  var output = document.getElementById('pg-output');
+  var generate = document.getElementById('pg-generate');
+  var copy = document.getElementById('pg-copy');
+  function generatePassword() {
+    var chars = '';
+    if (upper.checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (lower.checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if (numbers.checked) chars += '0123456789';
+    if (symbols.checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    if (!chars) { output.value = ''; return; }
+    var length = Math.max(4, Math.min(128, parseInt(len.value, 10) || 16));
+    var arr = new Uint32Array(length);
+    crypto.getRandomValues(arr);
+    var pwd = '';
+    for (var i = 0; i < length; i++) pwd += chars[arr[i] % chars.length];
+    output.value = pwd;
+  }
+  generate.addEventListener('click', generatePassword);
+  copy.addEventListener('click', function() { window.uhCopy(output.value); });
+  generatePassword();
+})();
+</script>
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>Is this password generator safe to use?</summary>
+        <p>Yes. Passwords are generated using your browser&#x27;s built-in cryptographically secure random number generator and never leave your device.</p>
+      </details>
+      <details>
+        <summary>What makes a password strong?</summary>
+        <p>A strong password is at least 12 characters long and includes a mix of uppercase, lowercase, numbers, and symbols.</p>
+      </details>
+      <details>
+        <summary>Can I use the same password everywhere?</summary>
+        <p>No. Use a unique password for every account so a breach on one site does not compromise your other accounts.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>

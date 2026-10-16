@@ -3,4 +3,34 @@
   <url>
     <loc>https://utility-helpers.netlify.app/</loc>
   </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/word-counter/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/password-generator/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/unit-converter/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/json-formatter/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/base64-encoder-decoder/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/url-encoder-decoder/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/color-picker/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/timestamp-converter/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/text-case-converter/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/lorem-ipsum-generator/</loc>
+  </url>
 </urlset>
