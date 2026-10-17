@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Base64 Encoder Decoder — Free Online Base64 Converter</title>
+    <meta name="description" content="Encode and decode Base64 instantly. Convert text to Base64 and back. Free online tool for developers, no signup, works in your browser.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/base64-encoder-decoder/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Base64 Encoder Decoder — Free Online Base64 Converter">
+    <meta property="og:description" content="Encode and decode Base64 instantly. Convert text to Base64 and back. Free online tool for developers, no signup, works in your browser.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/base64-encoder-decoder/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Base64 Encoder Decoder — Free Online Base64 Converter">
+    <meta name="twitter:description" content="Encode and decode Base64 instantly. Convert text to Base64 and back. Free online tool for developers, no signup, works in your browser.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Base64 Encoder Decoder",
+  "url": "https://utility-helpers.netlify.app/base64-encoder-decoder/",
+  "description": "Encode and decode Base64 text instantly — no server, no upload.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Base64 Encoder Decoder",
+      "item": "https://utility-helpers.netlify.app/base64-encoder-decoder/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Base64 encoding?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Base64 is a way to convert binary data into a text format using 64 printable ASCII characters, making it safe for transmission over text-only channels."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Base64 encoding secure?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Base64 is encoding, not encryption. Anyone can decode it. It is for data representation, not security."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I encode images with this tool?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This tool works with text. To encode an image, you would first convert it to a Base64 string using a file reader."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> Base64 Encoder Decoder
+    </nav>
+    <h1>Base64 Encoder Decoder</h1>
+    <p class="lede">Base64 encoder decoder is a free online tool that converts text to Base64 and back. Base64 is a common encoding format used to represent binary data as plain text, making it safe to transmit over systems that only handle text. Developers use it for embedding images in HTML and CSS, encoding API authentication tokens, sending email attachments, and storing data in JSON. This tool lets you encode any text to Base64 or decode Base64 back to readable text instantly, with no signup and no data leaving your browser.</p>
+
+<div class="tool">
+  <label for="b64-input">Enter text or Base64</label>
+  <textarea id="b64-input" placeholder="Enter text to encode, or Base64 to decode..."></textarea>
+  <div style="display:flex;gap:.5rem;margin:.5rem 0 1rem;">
+    <button id="b64-encode" type="button">Encode to Base64</button>
+    <button id="b64-decode" type="button">Decode from Base64</button>
+    <button id="b64-copy" type="button" style="background:var(--panel-2);color:var(--fg);border-color:var(--border);">Copy</button>
+  </div>
+  <div id="b64-error" style="color:#ef4444;font-size:.875rem;margin-bottom:.5rem;"></div>
+  <label>Result</label>
+  <div id="b64-output" style="padding:1rem;background:var(--panel-2);border-radius:8px;font-family:monospace;white-space:pre-wrap;word-break:break-all;min-height:6rem;"></div>
+</div>
+
+
+<script>
+(function() {
+  var inputEl = document.getElementById('b64-input');
+  var outputEl = document.getElementById('b64-output');
+  var encodeBtn = document.getElementById('b64-encode');
+  var decodeBtn = document.getElementById('b64-decode');
+  var copyBtn = document.getElementById('b64-copy');
+  var errorEl = document.getElementById('b64-error');
+
+  function encode() {
+    errorEl.textContent = '';
+    try {
+      outputEl.textContent = btoa(unescape(encodeURIComponent(inputEl.value)));
+    } catch(e) {
+      errorEl.textContent = 'Error: ' + e.message;
+    }
+  }
+
+  function decode() {
+    errorEl.textContent = '';
+    try {
+      outputEl.textContent = decodeURIComponent(escape(atob(inputEl.value)));
+    } catch(e) {
+      errorEl.textContent = 'Error: Invalid Base64 input';
+    }
+  }
+
+  encodeBtn.addEventListener('click', encode);
+  decodeBtn.addEventListener('click', decode);
+  copyBtn.addEventListener('click', function() {
+    window.uhCopy(outputEl.textContent);
+  });
+})();
+</script>
+
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>What is Base64 encoding?</summary>
+        <p>Base64 is a way to convert binary data into a text format using 64 printable ASCII characters, making it safe for transmission over text-only channels.</p>
+      </details>
+      <details>
+        <summary>Is Base64 encoding secure?</summary>
+        <p>No. Base64 is encoding, not encryption. Anyone can decode it. It is for data representation, not security.</p>
+      </details>
+      <details>
+        <summary>Can I encode images with this tool?</summary>
+        <p>This tool works with text. To encode an image, you would first convert it to a Base64 string using a file reader.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>

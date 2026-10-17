@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Text Case Converter — Uppercase, Lowercase &amp; Title Case</title>
+    <meta name="description" content="Convert text between uppercase, lowercase, sentence case, title case, and more. Free online case converter, instant results.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/text-case-converter/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Text Case Converter — Uppercase, Lowercase &amp; Title Case">
+    <meta property="og:description" content="Convert text between uppercase, lowercase, sentence case, title case, and more. Free online case converter, instant results.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/text-case-converter/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Text Case Converter — Uppercase, Lowercase &amp; Title Case">
+    <meta name="twitter:description" content="Convert text between uppercase, lowercase, sentence case, title case, and more. Free online case converter, instant results.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Text Case Converter",
+  "url": "https://utility-helpers.netlify.app/text-case-converter/",
+  "description": "Transform text between uppercase, lowercase, title case, camelCase and more.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Text Case Converter",
+      "item": "https://utility-helpers.netlify.app/text-case-converter/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What case formats are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "UPPERCASE, lowercase, Sentence case, Title Case, camelCase, PascalCase, and snake_case."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it handle long text?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You can convert paragraphs or entire documents without any length limits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my text saved anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Everything runs in your browser. Your text is never sent to a server."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> Text Case Converter
+    </nav>
+    <h1>Text Case Converter</h1>
+    <p class="lede">Text case converter is a free online tool that transforms text between uppercase, lowercase, sentence case, title case, and camel case. If you have ever pasted text that came through in all caps, or needed to format a headline in title case, this tool fixes it in seconds. Writers use it to clean up formatting, students use it to standardize essay titles, and developers use it to convert variable names between camelCase and snake_case. Simply paste your text, choose the target case format, and copy the result. Everything runs in your browser with no signup and no data leaving your device.</p>
+
+<div class="tool">
+  <label for="tc-input">Paste your text</label>
+  <textarea id="tc-input" placeholder="Type or paste text here..."></textarea>
+  <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0 1rem;">
+    <button class="tc-btn" data-type="upper" type="button">UPPERCASE</button>
+    <button class="tc-btn" data-type="lower" type="button">lowercase</button>
+    <button class="tc-btn" data-type="sentence" type="button">Sentence case</button>
+    <button class="tc-btn" data-type="title" type="button">Title Case</button>
+    <button class="tc-btn" data-type="camel" type="button">camelCase</button>
+    <button class="tc-btn" data-type="pascal" type="button">PascalCase</button>
+    <button class="tc-btn" data-type="snake" type="button">snake_case</button>
+    <button id="tc-copy" type="button" style="background:var(--panel-2);color:var(--fg);border-color:var(--border);">Copy</button>
+  </div>
+  <label>Result</label>
+  <div id="tc-output" style="padding:1rem;background:var(--panel-2);border-radius:8px;white-space:pre-wrap;word-break:break-all;min-height:6rem;"></div>
+</div>
+
+
+<script>
+(function() {
+  var inputEl = document.getElementById('tc-input');
+  var outputEl = document.getElementById('tc-output');
+  var copyBtn = document.getElementById('tc-copy');
+  var buttons = document.querySelectorAll('.tc-btn');
+
+  function toSentenceCase(str) {
+    return str.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, function(c) { return c.toUpperCase(); });
+  }
+  function toTitleCase(str) {
+    return str.toLowerCase().replace(/(?:^|\s)\S/g, function(c) { return c.toUpperCase(); });
+  }
+  function toCamelCase(str) {
+    return str.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function(_, c) { return c.toUpperCase(); });
+  }
+  function toPascalCase(str) {
+    var camel = toCamelCase(str);
+    return camel.charAt(0).toUpperCase() + camel.slice(1);
+  }
+  function toSnakeCase(str) {
+    return str.replace(/([a-z])([A-Z])/g, '$1_$2').replace(/[\s\-]+/g, '_').toLowerCase();
+  }
+
+  function convert(type) {
+    var text = inputEl.value;
+    switch(type) {
+      case 'upper': outputEl.textContent = text.toUpperCase(); break;
+      case 'lower': outputEl.textContent = text.toLowerCase(); break;
+      case 'sentence': outputEl.textContent = toSentenceCase(text); break;
+      case 'title': outputEl.textContent = toTitleCase(text); break;
+      case 'camel': outputEl.textContent = toCamelCase(text); break;
+      case 'pascal': outputEl.textContent = toPascalCase(text); break;
+      case 'snake': outputEl.textContent = toSnakeCase(text); break;
+    }
+  }
+
+  buttons.forEach(function(btn) {
+    btn.addEventListener('click', function() { convert(this.dataset.type); });
+  });
+  copyBtn.addEventListener('click', function() {
+    window.uhCopy(outputEl.textContent);
+  });
+})();
+</script>
+
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>What case formats are supported?</summary>
+        <p>UPPERCASE, lowercase, Sentence case, Title Case, camelCase, PascalCase, and snake_case.</p>
+      </details>
+      <details>
+        <summary>Does it handle long text?</summary>
+        <p>Yes. You can convert paragraphs or entire documents without any length limits.</p>
+      </details>
+      <details>
+        <summary>Is my text saved anywhere?</summary>
+        <p>No. Everything runs in your browser. Your text is never sent to a server.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>

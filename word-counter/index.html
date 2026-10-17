@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Word Counter — Free Online Word &amp; Character Count Tool</title>
+    <meta name="description" content="Count words, characters, sentences and paragraphs instantly. Free online word counter with no signup, no limits, works offline in your browser.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/word-counter/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Word Counter — Free Online Word &amp; Character Count Tool">
+    <meta property="og:description" content="Count words, characters, sentences and paragraphs instantly. Free online word counter with no signup, no limits, works offline in your browser.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/word-counter/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Word Counter — Free Online Word &amp; Character Count Tool">
+    <meta name="twitter:description" content="Count words, characters, sentences and paragraphs instantly. Free online word counter with no signup, no limits, works offline in your browser.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Word Counter",
+  "url": "https://utility-helpers.netlify.app/word-counter/",
+  "description": "Count words, characters, sentences and paragraphs in your text instantly.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Word Counter",
+      "item": "https://utility-helpers.netlify.app/word-counter/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does this word counter save my text?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Everything runs in your browser's memory. When you close or refresh the page, your text is gone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use this tool offline?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Once the page loads, the word counter works without an internet connection."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it count characters with or without spaces?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both. You get separate counts for characters including spaces and characters excluding spaces."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> Word Counter
+    </nav>
+    <h1>Word Counter</h1>
+    <p class="lede">Word counter is a free online tool that counts words, characters, sentences, and paragraphs in your text as you type. Whether you are writing an essay for school, crafting a social media post, or optimizing a meta description for SEO, knowing your exact word count helps you stay within platform limits. The tool works entirely in your browser — no signup, no installation, and no data ever leaves your device. Everything runs locally using JavaScript for complete privacy and instant results.</p>
+
+<div class="tool">
+  <label for="wc-input">Paste or type your text</label>
+  <textarea id="wc-input" placeholder="Start typing or paste your text here..."></textarea>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:1rem;margin-top:1rem;padding:1rem;background:var(--panel-2);border-radius:8px;">
+    <div><div style="font-size:1.5rem;font-weight:700;color:var(--accent);" id="wc-words">0</div><div style="color:var(--muted);font-size:.875rem;">Words</div></div>
+    <div><div style="font-size:1.5rem;font-weight:700;color:var(--accent);" id="wc-chars">0</div><div style="color:var(--muted);font-size:.875rem;">Characters</div></div>
+    <div><div style="font-size:1.5rem;font-weight:700;color:var(--accent);" id="wc-chars-ns">0</div><div style="color:var(--muted);font-size:.875rem;">Characters (no spaces)</div></div>
+    <div><div style="font-size:1.5rem;font-weight:700;color:var(--accent);" id="wc-sentences">0</div><div style="color:var(--muted);font-size:.875rem;">Sentences</div></div>
+    <div><div style="font-size:1.5rem;font-weight:700;color:var(--accent);" id="wc-paragraphs">0</div><div style="color:var(--muted);font-size:.875rem;">Paragraphs</div></div>
+  </div>
+</div>
+
+
+<script>
+(function() {
+  var input = document.getElementById('wc-input');
+  var wordsEl = document.getElementById('wc-words');
+  var charsEl = document.getElementById('wc-chars');
+  var charsNoSpaceEl = document.getElementById('wc-chars-ns');
+  var sentencesEl = document.getElementById('wc-sentences');
+  var paragraphsEl = document.getElementById('wc-paragraphs');
+
+  function countWords(text) {
+    var trimmed = text.trim();
+    if (!trimmed) return 0;
+    return trimmed.split(/\s+/).length;
+  }
+  function countSentences(text) {
+    var trimmed = text.trim();
+    if (!trimmed) return 0;
+    var matches = trimmed.match(/[.!?]+(\s|$)/g);
+    return matches ? matches.length : (trimmed.length > 0 ? 1 : 0);
+  }
+  function countParagraphs(text) {
+    var trimmed = text.trim();
+    if (!trimmed) return 0;
+    return trimmed.split(/\n\s*\n+/).filter(function(p) { return p.trim().length > 0; }).length;
+  }
+  function update() {
+    var text = input.value;
+    wordsEl.textContent = countWords(text);
+    charsEl.textContent = text.length;
+    charsNoSpaceEl.textContent = text.replace(/\s/g, '').length;
+    sentencesEl.textContent = countSentences(text);
+    paragraphsEl.textContent = countParagraphs(text);
+  }
+  input.addEventListener('input', update);
+  update();
+})();
+</script>
+
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>Does this word counter save my text?</summary>
+        <p>No. Everything runs in your browser&#x27;s memory. When you close or refresh the page, your text is gone.</p>
+      </details>
+      <details>
+        <summary>Can I use this tool offline?</summary>
+        <p>Yes. Once the page loads, the word counter works without an internet connection.</p>
+      </details>
+      <details>
+        <summary>Does it count characters with or without spaces?</summary>
+        <p>Both. You get separate counts for characters including spaces and characters excluding spaces.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>

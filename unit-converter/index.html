@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Unit Converter — Free Online Measurement Conversion Tool</title>
+    <meta name="description" content="Convert between units instantly: length, weight, temperature, volume, area, speed, and more. Free online unit converter, no signup needed.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/unit-converter/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Unit Converter — Free Online Measurement Conversion Tool">
+    <meta property="og:description" content="Convert between units instantly: length, weight, temperature, volume, area, speed, and more. Free online unit converter, no signup needed.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/unit-converter/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Unit Converter — Free Online Measurement Conversion Tool">
+    <meta name="twitter:description" content="Convert between units instantly: length, weight, temperature, volume, area, speed, and more. Free online unit converter, no signup needed.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Unit Converter",
+  "url": "https://utility-helpers.netlify.app/unit-converter/",
+  "description": "Convert between length, weight, temperature, volume, area, speed and more.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Unit Converter",
+      "item": "https://utility-helpers.netlify.app/unit-converter/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What unit categories can I convert?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Length, weight, temperature, volume, area, speed, time, and data storage units are all supported."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate are the conversions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Conversions use internationally standard conversion factors and display results with appropriate precision."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a limit to how many conversions I can do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. You can convert as many values as you want for free."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> Unit Converter
+    </nav>
+    <h1>Unit Converter</h1>
+    <p class="lede">Unit converter is a free online tool that converts between measurement units for length, weight, temperature, volume, area, speed, and more. Whether you are following a recipe in metric, converting miles to kilometers for a road trip, or checking the temperature in Fahrenheit, this tool gives you instant accurate results. Choose a category, enter your value, select the units, and see the conversion immediately. Everything runs in your browser with no signup, no installation, and no data ever leaving your device.</p>
+
+<div class="tool">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:1rem;margin-bottom:1rem;">
+    <div>
+      <label for="uc-category">Category</label>
+      <select id="uc-category">
+        <option value="length">Length</option>
+        <option value="weight">Weight</option>
+        <option value="temperature">Temperature</option>
+        <option value="volume">Volume</option>
+        <option value="area">Area</option>
+        <option value="speed">Speed</option>
+        <option value="time">Time</option>
+        <option value="data">Data Storage</option>
+      </select>
+    </div>
+    <div>
+      <label for="uc-from">From</label>
+      <select id="uc-from"></select>
+    </div>
+    <div>
+      <label for="uc-to">To</label>
+      <select id="uc-to"></select>
+    </div>
+    <div>
+      <label for="uc-input">Value</label>
+      <input type="number" id="uc-input" placeholder="Enter value" step="any">
+    </div>
+  </div>
+  <div style="padding:1.5rem;background:var(--panel-2);border-radius:8px;text-align:center;">
+    <div style="color:var(--muted);font-size:.875rem;margin-bottom:.5rem;">Result</div>
+    <div id="uc-result" style="font-size:2rem;font-weight:700;color:var(--accent);">—</div>
+  </div>
+</div>
+
+
+<script>
+(function() {
+  var categoryEl = document.getElementById('uc-category');
+  var fromEl = document.getElementById('uc-from');
+  var toEl = document.getElementById('uc-to');
+  var inputEl = document.getElementById('uc-input');
+  var resultEl = document.getElementById('uc-result');
+
+  var UNITS = {
+    length: { base: 'm', units: { m: 1, km: 1000, cm: 0.01, mm: 0.001, mi: 1609.344, yd: 0.9144, ft: 0.3048, in: 0.0254 } },
+    weight: { base: 'kg', units: { kg: 1, g: 0.001, mg: 0.000001, lb: 0.453592, oz: 0.0283495, st: 6.35029 } },
+    temperature: { special: true },
+    volume: { base: 'l', units: { l: 1, ml: 0.001, m3: 1000, gal: 3.78541, qt: 0.946353, pt: 0.473176, cup: 0.236588, floz: 0.0295735 } },
+    area: { base: 'm2', units: { m2: 1, km2: 1000000, cm2: 0.0001, ha: 10000, ac: 4046.86, ft2: 0.092903, in2: 0.00064516 } },
+    speed: { base: 'mps', units: { mps: 1, kph: 0.277778, mph: 0.44704, knot: 0.514444 } },
+    time: { base: 's', units: { s: 1, min: 60, h: 3600, day: 86400, week: 604800, month: 2629746, year: 31556952 } },
+    data: { base: 'b', units: { b: 1, kb: 1024, mb: 1048576, gb: 1073741824, tb: 1099511627776 } }
+  };
+
+  function populateUnits() {
+    var cat = categoryEl.value;
+    var config = UNITS[cat];
+    var unitNames = config.special ? ['C', 'F', 'K'] : Object.keys(config.units);
+    fromEl.innerHTML = '';
+    toEl.innerHTML = '';
+    unitNames.forEach(function(u) {
+      fromEl.appendChild(new Option(u, u));
+      toEl.appendChild(new Option(u, u));
+    });
+    if (unitNames.length > 1) toEl.selectedIndex = 1;
+    convert();
+  }
+
+  function convertTemperature(value, from, to) {
+    var celsius;
+    if (from === 'C') celsius = value;
+    else if (from === 'F') celsius = (value - 32) * 5 / 9;
+    else celsius = value - 273.15;
+
+    if (to === 'C') return celsius;
+    if (to === 'F') return celsius * 9 / 5 + 32;
+    return celsius + 273.15;
+  }
+
+  function convert() {
+    var cat = categoryEl.value;
+    var config = UNITS[cat];
+    var value = parseFloat(inputEl.value);
+    if (isNaN(value)) { resultEl.textContent = '—'; return; }
+    var from = fromEl.value, to = toEl.value;
+    var result;
+    if (config.special) {
+      result = convertTemperature(value, from, to);
+    } else {
+      var baseValue = value * config.units[from];
+      result = baseValue / config.units[to];
+    }
+    resultEl.textContent = (Math.abs(result) < 0.000001 || Math.abs(result) > 1e9)
+      ? result.toExponential(6)
+      : parseFloat(result.toFixed(10)).toString();
+  }
+
+  categoryEl.addEventListener('change', populateUnits);
+  fromEl.addEventListener('change', convert);
+  toEl.addEventListener('change', convert);
+  inputEl.addEventListener('input', convert);
+  populateUnits();
+})();
+</script>
+
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>What unit categories can I convert?</summary>
+        <p>Length, weight, temperature, volume, area, speed, time, and data storage units are all supported.</p>
+      </details>
+      <details>
+        <summary>How accurate are the conversions?</summary>
+        <p>Conversions use internationally standard conversion factors and display results with appropriate precision.</p>
+      </details>
+      <details>
+        <summary>Is there a limit to how many conversions I can do?</summary>
+        <p>No. You can convert as many values as you want for free.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>

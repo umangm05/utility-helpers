@@ -127,6 +127,15 @@ footer.site .wrap { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; justify-c
   .tile { transition: none; }
   .tile:hover { transform: none; }
 }
+/* Tool-specific: JSON syntax highlighting */
+.json-key { color: #93c5fd; }
+.json-string { color: #86efac; }
+.json-number { color: #fbbf24; }
+.json-boolean { color: #f472b6; }
+.json-null { color: #94a3b8; }
+/* Tool-specific: range input */
+input[type="range"] { accent-color: var(--accent); }
+input[type="color"] { border: none; border-radius: 8px; cursor: pointer; }
 """
 
 # Small progressive-enhancement helper used by tool pages. No framework, no CDN.
@@ -343,6 +352,7 @@ def render_tool(*, site: dict, tool: dict) -> str:
         '<div class="tool"><p>This tool is being built. '
         'It will run entirely in your browser.</p></div>'
     )
+    tool_script = tool.get("script") or ""
 
     blocks = [
         {
@@ -384,7 +394,9 @@ def render_tool(*, site: dict, tool: dict) -> str:
     </nav>
     <h1>{esc(tool['name'])}</h1>
     <p class="lede">{esc(intro)}</p>
-{tool_ui}{faq_html}"""
+{tool_ui}
+{tool_script}
+{faq_html}"""
 
     return render_page(
         site=site,

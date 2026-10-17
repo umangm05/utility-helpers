@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Timestamp Converter — Unix Epoch to Date Converter</title>
+    <meta name="description" content="Convert Unix timestamps to human-readable dates and back. Free online timestamp converter with UTC and local timezone support.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/timestamp-converter/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Timestamp Converter — Unix Epoch to Date Converter">
+    <meta property="og:description" content="Convert Unix timestamps to human-readable dates and back. Free online timestamp converter with UTC and local timezone support.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/timestamp-converter/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Timestamp Converter — Unix Epoch to Date Converter">
+    <meta name="twitter:description" content="Convert Unix timestamps to human-readable dates and back. Free online timestamp converter with UTC and local timezone support.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Timestamp Converter",
+  "url": "https://utility-helpers.netlify.app/timestamp-converter/",
+  "description": "Convert Unix timestamps to readable dates and back, with UTC support.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Timestamp Converter",
+      "item": "https://utility-helpers.netlify.app/timestamp-converter/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a Unix timestamp?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A Unix timestamp is the number of seconds (or milliseconds) that have elapsed since January 1, 1970, also known as the Unix epoch."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this tool handle milliseconds?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The tool automatically detects whether your timestamp is in seconds or milliseconds and converts accordingly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert a date to a timestamp?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Enter a date and time, and the tool will show you the equivalent Unix timestamp in both seconds and milliseconds."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> Timestamp Converter
+    </nav>
+    <h1>Timestamp Converter</h1>
+    <p class="lede">Timestamp converter is a free online tool that converts Unix timestamps to human-readable dates and back. Unix timestamps count the number of seconds or milliseconds since January 1, 1970, and are used everywhere in computing — APIs, databases, log files, and JavaScript all rely on them. But humans cannot read raw timestamps, so developers use this tool to convert them into readable dates and times. Enter a timestamp to see the date in your local timezone and UTC, or enter a date to get its Unix timestamp equivalent. Everything runs in your browser with no signup and no data leaving your device.</p>
+
+<div class="tool">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1rem;margin-bottom:1rem;">
+    <div>
+      <label for="ts-input">Unix Timestamp</label>
+      <input type="text" id="ts-input" placeholder="Enter seconds or milliseconds">
+    </div>
+    <div>
+      <label for="ts-date">Date & Time</label>
+      <input type="datetime-local" id="ts-date">
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1rem;padding:1rem;background:var(--panel-2);border-radius:8px;">
+    <div><div style="color:var(--muted);font-size:.875rem;">Local</div><div id="ts-local" style="font-weight:600;">—</div></div>
+    <div><div style="color:var(--muted);font-size:.875rem;">UTC</div><div id="ts-utc" style="font-weight:600;">—</div></div>
+    <div><div style="color:var(--muted);font-size:.875rem;">Seconds</div><div id="ts-seconds" style="font-weight:600;">—</div></div>
+    <div><div style="color:var(--muted);font-size:.875rem;">Milliseconds</div><div id="ts-ms" style="font-weight:600;">—</div></div>
+  </div>
+</div>
+
+
+<script>
+(function() {
+  var tsInput = document.getElementById('ts-input');
+  var dateInput = document.getElementById('ts-date');
+  var localEl = document.getElementById('ts-local');
+  var utcEl = document.getElementById('ts-utc');
+  var secondsEl = document.getElementById('ts-seconds');
+  var msEl = document.getElementById('ts-ms');
+
+  function formatDate(date) {
+    return date.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' });
+  }
+
+  function updateFromTimestamp() {
+    var ts = tsInput.value.trim();
+    if (!ts) { localEl.textContent = '—'; utcEl.textContent = '—'; secondsEl.textContent = '—'; msEl.textContent = '—'; return; }
+    var num = Number(ts);
+    var ms = num.toString().length <= 10 ? num * 1000 : num;
+    var date = new Date(ms);
+    if (isNaN(date.getTime())) { localEl.textContent = 'Invalid timestamp'; utcEl.textContent = ''; return; }
+    localEl.textContent = formatDate(date);
+    utcEl.textContent = date.toUTCString();
+    secondsEl.textContent = Math.floor(date.getTime() / 1000);
+    msEl.textContent = date.getTime();
+    // Set date input
+    var iso = date.toISOString().substring(0, 16);
+    dateInput.value = iso;
+  }
+
+  function updateFromDate() {
+    var iso = dateInput.value;
+    if (!iso) return;
+    var date = new Date(iso);
+    if (isNaN(date.getTime())) return;
+    var seconds = Math.floor(date.getTime() / 1000);
+    tsInput.value = seconds;
+    localEl.textContent = formatDate(date);
+    utcEl.textContent = date.toUTCString();
+    secondsEl.textContent = seconds;
+    msEl.textContent = date.getTime();
+  }
+
+  tsInput.addEventListener('input', updateFromTimestamp);
+  dateInput.addEventListener('change', updateFromDate);
+
+  // Set default to current time
+  var now = Math.floor(Date.now() / 1000);
+  tsInput.value = now;
+  updateFromTimestamp();
+})();
+</script>
+
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>What is a Unix timestamp?</summary>
+        <p>A Unix timestamp is the number of seconds (or milliseconds) that have elapsed since January 1, 1970, also known as the Unix epoch.</p>
+      </details>
+      <details>
+        <summary>Does this tool handle milliseconds?</summary>
+        <p>Yes. The tool automatically detects whether your timestamp is in seconds or milliseconds and converts accordingly.</p>
+      </details>
+      <details>
+        <summary>Can I convert a date to a timestamp?</summary>
+        <p>Yes. Enter a date and time, and the tool will show you the equivalent Unix timestamp in both seconds and milliseconds.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>

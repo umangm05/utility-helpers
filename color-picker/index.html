@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Color Picker — Free Online Hex, RGB &amp; HSL Converter</title>
+    <meta name="description" content="Pick colors and convert between Hex, RGB, and HSL instantly. Free online color picker with live preview. No signup, works in your browser.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/color-picker/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Color Picker — Free Online Hex, RGB &amp; HSL Converter">
+    <meta property="og:description" content="Pick colors and convert between Hex, RGB, and HSL instantly. Free online color picker with live preview. No signup, works in your browser.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/color-picker/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Color Picker — Free Online Hex, RGB &amp; HSL Converter">
+    <meta name="twitter:description" content="Pick colors and convert between Hex, RGB, and HSL instantly. Free online color picker with live preview. No signup, works in your browser.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Color Picker",
+  "url": "https://utility-helpers.netlify.app/color-picker/",
+  "description": "Pick colors and convert between Hex, RGB, and HSL with live preview.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Color Picker",
+      "item": "https://utility-helpers.netlify.app/color-picker/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between Hex, RGB, and HSL?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hex is a six-digit code like #FF5733, RGB defines color as red/green/blue values (0-255), and HSL defines it as hue, saturation, and lightness percentages."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert a Hex color to RGB?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Enter any Hex code and the tool instantly shows the equivalent RGB, HSL, and a visual preview."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this tool work on mobile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The color picker and all conversions work on any device with a modern web browser."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> Color Picker
+    </nav>
+    <h1>Color Picker</h1>
+    <p class="lede">Color picker is a free online tool that lets you visually select colors and convert between Hex, RGB, and HSL formats. Use the visual color picker to find the exact shade you need, or enter a Hex code to see its RGB and HSL equivalents. Designers use this tool to match brand colors, developers use it to get the right color values for CSS, and marketers use it to ensure consistency across digital assets. The tool shows a live preview of your selected color along with copy-ready values for each format. Everything runs in your browser with no signup and no data leaving your device.</p>
+
+<div class="tool">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:1rem;margin-bottom:1rem;">
+    <div>
+      <label for="cp-picker">Picker</label>
+      <input type="color" id="cp-picker" value="#f59e0b" style="width:100%;height:3rem;padding:0;">
+    </div>
+    <div>
+      <label for="cp-hex">Hex</label>
+      <input type="text" id="cp-hex" value="#f59e0b" maxlength="7">
+    </div>
+    <div>
+      <label>RGB</label>
+      <div style="display:flex;gap:.5rem;">
+        <input type="number" id="cp-r" min="0" max="255" placeholder="R" style="width:4rem;">
+        <input type="number" id="cp-g" min="0" max="255" placeholder="G" style="width:4rem;">
+        <input type="number" id="cp-b" min="0" max="255" placeholder="B" style="width:4rem;">
+      </div>
+    </div>
+    <div>
+      <label>HSL</label>
+      <div style="display:flex;gap:.5rem;">
+        <input type="number" id="cp-h" min="0" max="360" placeholder="H" style="width:4rem;">
+        <input type="number" id="cp-s" min="0" max="100" placeholder="S" style="width:4rem;">
+        <input type="number" id="cp-l" min="0" max="100" placeholder="L" style="width:4rem;">
+      </div>
+    </div>
+  </div>
+  <div id="cp-preview" style="height:4rem;border-radius:8px;border:1px solid var(--border);"></div>
+</div>
+
+
+<script>
+(function() {
+  var colorInput = document.getElementById('cp-picker');
+  var hexInput = document.getElementById('cp-hex');
+  var rInput = document.getElementById('cp-r');
+  var gInput = document.getElementById('cp-g');
+  var bInput = document.getElementById('cp-b');
+  var hInput = document.getElementById('cp-h');
+  var sInput = document.getElementById('cp-s');
+  var lInput = document.getElementById('cp-l');
+  var previewEl = document.getElementById('cp-preview');
+
+  function rgbToHex(r, g, b) {
+    return '#' + [r, g, b].map(function(v) {
+      return Math.round(v).toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
+  }
+
+  function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
+    if (max === min) {
+      h = s = 0;
+    } else {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+  }
+
+  function hslToRgb(h, s, l) {
+    h /= 360; s /= 100; l /= 100;
+    var r, g, b;
+    if (s === 0) {
+      r = g = b = l;
+    } else {
+      var hue2rgb = function(p, q, t) {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+      };
+      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      var p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+    }
+    return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
+  }
+
+  function updateFromPicker() {
+    var hex = colorInput.value;
+    var rgb = hexToRgb(hex);
+    if (!rgb) return;
+    var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+    hexInput.value = hex;
+    rInput.value = rgb.r;
+    gInput.value = rgb.g;
+    bInput.value = rgb.b;
+    hInput.value = hsl.h;
+    sInput.value = hsl.s;
+    lInput.value = hsl.l;
+    previewEl.style.backgroundColor = hex;
+  }
+
+  function updateFromRgb() {
+    var r = parseInt(rInput.value) || 0;
+    var g = parseInt(gInput.value) || 0;
+    var b = parseInt(bInput.value) || 0;
+    var hex = rgbToHex(r, g, b);
+    var hsl = rgbToHsl(r, g, b);
+    colorInput.value = hex;
+    hexInput.value = hex;
+    hInput.value = hsl.h;
+    sInput.value = hsl.s;
+    lInput.value = hsl.l;
+    previewEl.style.backgroundColor = hex;
+  }
+
+  function updateFromHex() {
+    var hex = hexInput.value;
+    if (!/^#[0-9a-fA-F]{6}$/.test(hex)) return;
+    var rgb = hexToRgb(hex);
+    if (!rgb) return;
+    var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+    colorInput.value = hex;
+    rInput.value = rgb.r;
+    gInput.value = rgb.g;
+    bInput.value = rgb.b;
+    hInput.value = hsl.h;
+    sInput.value = hsl.s;
+    lInput.value = hsl.l;
+    previewEl.style.backgroundColor = hex;
+  }
+
+  function updateFromHsl() {
+    var h = parseInt(hInput.value) || 0;
+    var s = parseInt(sInput.value) || 0;
+    var l = parseInt(lInput.value) || 0;
+    var rgb = hslToRgb(h, s, l);
+    var hex = rgbToHex(rgb.r, rgb.g, rgb.b);
+    colorInput.value = hex;
+    hexInput.value = hex;
+    rInput.value = rgb.r;
+    gInput.value = rgb.g;
+    bInput.value = rgb.b;
+    previewEl.style.backgroundColor = hex;
+  }
+
+  colorInput.addEventListener('input', updateFromPicker);
+  hexInput.addEventListener('change', updateFromHex);
+  [rInput, gInput, bInput].forEach(function(el) { el.addEventListener('input', updateFromRgb); });
+  [hInput, sInput, lInput].forEach(function(el) { el.addEventListener('input', updateFromHsl); });
+
+  updateFromPicker();
+})();
+</script>
+
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>What is the difference between Hex, RGB, and HSL?</summary>
+        <p>Hex is a six-digit code like #FF5733, RGB defines color as red/green/blue values (0-255), and HSL defines it as hue, saturation, and lightness percentages.</p>
+      </details>
+      <details>
+        <summary>Can I convert a Hex color to RGB?</summary>
+        <p>Yes. Enter any Hex code and the tool instantly shows the equivalent RGB, HSL, and a visual preview.</p>
+      </details>
+      <details>
+        <summary>Does this tool work on mobile?</summary>
+        <p>Yes. The color picker and all conversions work on any device with a modern web browser.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>

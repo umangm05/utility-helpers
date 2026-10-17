@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>URL Encoder Decoder — Free Online URL Encoding Tool</title>
+    <meta name="description" content="Encode and decode URLs instantly. Convert special characters to percent-encoded format and back. Free online URL encoder decoder.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/url-encoder-decoder/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="URL Encoder Decoder — Free Online URL Encoding Tool">
+    <meta property="og:description" content="Encode and decode URLs instantly. Convert special characters to percent-encoded format and back. Free online URL encoder decoder.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/url-encoder-decoder/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="URL Encoder Decoder — Free Online URL Encoding Tool">
+    <meta name="twitter:description" content="Encode and decode URLs instantly. Convert special characters to percent-encoded format and back. Free online URL encoder decoder.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "URL Encoder Decoder",
+  "url": "https://utility-helpers.netlify.app/url-encoder-decoder/",
+  "description": "Encode and decode URLs with percent-encoding, right in your browser.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "URL Encoder Decoder",
+      "item": "https://utility-helpers.netlify.app/url-encoder-decoder/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is URL encoding?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "URL encoding converts special characters into a percent sign followed by two hexadecimal digits, making them safe for use in web addresses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When do I need to encode a URL?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Encode URLs when they contain spaces, non-ASCII characters, or reserved characters like &, =, or ? that could break the URL structure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is URL encoding the same as encryption?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. URL encoding is a reversible formatting convention. Anyone can decode an encoded URL."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> URL Encoder Decoder
+    </nav>
+    <h1>URL Encoder Decoder</h1>
+    <p class="lede">URL encoder decoder is a free online tool that converts URLs between their readable form and percent-encoded format. URLs can only contain a limited set of characters, so special characters like spaces, ampersands, and unicode letters must be encoded as percent-encoded values for use in web addresses. Developers use this tool to prepare query parameters for API calls, fix broken links, and ensure URLs are valid before sharing. Enter any URL or text to encode it, or paste an encoded URL to decode it back to readable form. Everything runs in your browser with no data leaving your device.</p>
+
+<div class="tool">
+  <label for="url-input">Enter URL or text</label>
+  <textarea id="url-input" placeholder="Enter URL to encode, or encoded URL to decode..."></textarea>
+  <div style="display:flex;gap:.5rem;margin:.5rem 0 1rem;">
+    <button id="url-encode" type="button">Encode URL</button>
+    <button id="url-decode" type="button">Decode URL</button>
+    <button id="url-copy" type="button" style="background:var(--panel-2);color:var(--fg);border-color:var(--border);">Copy</button>
+  </div>
+  <div id="url-error" style="color:#ef4444;font-size:.875rem;margin-bottom:.5rem;"></div>
+  <label>Result</label>
+  <div id="url-output" style="padding:1rem;background:var(--panel-2);border-radius:8px;font-family:monospace;white-space:pre-wrap;word-break:break-all;min-height:6rem;"></div>
+</div>
+
+
+<script>
+(function() {
+  var inputEl = document.getElementById('url-input');
+  var outputEl = document.getElementById('url-output');
+  var encodeBtn = document.getElementById('url-encode');
+  var decodeBtn = document.getElementById('url-decode');
+  var copyBtn = document.getElementById('url-copy');
+  var errorEl = document.getElementById('url-error');
+
+  function encode() {
+    errorEl.textContent = '';
+    try {
+      outputEl.textContent = encodeURIComponent(inputEl.value);
+    } catch(e) {
+      errorEl.textContent = 'Error: ' + e.message;
+    }
+  }
+
+  function decode() {
+    errorEl.textContent = '';
+    try {
+      outputEl.textContent = decodeURIComponent(inputEl.value);
+    } catch(e) {
+      errorEl.textContent = 'Error: Invalid URL-encoded string';
+    }
+  }
+
+  encodeBtn.addEventListener('click', encode);
+  decodeBtn.addEventListener('click', decode);
+  copyBtn.addEventListener('click', function() {
+    window.uhCopy(outputEl.textContent);
+  });
+})();
+</script>
+
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>What is URL encoding?</summary>
+        <p>URL encoding converts special characters into a percent sign followed by two hexadecimal digits, making them safe for use in web addresses.</p>
+      </details>
+      <details>
+        <summary>When do I need to encode a URL?</summary>
+        <p>Encode URLs when they contain spaces, non-ASCII characters, or reserved characters like &amp;, =, or ? that could break the URL structure.</p>
+      </details>
+      <details>
+        <summary>Is URL encoding the same as encryption?</summary>
+        <p>No. URL encoding is a reversible formatting convention. Anyone can decode an encoded URL.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>

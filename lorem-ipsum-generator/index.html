@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lorem Ipsum Generator — Free Online Dummy Text Tool</title>
+    <meta name="description" content="Generate lorem ipsum placeholder text instantly. Choose the number of paragraphs, sentences, or words. Free online tool, no signup.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/lorem-ipsum-generator/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Lorem Ipsum Generator — Free Online Dummy Text Tool">
+    <meta property="og:description" content="Generate lorem ipsum placeholder text instantly. Choose the number of paragraphs, sentences, or words. Free online tool, no signup.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/lorem-ipsum-generator/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Lorem Ipsum Generator — Free Online Dummy Text Tool">
+    <meta name="twitter:description" content="Generate lorem ipsum placeholder text instantly. Choose the number of paragraphs, sentences, or words. Free online tool, no signup.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Lorem Ipsum Generator",
+  "url": "https://utility-helpers.netlify.app/lorem-ipsum-generator/",
+  "description": "Generate lorem ipsum placeholder text by paragraph, sentence, or word.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Lorem Ipsum Generator",
+      "item": "https://utility-helpers.netlify.app/lorem-ipsum-generator/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is lorem ipsum text?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Lorem ipsum is dummy text used as a placeholder in design and layout work. It looks like real text but has no meaning, so it does not distract from the design."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many paragraphs can I generate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can generate up to 20 paragraphs at once, or specify a custom number of sentences or words."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use lorem ipsum text in my final product?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Lorem ipsum is a placeholder. Replace it with real content before publishing."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> Lorem Ipsum Generator
+    </nav>
+    <h1>Lorem Ipsum Generator</h1>
+    <p class="lede">Lorem Ipsum generator is a free online tool that creates placeholder text for designers, developers, and content creators. Lorem ipsum dolor sit amet is the standard dummy text used in the printing and typesetting industry, and it remains the go-to filler for wireframes, mockups, and prototypes today. This tool lets you generate lorem ipsum text by the paragraph, sentence, or word, so you get exactly the right amount of filler content for your layout. The generated text looks natural and proportional, helping you evaluate design without being distracted by readable content. Everything runs in your browser with no signup.</p>
+
+<div class="tool">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:1rem;margin-bottom:1rem;">
+    <div>
+      <label for="li-unit">Generate by</label>
+      <select id="li-unit">
+        <option value="paragraphs">Paragraphs</option>
+        <option value="sentences">Sentences</option>
+        <option value="words">Words</option>
+      </select>
+    </div>
+    <div>
+      <label for="li-count">Count</label>
+      <input type="number" id="li-count" min="1" max="20" value="3">
+    </div>
+    <div style="display:flex;align-items:flex-end;">
+      <button id="li-generate" type="button">Generate</button>
+      <button id="li-copy" type="button" style="background:var(--panel-2);color:var(--fg);border-color:var(--border);">Copy</button>
+    </div>
+  </div>
+  <label>Output</label>
+  <div id="li-output" style="padding:1rem;background:var(--panel-2);border-radius:8px;min-height:6rem;line-height:1.8;"></div>
+</div>
+
+
+<script>
+(function() {
+  var countEl = document.getElementById('li-count');
+  var unitEl = document.getElementById('li-unit');
+  var outputEl = document.getElementById('li-output');
+  var generateBtn = document.getElementById('li-generate');
+  var copyBtn = document.getElementById('li-copy');
+
+  var WORDS = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum'.split(' ');
+
+  function randomWord() {
+    return WORDS[Math.floor(Math.random() * WORDS.length)];
+  }
+
+  function generateSentence() {
+    var len = 5 + Math.floor(Math.random() * 10);
+    var words = [];
+    for (var i = 0; i < len; i++) words.push(randomWord());
+    var sentence = words.join(' ');
+    return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+  }
+
+  function generateParagraph() {
+    var len = 3 + Math.floor(Math.random() * 4);
+    var sentences = [];
+    for (var i = 0; i < len; i++) sentences.push(generateSentence());
+    return sentences.join(' ');
+  }
+
+  function generate() {
+    var count = parseInt(countEl.value, 10) || 1;
+    var unit = unitEl.value;
+    var output = [];
+    if (unit === 'paragraphs') {
+      for (var i = 0; i < count; i++) output.push(generateParagraph());
+      outputEl.innerHTML = output.join('<br><br>');
+    } else if (unit === 'sentences') {
+      for (var i = 0; i < count; i++) output.push(generateSentence());
+      outputEl.innerHTML = output.join(' ');
+    } else {
+      var words = [];
+      for (var i = 0; i < count; i++) words.push(randomWord());
+      outputEl.textContent = words.join(' ');
+    }
+  }
+
+  generateBtn.addEventListener('click', generate);
+  copyBtn.addEventListener('click', function() {
+    window.uhCopy(outputEl.textContent);
+  });
+  generate();
+})();
+</script>
+
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>What is lorem ipsum text?</summary>
+        <p>Lorem ipsum is dummy text used as a placeholder in design and layout work. It looks like real text but has no meaning, so it does not distract from the design.</p>
+      </details>
+      <details>
+        <summary>How many paragraphs can I generate?</summary>
+        <p>You can generate up to 20 paragraphs at once, or specify a custom number of sentences or words.</p>
+      </details>
+      <details>
+        <summary>Can I use lorem ipsum text in my final product?</summary>
+        <p>No. Lorem ipsum is a placeholder. Replace it with real content before publishing.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>

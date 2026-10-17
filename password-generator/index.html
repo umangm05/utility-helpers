@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Password Generator — Create Strong Random Passwords Online</title>
+    <meta name="description" content="Generate strong, secure random passwords instantly. Customize length, characters, and more. Free online password generator with no signup.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/password-generator/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Password Generator — Create Strong Random Passwords Online">
+    <meta property="og:description" content="Generate strong, secure random passwords instantly. Customize length, characters, and more. Free online password generator with no signup.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/password-generator/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Password Generator — Create Strong Random Passwords Online">
+    <meta name="twitter:description" content="Generate strong, secure random passwords instantly. Customize length, characters, and more. Free online password generator with no signup.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Password Generator",
+  "url": "https://utility-helpers.netlify.app/password-generator/",
+  "description": "Create strong, random passwords with custom length and character types.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Utility Helpers",
+      "item": "https://utility-helpers.netlify.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Password Generator",
+      "item": "https://utility-helpers.netlify.app/password-generator/"
+    }
+  ]
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this password generator safe to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Passwords are generated using your browser's built-in cryptographically secure random number generator and never leave your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What makes a password strong?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A strong password is at least 12 characters long and includes a mix of uppercase, lowercase, numbers, and symbols."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use the same password everywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Use a unique password for every account so a breach on one site does not compromise your other accounts."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">All tools</a> <span aria-hidden="true">/</span> Password Generator
+    </nav>
+    <h1>Password Generator</h1>
+    <p class="lede">Password generator creates strong, random passwords that protect your online accounts from unauthorized access. You can customize the length and choose which character types to include — uppercase letters, lowercase letters, numbers, and symbols. Every password is generated locally in your browser using cryptographically secure random number generation, so your passwords are never sent over the internet or stored anywhere. Create unlimited passwords for free with no signup required. The tool works on any device with a modern web browser and runs completely offline after the page loads.</p>
+
+<div class="tool">
+  <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+    <label for="pg-length" style="margin:0;">Length: <span id="pg-length-val">16</span></label>
+    <input type="range" id="pg-length" min="4" max="64" value="16" style="flex:1;">
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
+    <label><input type="checkbox" id="pg-upper" checked> Uppercase (A-Z)</label>
+    <label><input type="checkbox" id="pg-lower" checked> Lowercase (a-z)</label>
+    <label><input type="checkbox" id="pg-numbers" checked> Numbers (0-9)</label>
+    <label><input type="checkbox" id="pg-symbols" checked> Symbols (!@#$...)</label>
+  </div>
+  <div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+    <button id="pg-generate" type="button">Generate Password</button>
+    <button id="pg-copy" type="button" style="background:var(--panel-2);color:var(--fg);border-color:var(--border);">Copy</button>
+  </div>
+  <div id="pg-output" style="font-family:monospace;font-size:1.25rem;padding:1rem;background:var(--panel-2);border-radius:8px;word-break:break-all;min-height:1.5rem;"></div>
+</div>
+
+
+<script>
+(function() {
+  var lengthEl = document.getElementById('pg-length');
+  var lengthVal = document.getElementById('pg-length-val');
+  var upperEl = document.getElementById('pg-upper');
+  var lowerEl = document.getElementById('pg-lower');
+  var numbersEl = document.getElementById('pg-numbers');
+  var symbolsEl = document.getElementById('pg-symbols');
+  var outputEl = document.getElementById('pg-output');
+  var generateBtn = document.getElementById('pg-generate');
+  var copyBtn = document.getElementById('pg-copy');
+
+  function generate() {
+    var length = parseInt(lengthEl.value, 10);
+    var chars = '';
+    if (upperEl.checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (lowerEl.checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if (numbersEl.checked) chars += '0123456789';
+    if (symbolsEl.checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+    if (!chars) {
+      outputEl.textContent = 'Select at least one character type';
+      return;
+    }
+    var arr = new Uint32Array(length);
+    crypto.getRandomValues(arr);
+    var password = '';
+    for (var i = 0; i < length; i++) {
+      password += chars[arr[i] % chars.length];
+    }
+    outputEl.textContent = password;
+  }
+
+  lengthEl.addEventListener('input', function() {
+    lengthVal.textContent = lengthEl.value;
+  });
+  generateBtn.addEventListener('click', generate);
+  copyBtn.addEventListener('click', function() {
+    window.uhCopy(outputEl.textContent);
+  });
+  generate();
+})();
+</script>
+
+
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <details>
+        <summary>Is this password generator safe to use?</summary>
+        <p>Yes. Passwords are generated using your browser&#x27;s built-in cryptographically secure random number generator and never leave your device.</p>
+      </details>
+      <details>
+        <summary>What makes a password strong?</summary>
+        <p>A strong password is at least 12 characters long and includes a mix of uppercase, lowercase, numbers, and symbols.</p>
+      </details>
+      <details>
+        <summary>Can I use the same password everywhere?</summary>
+        <p>No. Use a unique password for every account so a breach on one site does not compromise your other accounts.</p>
+      </details>
+    </section>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
+    <p>Everything runs in your browser.</p>
+  </div>
+</footer>
+</body>
+</html>
