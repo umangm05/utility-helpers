@@ -80,14 +80,25 @@ It warns (without failing) when a title exceeds 60 chars or a description 155.
 
 ## Deploy
 
-Netlify deploys the repository as-is:
+The site is live at **https://utility-helpers.netlify.app**.
 
-- **Build command:** none (leave blank)
-- **Publish directory:** `.` (already set in `netlify.toml`)
+**Status:** Deployed 2026-10-17 via the Netlify CLI. The site is linked to
+the `utility-helpers` Netlify project (ID `ed5fcc96-8610-4e22-8bab-0d247eb93d03`).
 
-`netlify.toml` also sets long-lived caching for `/assets/*`, sensible security
-headers, and a 404 fallback. To have Netlify regenerate the HTML on each deploy
-instead, uncomment `command = "python3 scripts/build.py"` in `netlify.toml`.
+### How to redeploy
+
+```bash
+cd /root/projects/utility-helpers
+npx netlify deploy --prod
+```
+
+`netlify.toml` sets `publish = "."` (no build step), security headers,
+`/assets/*` caching, and a custom 404 fallback.
+
+**Note:** Git continuous deployment is NOT connected — pushing to a branch
+does not auto-trigger a deploy. Deploys are manual via the CLI command above.
+To enable Git CD, connect the repo in the Netlify dashboard under
+Site configuration → Build & deploy → Continuous deployment.
 
 ## Local verification
 
@@ -102,6 +113,24 @@ curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/sitemap.xml
 curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/robots.txt
 curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/404.html
 ```
+
+## Google Search Console
+
+Add your verification file at `google-site-verification.html` (or any name GSC
+provides). Format:
+
+```html
+<html>
+  <head>
+    <meta name="google-site-verification" content="YOUR_TOKEN_HERE" />
+    <title>Google Search Console verification</title>
+  </head>
+  <body>Google Search Console verification file</body>
+</html>
+```
+
+Do NOT fake a token — this file must match the exact value Google gives you.
+Once deployed, verify at `https://utility-helpers.netlify.app/google-site-verification.html`.
 
 ## Conventions
 

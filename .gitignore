@@ -9,3 +9,6 @@ Thumbs.db
 # Local verification artifacts
 .verify/
 *.log
+
+# Local Netlify folder
+.netlify

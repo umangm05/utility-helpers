@@ -55,6 +55,7 @@ body {
 }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
+.breadcrumb a { color: var(--muted); text-decoration: underline; }
 a:focus-visible, button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -95,7 +96,7 @@ h2 { font-size: 1.3rem; margin: 2.5rem 0 .75rem; letter-spacing: -.01em; }
   color: var(--fg); transition: border-color .15s ease, transform .15s ease;
 }
 .tile:hover { border-color: var(--accent); transform: translateY(-2px); text-decoration: none; }
-.tile h3 { margin: 0 0 .35rem; font-size: 1.0625rem; }
+.tile .tile-title { margin: 0 0 .35rem; font-size: 1.0625rem; font-weight: 600; }
 .tile p { margin: 0; color: var(--muted); font-size: .9375rem; }
 .empty {
   border: 1px dashed var(--border); border-radius: var(--radius);
@@ -273,7 +274,7 @@ def render_home(*, site: dict, tools: list[dict]) -> str:
     if tools:
         tiles = "\n".join(
             f"""        <a class="tile" href="/{esc(t['slug'])}/">
-          <h3>{esc(t['name'])}</h3>
+          <p class="tile-title">{esc(t['name'])}</p>
           <p>{esc(t['summary'])}</p>
         </a>""" for t in tools
         )
