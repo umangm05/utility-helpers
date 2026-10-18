@@ -1,0 +1,245 @@
+{
+  "$comment": "Single source of truth for the Utility Helpers site. Edit this file, then run `python3 scripts/build.py`. Tool entries are added by UH-BUILD-TOOLS once Edith's research lands (UH-RESEARCH).",
+  "site": {
+    "name": "Utility Helpers",
+    "baseUrl": "https://utility-helpers.netlify.app",
+    "tagline": "Free browser tools that run entirely on your device.",
+    "description": "Free, fast, private browser tools. Every utility runs entirely in your browser — nothing is uploaded, nothing is stored, no account required.",
+    "author": "Umang Mittal",
+    "github": "https://github.com/umangm05/utility-helpers",
+    "locale": "en_US",
+    "themeColor": "#f59e0b"
+  },
+  "tools": [
+    {
+      "slug": "word-counter",
+      "name": "Word Counter",
+      "summary": "Students, writers, and social media managers constantly need to check word and character limits for essays, posts, captions, and SEO meta descriptions.",
+      "title": "Word Counter — Free Online Word & Character Count Tool",
+      "description": "Count words, characters, sentences and paragraphs instantly. Free online word counter with no signup, no limits, works offline in your browser.",
+      "intro": "Word counter is a free online tool that counts words, characters, sentences, and paragraphs in your text as you type. Whether you are writing an essay for school, crafting a social media post, or optimizing a meta description for SEO, knowing your exact word count helps you stay within platform limits. The tool works entirely in your browser — no signup, no installation, and no data ever leaves your device. Everything runs locally using JavaScript for complete privacy and instant results.",
+      "faq": [
+        {
+          "q": "Does this word counter save my text?",
+          "a": "No. Everything runs in your browser's memory. When you close or refresh the page, your text is gone."
+        },
+        {
+          "q": "Can I use this tool offline?",
+          "a": "Yes. Once the page loads, the word counter works without an internet connection."
+        },
+        {
+          "q": "Does it count characters with or without spaces?",
+          "a": "Both. You get separate counts for characters including spaces and characters excluding spaces."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <label for=\"wc-input\">Enter your text</label>\n  <textarea id=\"wc-input\" placeholder=\"Type or paste your text here...\" rows=\"8\"></textarea>\n  <div id=\"wc-stats\" style=\"margin-top:1rem;display:grid;gap:.5rem;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr))\">\n    <div><span style=\"color:var(--muted)\">Words</span><br><strong id=\"wc-words\" style=\"font-size:1.5rem\">0</strong></div>\n    <div><span style=\"color:var(--muted)\">Characters</span><br><strong id=\"wc-chars\" style=\"font-size:1.5rem\">0</strong></div>\n    <div><span style=\"color:var(--muted)\">No spaces</span><br><strong id=\"wc-chars-nospace\" style=\"font-size:1.5rem\">0</strong></div>\n    <div><span style=\"color:var(--muted)\">Sentences</span><br><strong id=\"wc-sentences\" style=\"font-size:1.5rem\">0</strong></div>\n    <div><span style=\"color:var(--muted)\">Paragraphs</span><br><strong id=\"wc-paragraphs\" style=\"font-size:1.5rem\">0</strong></div>\n  </div>\n</div>\n<script>\n(function() {\n  var input = document.getElementById('wc-input');\n  var words = document.getElementById('wc-words');\n  var chars = document.getElementById('wc-chars');\n  var charsNoSpace = document.getElementById('wc-chars-nospace');\n  var sentences = document.getElementById('wc-sentences');\n  var paragraphs = document.getElementById('wc-paragraphs');\n  input.addEventListener('input', function() {\n    var text = input.value;\n    var wc = text.trim() ? text.trim().split(/\\s+/).length : 0;\n    var cc = text.length;\n    var ccns = text.replace(/\\s/g, '').length;\n    var sc = text.split(/[.!?]+/).filter(function(s) { return s.trim(); }).length;\n    var pc = text.split(/\\n\\n+/).filter(function(p) { return p.trim(); }).length;\n    words.textContent = wc;\n    chars.textContent = cc;\n    charsNoSpace.textContent = ccns;\n    sentences.textContent = sc;\n    paragraphs.textContent = pc;\n  });\n})();\n</script>"
+    },
+    {
+      "slug": "password-generator",
+      "name": "Password Generator",
+      "summary": "With data breaches in the news constantly, people need to create unique passwords for new accounts and update old ones regularly.",
+      "title": "Password Generator — Create Strong Random Passwords Online",
+      "description": "Generate strong, secure random passwords instantly. Customize length, characters, and more. Free online password generator with no signup.",
+      "intro": "Password generator creates strong, random passwords that protect your online accounts from unauthorized access. You can customize the length and choose which character types to include — uppercase letters, lowercase letters, numbers, and symbols. Every password is generated locally in your browser using cryptographically secure random number generation, so your passwords are never sent over the internet or stored anywhere. Create unlimited passwords for free with no signup required. The tool works on any device with a modern web browser and runs completely offline after the page loads.",
+      "faq": [
+        {
+          "q": "Is this password generator safe to use?",
+          "a": "Yes. Passwords are generated using your browser's built-in cryptographically secure random number generator and never leave your device."
+        },
+        {
+          "q": "What makes a password strong?",
+          "a": "A strong password is at least 12 characters long and includes a mix of uppercase, lowercase, numbers, and symbols."
+        },
+        {
+          "q": "Can I use the same password everywhere?",
+          "a": "No. Use a unique password for every account so a breach on one site does not compromise your other accounts."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <div style=\"display:grid;gap:1rem;max-width:24rem\">\n    <div>\n      <label for=\"pg-length\">Password length</label>\n      <input type=\"number\" id=\"pg-length\" value=\"16\" min=\"4\" max=\"128\" style=\"width:100%\">\n    </div>\n    <div style=\"display:grid;gap:.5rem\">\n      <label><input type=\"checkbox\" id=\"pg-upper\" checked> Uppercase (A-Z)</label>\n      <label><input type=\"checkbox\" id=\"pg-lower\" checked> Lowercase (a-z)</label>\n      <label><input type=\"checkbox\" id=\"pg-numbers\" checked> Numbers (0-9)</label>\n      <label><input type=\"checkbox\" id=\"pg-symbols\" checked> Symbols (!@#$...)</label>\n    </div>\n    <button id=\"pg-generate\" type=\"button\">Generate password</button>\n    <div>\n      <label for=\"pg-output\">Generated password</label>\n      <input type=\"text\" id=\"pg-output\" readonly style=\"width:100%;font-family:monospace\">\n    </div>\n    <button id=\"pg-copy\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Copy to clipboard</button>\n  </div>\n</div>\n<script>\n(function() {\n  var len = document.getElementById('pg-length');\n  var upper = document.getElementById('pg-upper');\n  var lower = document.getElementById('pg-lower');\n  var numbers = document.getElementById('pg-numbers');\n  var symbols = document.getElementById('pg-symbols');\n  var output = document.getElementById('pg-output');\n  var generate = document.getElementById('pg-generate');\n  var copy = document.getElementById('pg-copy');\n  function generatePassword() {\n    var chars = '';\n    if (upper.checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';\n    if (lower.checked) chars += 'abcdefghijklmnopqrstuvwxyz';\n    if (numbers.checked) chars += '0123456789';\n    if (symbols.checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';\n    if (!chars) { output.value = ''; return; }\n    var length = Math.max(4, Math.min(128, parseInt(len.value, 10) || 16));\n    var arr = new Uint32Array(length);\n    crypto.getRandomValues(arr);\n    var pwd = '';\n    for (var i = 0; i < length; i++) pwd += chars[arr[i] % chars.length];\n    output.value = pwd;\n  }\n  generate.addEventListener('click', generatePassword);\n  copy.addEventListener('click', function() { window.uhCopy(output.value); });\n  generatePassword();\n})();\n</script>"
+    },
+    {
+      "slug": "unit-converter",
+      "name": "Unit Converter",
+      "summary": "Students, engineers, cooks, and travelers constantly need to convert between units — kilometers to miles, Celsius to Fahrenheit, kilograms to pounds.",
+      "title": "Unit Converter — Free Online Measurement Conversion Tool",
+      "description": "Convert between units instantly: length, weight, temperature, volume, area, speed, and more. Free online unit converter, no signup needed.",
+      "intro": "Unit converter is a free online tool that converts between measurement units for length, weight, temperature, volume, area, speed, and more. Whether you are following a recipe in metric, converting miles to kilometers for a road trip, or checking the temperature in Fahrenheit, this tool gives you instant accurate results. Choose a category, enter your value, select the units, and see the conversion immediately. Everything runs in your browser with no signup, no installation, and no data ever leaving your device.",
+      "faq": [
+        {
+          "q": "What unit categories can I convert?",
+          "a": "Length, weight, temperature, volume, area, speed, time, and data storage units are all supported."
+        },
+        {
+          "q": "How accurate are the conversions?",
+          "a": "Conversions use internationally standard conversion factors and display results with appropriate precision."
+        },
+        {
+          "q": "Is there a limit to how many conversions I can do?",
+          "a": "No. You can convert as many values as you want for free."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <div style=\"display:grid;gap:1rem;max-width:28rem\">\n    <div>\n      <label for=\"uc-category\">Category</label>\n      <select id=\"uc-category\" style=\"width:100%\">\n        <option value=\"length\">Length</option>\n        <option value=\"weight\">Weight</option>\n        <option value=\"temperature\">Temperature</option>\n        <option value=\"volume\">Volume</option>\n        <option value=\"area\">Area</option>\n        <option value=\"speed\">Speed</option>\n        <option value=\"time\">Time</option>\n        <option value=\"data\">Data storage</option>\n      </select>\n    </div>\n    <div style=\"display:grid;grid-template-columns:1fr auto 1fr;gap:.5rem;align-items:end\">\n      <div>\n        <label for=\"uc-from\">From</label>\n        <select id=\"uc-from\" style=\"width:100%\"></select>\n      </div>\n      <button id=\"uc-swap\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border);padding:.6rem .8rem\">&harr;</button>\n      <div>\n        <label for=\"uc-to\">To</label>\n        <select id=\"uc-to\" style=\"width:100%\"></select>\n      </div>\n    </div>\n    <div>\n      <label for=\"uc-input\">Value</label>\n      <input type=\"number\" id=\"uc-input\" value=\"1\" step=\"any\" style=\"width:100%\">\n    </div>\n    <div>\n      <label>Result</label>\n      <div id=\"uc-result\" style=\"font-size:1.5rem;font-weight:700;padding:.75rem;border:1px solid var(--border);border-radius:8px;background:var(--panel-2)\">—</div>\n    </div>\n  </div>\n</div>\n<script>\n(function() {\n  var UNITS = {\n    length: { 'm': 1, 'km': 1000, 'cm': 0.01, 'mm': 0.001, 'mi': 1609.344, 'yd': 0.9144, 'ft': 0.3048, 'in': 0.0254 },\n    weight: { 'kg': 1, 'g': 0.001, 'lb': 0.453592, 'oz': 0.0283495, 't': 1000 },\n    temperature: { 'C': 'C', 'F': 'F', 'K': 'K' },\n    volume: { 'L': 1, 'mL': 0.001, 'gal': 3.78541, 'qt': 0.946353, 'pt': 0.473176, 'cup': 0.236588, 'fl oz': 0.0295735 },\n    area: { 'm2': 1, 'km2': 1e6, 'ft2': 0.092903, 'ac': 4046.86, 'ha': 10000 },\n    speed: { 'm/s': 1, 'km/h': 0.277778, 'mph': 0.44704, 'ft/s': 0.3048, 'kn': 0.514444 },\n    time: { 's': 1, 'min': 60, 'h': 3600, 'day': 86400, 'week': 604800, 'ms': 0.001 },\n    data: { 'B': 1, 'KB': 1024, 'MB': 1048576, 'GB': 1073741824, 'TB': 1099511627776, 'bit': 0.125 }\n  };\n  var category = document.getElementById('uc-category');\n  var from = document.getElementById('uc-from');\n  var to = document.getElementById('uc-to');\n  var input = document.getElementById('uc-input');\n  var result = document.getElementById('uc-result');\n  var swap = document.getElementById('uc-swap');\n  function populateUnits() {\n    var units = Object.keys(UNITS[category.value]);\n    from.innerHTML = units.map(function(u) { return '<option value=\"' + u + '\">' + u + '</option>'; }).join('');\n    to.innerHTML = units.map(function(u) { return '<option value=\"' + u + '\">' + u + '</option>'; }).join('');\n    if (units.length > 1) to.selectedIndex = 1;\n    convert();\n  }\n  function convert() {\n    var val = parseFloat(input.value);\n    if (isNaN(val)) { result.textContent = '—'; return; }\n    var cat = category.value;\n    var f = from.value, t = to.value;\n    var out;\n    if (cat === 'temperature') {\n      var celsius = f === 'C' ? val : f === 'F' ? (val - 32) * 5/9 : val - 273.15;\n      out = t === 'C' ? celsius : t === 'F' ? celsius * 9/5 + 32 : celsius + 273.15;\n    } else {\n      out = val * UNITS[cat][f] / UNITS[cat][t];\n    }\n    result.textContent = (Math.round(out * 1e10) / 1e10).toString() + ' ' + t;\n  }\n  category.addEventListener('change', populateUnits);\n  from.addEventListener('change', convert);\n  to.addEventListener('change', convert);\n  input.addEventListener('input', convert);\n  swap.addEventListener('click', function() {\n    var tmp = from.value; from.value = to.value; to.value = tmp; convert();\n  });\n  populateUnits();\n})();\n</script>"
+    },
+    {
+      "slug": "json-formatter",
+      "name": "JSON Formatter",
+      "summary": "Developers work with JSON data daily — APIs return it, config files use it, and debugging requires reading minified JSON.",
+      "title": "JSON Formatter — Free Online JSON Validator & Beautifier",
+      "description": "Format, validate, and beautify your JSON data instantly. Free online JSON formatter with syntax highlighting and error detection. No signup.",
+      "intro": "JSON formatter is a free online tool that formats, validates, and beautifies JSON data. Paste your minified or messy JSON into the editor and get clean, readable, properly indented output in seconds. The tool highlights syntax, detects errors with precise line numbers, and helps you spot missing commas, brackets, or quotes. Whether you are debugging an API response, cleaning up a configuration file, or learning JSON syntax, this tool saves you time. Everything runs in your browser — your JSON data never leaves your device.",
+      "faq": [
+        {
+          "q": "Can I format minified JSON?",
+          "a": "Yes. Paste minified or single-line JSON and the tool will indent it for readability."
+        },
+        {
+          "q": "Does it validate JSON syntax?",
+          "a": "Yes. The tool checks for valid JSON and shows the exact location of any syntax errors."
+        },
+        {
+          "q": "Is my JSON data safe to paste here?",
+          "a": "Yes. Everything runs in your browser. Your JSON is never sent to any server."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <div style=\"display:grid;gap:1rem\">\n    <div>\n      <label for=\"jf-input\">Paste your JSON</label>\n      <textarea id=\"jf-input\" placeholder='{\"key\":\"value\"}' rows=\"8\"></textarea>\n    </div>\n    <div style=\"display:flex;gap:.5rem;flex-wrap:wrap\">\n      <button id=\"jf-format\" type=\"button\">Format</button>\n      <button id=\"jf-minify\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Minify</button>\n      <button id=\"jf-copy\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Copy</button>\n    </div>\n    <div id=\"jf-error\" style=\"color:#ef4444;display:none\"></div>\n    <div>\n      <label for=\"jf-output\">Result</label>\n      <textarea id=\"jf-output\" rows=\"8\" readonly style=\"width:100%;font-family:monospace\"></textarea>\n    </div>\n  </div>\n</div>\n<script>\n(function() {\n  var input = document.getElementById('jf-input');\n  var output = document.getElementById('jf-output');\n  var error = document.getElementById('jf-error');\n  var format = document.getElementById('jf-format');\n  var minify = document.getElementById('jf-minify');\n  var copy = document.getElementById('jf-copy');\n  function showError(msg) { error.textContent = msg; error.style.display = 'block'; output.value = ''; }\n  function hideError() { error.style.display = 'none'; }\n  function doFormat() {\n    hideError();\n    try {\n      var parsed = JSON.parse(input.value);\n      output.value = JSON.stringify(parsed, null, 2);\n    } catch (e) { showError('Invalid JSON: ' + e.message); }\n  }\n  function doMinify() {\n    hideError();\n    try {\n      var parsed = JSON.parse(input.value);\n      output.value = JSON.stringify(parsed);\n    } catch (e) { showError('Invalid JSON: ' + e.message); }\n  }\n  format.addEventListener('click', doFormat);\n  minify.addEventListener('click', doMinify);\n  copy.addEventListener('click', function() { window.uhCopy(output.value); });\n})();\n</script>"
+    },
+    {
+      "slug": "base64-encoder-decoder",
+      "name": "Base64 Encoder Decoder",
+      "summary": "Developers constantly encode and decode Base64 for email attachments, data URIs, API authentication tokens, and embedding images in HTML/CSS.",
+      "title": "Base64 Encoder Decoder — Free Online Base64 Converter",
+      "description": "Encode and decode Base64 instantly. Convert text to Base64 and back. Free online tool for developers, no signup, works in your browser.",
+      "intro": "Base64 encoder decoder is a free online tool that converts text to Base64 and back. Base64 is a common encoding format used to represent binary data as plain text, making it safe to transmit over systems that only handle text. Developers use it for embedding images in HTML and CSS, encoding API authentication tokens, sending email attachments, and storing data in JSON. This tool lets you encode any text to Base64 or decode Base64 back to readable text instantly, with no signup and no data leaving your browser.",
+      "faq": [
+        {
+          "q": "What is Base64 encoding?",
+          "a": "Base64 is a way to convert binary data into a text format using 64 printable ASCII characters, making it safe for transmission over text-only channels."
+        },
+        {
+          "q": "Is Base64 encoding secure?",
+          "a": "No. Base64 is encoding, not encryption. Anyone can decode it. It is for data representation, not security."
+        },
+        {
+          "q": "Can I encode images with this tool?",
+          "a": "This tool works with text. To encode an image, you would first convert it to a Base64 string using a file reader."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <div style=\"display:grid;gap:1rem\">\n    <div>\n      <label for=\"b64-input\">Enter text</label>\n      <textarea id=\"b64-input\" placeholder=\"Enter text to encode or decode...\" rows=\"6\"></textarea>\n    </div>\n    <div style=\"display:flex;gap:.5rem;flex-wrap:wrap\">\n      <button id=\"b64-encode\" type=\"button\">Encode to Base64</button>\n      <button id=\"b64-decode\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Decode from Base64</button>\n      <button id=\"b64-copy\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Copy</button>\n    </div>\n    <div id=\"b64-error\" style=\"color:#ef4444;display:none\"></div>\n    <div>\n      <label for=\"b64-output\">Result</label>\n      <textarea id=\"b64-output\" rows=\"6\" readonly style=\"width:100%;font-family:monospace\"></textarea>\n    </div>\n  </div>\n</div>\n<script>\n(function() {\n  var input = document.getElementById('b64-input');\n  var output = document.getElementById('b64-output');\n  var error = document.getElementById('b64-error');\n  var encode = document.getElementById('b64-encode');\n  var decode = document.getElementById('b64-decode');\n  var copy = document.getElementById('b64-copy');\n  function showError(msg) { error.textContent = msg; error.style.display = 'block'; output.value = ''; }\n  function hideError() { error.style.display = 'none'; }\n  function doEncode() {\n    hideError();\n    try { output.value = btoa(unescape(encodeURIComponent(input.value))); }\n    catch (e) { showError('Encoding error: ' + e.message); }\n  }\n  function doDecode() {\n    hideError();\n    try { output.value = decodeURIComponent(escape(atob(input.value.trim()))); }\n    catch (e) { showError('Decoding error: ' + e.message); }\n  }\n  encode.addEventListener('click', doEncode);\n  decode.addEventListener('click', doDecode);\n  copy.addEventListener('click', function() { window.uhCopy(output.value); });\n})();\n</script>"
+    },
+    {
+      "slug": "url-encoder-decoder",
+      "name": "URL Encoder Decoder",
+      "summary": "Developers and marketers constantly encode URLs with special characters for query parameters, API calls, and sharing links.",
+      "title": "URL Encoder Decoder — Free Online URL Encoding Tool",
+      "description": "Encode and decode URLs instantly. Convert special characters to percent-encoded format and back. Free online URL encoder decoder.",
+      "intro": "URL encoder decoder is a free online tool that converts URLs between their readable form and percent-encoded format. URLs can only contain a limited set of characters, so special characters like spaces, ampersands, and unicode letters must be encoded as percent-encoded values for use in web addresses. Developers use this tool to prepare query parameters for API calls, fix broken links, and ensure URLs are valid before sharing. Enter any URL or text to encode it, or paste an encoded URL to decode it back to readable form. Everything runs in your browser with no data leaving your device.",
+      "faq": [
+        {
+          "q": "What is URL encoding?",
+          "a": "URL encoding converts special characters into a percent sign followed by two hexadecimal digits, making them safe for use in web addresses."
+        },
+        {
+          "q": "When do I need to encode a URL?",
+          "a": "Encode URLs when they contain spaces, non-ASCII characters, or reserved characters like &, =, or ? that could break the URL structure."
+        },
+        {
+          "q": "Is URL encoding the same as encryption?",
+          "a": "No. URL encoding is a reversible formatting convention. Anyone can decode an encoded URL."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <div style=\"display:grid;gap:1rem\">\n    <div>\n      <label for=\"url-input\">Enter URL or text</label>\n      <textarea id=\"url-input\" placeholder=\"Enter URL or text to encode/decode...\" rows=\"6\"></textarea>\n    </div>\n    <div style=\"display:flex;gap:.5rem;flex-wrap:wrap\">\n      <button id=\"url-encode\" type=\"button\">Encode</button>\n      <button id=\"url-decode\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Decode</button>\n      <button id=\"url-copy\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Copy</button>\n    </div>\n    <div id=\"url-error\" style=\"color:#ef4444;display:none\"></div>\n    <div>\n      <label for=\"url-output\">Result</label>\n      <textarea id=\"url-output\" rows=\"6\" readonly style=\"width:100%;font-family:monospace\"></textarea>\n    </div>\n  </div>\n</div>\n<script>\n(function() {\n  var input = document.getElementById('url-input');\n  var output = document.getElementById('url-output');\n  var error = document.getElementById('url-error');\n  var encode = document.getElementById('url-encode');\n  var decode = document.getElementById('url-decode');\n  var copy = document.getElementById('url-copy');\n  function showError(msg) { error.textContent = msg; error.style.display = 'block'; output.value = ''; }\n  function hideError() { error.style.display = 'none'; }\n  function doEncode() { hideError(); output.value = encodeURIComponent(input.value); }\n  function doDecode() { hideError(); try { output.value = decodeURIComponent(input.value); } catch(e) { showError('Decoding error: ' + e.message); } }\n  encode.addEventListener('click', doEncode);\n  decode.addEventListener('click', doDecode);\n  copy.addEventListener('click', function() { window.uhCopy(output.value); });\n})();\n</script>"
+    },
+    {
+      "slug": "color-picker",
+      "name": "Color Picker",
+      "summary": "Designers, developers, and digital marketers need to pick colors, convert between formats (hex, RGB, HSL), and match brand colors daily.",
+      "title": "Color Picker — Free Online Hex, RGB & HSL Converter",
+      "description": "Pick colors and convert between Hex, RGB, and HSL instantly. Free online color picker with live preview. No signup, works in your browser.",
+      "intro": "Color picker is a free online tool that lets you visually select colors and convert between Hex, RGB, and HSL formats. Use the visual color picker to find the exact shade you need, or enter a Hex code to see its RGB and HSL equivalents. Designers use this tool to match brand colors, developers use it to get the right color values for CSS, and marketers use it to ensure consistency across digital assets. The tool shows a live preview of your selected color along with copy-ready values for each format. Everything runs in your browser with no signup and no data leaving your device.",
+      "faq": [
+        {
+          "q": "What is the difference between Hex, RGB, and HSL?",
+          "a": "Hex is a six-digit code like #FF5733, RGB defines color as red/green/blue values (0-255), and HSL defines it as hue, saturation, and lightness percentages."
+        },
+        {
+          "q": "Can I convert a Hex color to RGB?",
+          "a": "Yes. Enter any Hex code and the tool instantly shows the equivalent RGB, HSL, and a visual preview."
+        },
+        {
+          "q": "Does this tool work on mobile?",
+          "a": "Yes. The color picker and all conversions work on any device with a modern web browser."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <div style=\"display:grid;gap:1rem;max-width:28rem\">\n    <div>\n      <label for=\"cp-picker\">Pick a color</label>\n      <input type=\"color\" id=\"cp-picker\" value=\"#f59e0b\" style=\"width:100%;height:3rem;border:none;background:none;cursor:pointer\">\n    </div>\n    <div id=\"cp-preview\" style=\"height:4rem;border-radius:8px;border:1px solid var(--border);background:#f59e0b\"></div>\n    <div style=\"display:grid;gap:.5rem\">\n      <div>\n        <label for=\"cp-hex\">Hex</label>\n        <input type=\"text\" id=\"cp-hex\" value=\"#f59e0b\" style=\"width:100%;font-family:monospace\">\n      </div>\n      <div>\n        <label for=\"cp-rgb\">RGB</label>\n        <input type=\"text\" id=\"cp-rgb\" value=\"rgb(245, 158, 11)\" style=\"width:100%;font-family:monospace\">\n      </div>\n      <div>\n        <label for=\"cp-hsl\">HSL</label>\n        <input type=\"text\" id=\"cp-hsl\" value=\"hsl(38, 92%, 50%)\" style=\"width:100%;font-family:monospace\">\n      </div>\n    </div>\n    <div style=\"display:flex;gap:.5rem;flex-wrap:wrap\">\n      <button id=\"cp-copy-hex\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Copy Hex</button>\n      <button id=\"cp-copy-rgb\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Copy RGB</button>\n      <button id=\"cp-copy-hsl\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Copy HSL</button>\n    </div>\n  </div>\n</div>\n<script>\n(function() {\n  var picker = document.getElementById('cp-picker');\n  var preview = document.getElementById('cp-preview');\n  var hex = document.getElementById('cp-hex');\n  var rgb = document.getElementById('cp-rgb');\n  var hsl = document.getElementById('cp-hsl');\n  function hexToRgb(h) {\n    h = h.replace('#', '');\n    if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];\n    var n = parseInt(h, 16);\n    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };\n  }\n  function rgbToHsl(r, g, b) {\n    r /= 255; g /= 255; b /= 255;\n    var max = Math.max(r, g, b), min = Math.min(r, g, b);\n    var h, s, l = (max + min) / 2;\n    if (max === min) { h = s = 0; }\n    else {\n      var d = max - min;\n      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);\n      if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;\n      else if (max === g) h = ((b - r) / d + 2) / 6;\n      else h = ((r - g) / d + 4) / 6;\n    }\n    return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };\n  }\n  function update(hexVal) {\n    var rgbObj = hexToRgb(hexVal);\n    var hslObj = rgbToHsl(rgbObj.r, rgbObj.g, rgbObj.b);\n    preview.style.background = hexVal;\n    hex.value = hexVal;\n    rgb.value = 'rgb(' + rgbObj.r + ', ' + rgbObj.g + ', ' + rgbObj.b + ')';\n    hsl.value = 'hsl(' + hslObj.h + ', ' + hslObj.s + '%, ' + hslObj.l + '%)';\n  }\n  picker.addEventListener('input', function() { update(picker.value); });\n  hex.addEventListener('change', function() {\n    var v = hex.value.trim();\n    if (!v.startsWith('#')) v = '#' + v;\n    if (/^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$/.test(v)) { picker.value = v.length === 4 ? '#' + v[1]+v[1]+v[2]+v[2]+v[3]+v[3] : v; update(v); }\n  });\n  document.getElementById('cp-copy-hex').addEventListener('click', function() { window.uhCopy(hex.value); });\n  document.getElementById('cp-copy-rgb').addEventListener('click', function() { window.uhCopy(rgb.value); });\n  document.getElementById('cp-copy-hsl').addEventListener('click', function() { window.uhCopy(hsl.value); });\n  update(picker.value);\n})();\n</script>"
+    },
+    {
+      "slug": "timestamp-converter",
+      "name": "Timestamp Converter",
+      "summary": "Developers and data analysts constantly convert between Unix timestamps and human-readable dates when working with APIs, databases, and logs.",
+      "title": "Timestamp Converter — Unix Epoch to Date Converter",
+      "description": "Convert Unix timestamps to human-readable dates and back. Free online timestamp converter with UTC and local timezone support.",
+      "intro": "Timestamp converter is a free online tool that converts Unix timestamps to human-readable dates and back. Unix timestamps count the number of seconds or milliseconds since January 1, 1970, and are used everywhere in computing — APIs, databases, log files, and JavaScript all rely on them. But humans cannot read raw timestamps, so developers use this tool to convert them into readable dates and times. Enter a timestamp to see the date in your local timezone and UTC, or enter a date to get its Unix timestamp equivalent. Everything runs in your browser with no signup and no data leaving your device.",
+      "faq": [
+        {
+          "q": "What is a Unix timestamp?",
+          "a": "A Unix timestamp is the number of seconds (or milliseconds) that have elapsed since January 1, 1970, also known as the Unix epoch."
+        },
+        {
+          "q": "Does this tool handle milliseconds?",
+          "a": "Yes. The tool automatically detects whether your timestamp is in seconds or milliseconds and converts accordingly."
+        },
+        {
+          "q": "Can I convert a date to a timestamp?",
+          "a": "Yes. Enter a date and time, and the tool will show you the equivalent Unix timestamp in both seconds and milliseconds."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <div style=\"display:grid;gap:1rem;max-width:28rem\">\n    <div>\n      <label for=\"ts-input\">Unix timestamp (seconds or milliseconds)</label>\n      <input type=\"number\" id=\"ts-input\" placeholder=\"e.g. 1697452800\" style=\"width:100%;font-family:monospace\">\n    </div>\n    <button id=\"ts-convert\" type=\"button\">Convert to date</button>\n    <div>\n      <label>Human-readable date</label>\n      <div id=\"ts-output\" style=\"padding:.75rem;border:1px solid var(--border);border-radius:8px;background:var(--panel-2);font-family:monospace\">—</div>\n    </div>\n    <hr style=\"border:none;border-top:1px solid var(--border);margin:1rem 0\">\n    <div>\n      <label for=\"ts-date-input\">Date to convert</label>\n      <input type=\"datetime-local\" id=\"ts-date-input\" style=\"width:100%\">\n    </div>\n    <button id=\"ts-to-timestamp\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Convert to timestamp</button>\n    <div>\n      <label>Unix timestamp</label>\n      <div id=\"ts-timestamp-output\" style=\"padding:.75rem;border:1px solid var(--border);border-radius:8px;background:var(--panel-2);font-family:monospace\">—</div>\n    </div>\n  </div>\n</div>\n<script>\n(function() {\n  var tsInput = document.getElementById('ts-input');\n  var tsOutput = document.getElementById('ts-output');\n  var convert = document.getElementById('ts-convert');\n  var dateInput = document.getElementById('ts-date-input');\n  var tsTimestampOutput = document.getElementById('ts-timestamp-output');\n  var toTimestamp = document.getElementById('ts-to-timestamp');\n  function convertTs() {\n    var val = parseFloat(tsInput.value);\n    if (isNaN(val)) { tsOutput.textContent = '—'; return; }\n    var ms = val < 1e12 ? val * 1000 : val;\n    var d = new Date(ms);\n    if (isNaN(d.getTime())) { tsOutput.textContent = 'Invalid timestamp'; return; }\n    tsOutput.textContent = d.toLocaleString() + ' (' + d.toISOString() + ')';\n  }\n  function convertDate() {\n    var val = dateInput.value;\n    if (!val) { tsTimestampOutput.textContent = '—'; return; }\n    var d = new Date(val);\n    if (isNaN(d.getTime())) { tsTimestampOutput.textContent = 'Invalid date'; return; }\n    var sec = Math.floor(d.getTime() / 1000);\n    tsTimestampOutput.textContent = sec + ' (seconds) / ' + d.getTime() + ' (milliseconds)';\n  }\n  convert.addEventListener('click', convertTs);\n  toTimestamp.addEventListener('click', convertDate);\n  tsInput.addEventListener('input', convertTs);\n})();\n</script>"
+    },
+    {
+      "slug": "text-case-converter",
+      "name": "Text Case Converter",
+      "summary": "Writers, students, and professionals constantly need to fix capitalization — converting ALL CAPS text to sentence case, or formatting titles.",
+      "title": "Text Case Converter — Uppercase, Lowercase & Title Case",
+      "description": "Convert text between uppercase, lowercase, sentence case, title case, and more. Free online case converter, instant results.",
+      "intro": "Text case converter is a free online tool that transforms text between uppercase, lowercase, sentence case, title case, and camel case. If you have ever pasted text that came through in all caps, or needed to format a headline in title case, this tool fixes it in seconds. Writers use it to clean up formatting, students use it to standardize essay titles, and developers use it to convert variable names between camelCase and snake_case. Simply paste your text, choose the target case format, and copy the result. Everything runs in your browser with no signup and no data leaving your device.",
+      "faq": [
+        {
+          "q": "What case formats are supported?",
+          "a": "UPPERCASE, lowercase, Sentence case, Title Case, camelCase, PascalCase, and snake_case."
+        },
+        {
+          "q": "Does it handle long text?",
+          "a": "Yes. You can convert paragraphs or entire documents without any length limits."
+        },
+        {
+          "q": "Is my text saved anywhere?",
+          "a": "No. Everything runs in your browser. Your text is never sent to a server."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <div style=\"display:grid;gap:1rem\">\n    <div>\n      <label for=\"tc-input\">Enter your text</label>\n      <textarea id=\"tc-input\" placeholder=\"Type or paste your text here...\" rows=\"6\"></textarea>\n    </div>\n    <div>\n      <label for=\"tc-format\">Convert to</label>\n      <select id=\"tc-format\" style=\"width:100%\">\n        <option value=\"uppercase\">UPPERCASE</option>\n        <option value=\"lowercase\">lowercase</option>\n        <option value=\"sentence\">Sentence case</option>\n        <option value=\"title\">Title Case</option>\n        <option value=\"camel\">camelCase</option>\n        <option value=\"pascal\">PascalCase</option>\n        <option value=\"snake\">snake_case</option>\n      </select>\n    </div>\n    <button id=\"tc-convert\" type=\"button\">Convert</button>\n    <div>\n      <label for=\"tc-output\">Result</label>\n      <textarea id=\"tc-output\" rows=\"6\" readonly style=\"width:100%\"></textarea>\n    </div>\n    <button id=\"tc-copy\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Copy to clipboard</button>\n  </div>\n</div>\n<script>\n(function() {\n  var input = document.getElementById('tc-input');\n  var format = document.getElementById('tc-format');\n  var output = document.getElementById('tc-output');\n  var convert = document.getElementById('tc-convert');\n  var copy = document.getElementById('tc-copy');\n  function toWords(text) { return text.trim().split(/\\s+/).filter(Boolean); }\n  function convertText() {\n    var text = input.value;\n    var fmt = format.value;\n    var result = '';\n    if (fmt === 'uppercase') result = text.toUpperCase();\n    else if (fmt === 'lowercase') result = text.toLowerCase();\n    else if (fmt === 'sentence') result = text.toLowerCase().replace(/(^\\s*[a-z])|[.!?]\\s+[a-z]/g, function(c) { return c.toUpperCase(); });\n    else if (fmt === 'title') result = toWords(text).map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(); }).join(' ');\n    else if (fmt === 'camel') result = toWords(text).map(function(w, i) { return i === 0 ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(); }).join('');\n    else if (fmt === 'pascal') result = toWords(text).map(function(w) { return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(); }).join('');\n    else if (fmt === 'snake') result = toWords(text).map(function(w) { return w.toLowerCase(); }).join('_');\n    output.value = result;\n  }\n  convert.addEventListener('click', convertText);\n  copy.addEventListener('click', function() { window.uhCopy(output.value); });\n  input.addEventListener('input', convertText);\n  format.addEventListener('change', convertText);\n})();\n</script>"
+    },
+    {
+      "slug": "lorem-ipsum-generator",
+      "name": "Lorem Ipsum Generator",
+      "summary": "Designers and developers constantly need placeholder text for wireframes, mockups, and prototypes before real content is available.",
+      "title": "Lorem Ipsum Generator — Free Online Dummy Text Tool",
+      "description": "Generate lorem ipsum placeholder text instantly. Choose the number of paragraphs, sentences, or words. Free online tool, no signup.",
+      "intro": "Lorem Ipsum generator is a free online tool that creates placeholder text for designers, developers, and content creators. Lorem ipsum dolor sit amet is the standard dummy text used in the printing and typesetting industry, and it remains the go-to filler for wireframes, mockups, and prototypes today. This tool lets you generate lorem ipsum text by the paragraph, sentence, or word, so you get exactly the right amount of filler content for your layout. The generated text looks natural and proportional, helping you evaluate design without being distracted by readable content. Everything runs in your browser with no signup.",
+      "faq": [
+        {
+          "q": "What is lorem ipsum text?",
+          "a": "Lorem ipsum is dummy text used as a placeholder in design and layout work. It looks like real text but has no meaning, so it does not distract from the design."
+        },
+        {
+          "q": "How many paragraphs can I generate?",
+          "a": "You can generate up to 20 paragraphs at once, or specify a custom number of sentences or words."
+        },
+        {
+          "q": "Can I use lorem ipsum text in my final product?",
+          "a": "No. Lorem ipsum is a placeholder. Replace it with real content before publishing."
+        }
+      ],
+      "body_html": "<div class=\"tool\">\n  <div style=\"display:grid;gap:1rem;max-width:28rem\">\n    <div>\n      <label for=\"li-count\">How many?</label>\n      <input type=\"number\" id=\"li-count\" value=\"3\" min=\"1\" max=\"20\" style=\"width:100%\">\n    </div>\n    <div>\n      <label for=\"li-type\">Type</label>\n      <select id=\"li-type\" style=\"width:100%\">\n        <option value=\"paragraphs\">Paragraphs</option>\n        <option value=\"sentences\">Sentences</option>\n        <option value=\"words\">Words</option>\n      </select>\n    </div>\n    <button id=\"li-generate\" type=\"button\">Generate</button>\n    <div>\n      <label for=\"li-output\">Generated text</label>\n      <textarea id=\"li-output\" rows=\"10\" readonly style=\"width:100%\"></textarea>\n    </div>\n    <button id=\"li-copy\" type=\"button\" style=\"background:var(--panel-2);color:var(--fg);border-color:var(--border)\">Copy to clipboard</button>\n  </div>\n</div>\n<script>\n(function() {\n  var LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';\n  var WORDS = LOREM.split(/\\s+/);\n  var count = document.getElementById('li-count');\n  var type = document.getElementById('li-type');\n  var output = document.getElementById('li-output');\n  var generate = document.getElementById('li-generate');\n  var copy = document.getElementById('li-copy');\n  function generateText() {\n    var n = Math.max(1, Math.min(20, parseInt(count.value, 10) || 3));\n    var t = type.value;\n    var result = '';\n    if (t === 'words') {\n      result = WORDS.slice(0, n).join(' ');\n    } else if (t === 'sentences') {\n      var sentences = LOREM.match(/[^.!?]+[.!?]+/g) || [LOREM];\n      result = [];\n      for (var i = 0; i < n; i++) result.push(sentences[i % sentences.length]);\n      result = result.join(' ');\n    } else {\n      var paragraphs = [];\n      for (var i = 0; i < n; i++) {\n        var start = (i * 5) % WORDS.length;\n        var words = [];\n        for (var j = 0; j < 5; j++) words.push(WORDS[(start + j) % WORDS.length]);\n        paragraphs.push(words.join(' '));\n      }\n      result = paragraphs.join('\\n\\n');\n    }\n    output.value = result;\n  }\n  generate.addEventListener('click', generateText);\n  copy.addEventListener('click', function() { window.uhCopy(output.value); });\n  generateText();\n})();\n</script>"
+    }
+  ]
+}

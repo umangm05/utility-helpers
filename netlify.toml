@@ -1,0 +1,32 @@
+# Netlify configuration for Utility Helpers.
+#
+# The site is plain static HTML committed to the repo root — there is NO build
+# step. `publish = "."` ships the repository as-is. The optional `[build]`
+# command below is commented out; uncomment it only if you want Netlify to
+# regenerate the HTML from site.config.json on every deploy (it needs Python,
+# which Netlify's build image provides).
+
+[build]
+  publish = "."
+  # command = "python3 scripts/build.py"
+
+# Long-lived immutable caching for hashed-free static assets.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Security headers (safe defaults for a static, no-backend site).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Serve the custom 404 page for unknown paths.
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404

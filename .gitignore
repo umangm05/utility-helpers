@@ -1,0 +1,14 @@
+# Python bytecode / caches from scripts/build.py
+__pycache__/
+*.py[cod]
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Local verification artifacts
+.verify/
+*.log
+
+# Local Netlify folder
+.netlify
