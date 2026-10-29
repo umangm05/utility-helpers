@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site:
+    name: Site (build + verify + known-answer tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright (for verify.py + test_tools.py)
+        run: |
+          pip install playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Build check (generator invariants, zero deps, no drift)
+        run: python3 scripts/build.py --check
+      - name: Verify routes (fresh-context per-route assertions)
+        run: python3 scripts/verify.py
+      - name: Known-answer tool tests (all 10 tools)
+        run: python3 scripts/test_tools.py
