@@ -33,4 +33,10 @@
   <url>
     <loc>https://utility-helpers.netlify.app/lorem-ipsum-generator/</loc>
   </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/privacy/</loc>
+  </url>
+  <url>
+    <loc>https://utility-helpers.netlify.app/suggest/</loc>
+  </url>
 </urlset>

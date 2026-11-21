@@ -12,3 +12,6 @@ Thumbs.db
 
 # Local Netlify folder
 .netlify
+
+# Node deps for netlify/functions (bundled by the Netlify CLI at deploy time)
+node_modules/

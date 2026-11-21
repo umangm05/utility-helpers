@@ -99,11 +99,12 @@
     <a class="brand" href="/">Utility<span>Helpers</span></a>
     <nav aria-label="Primary">
       <a href="/">All tools</a>
+      <a href="/suggest/">Suggest</a>
       <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
     </nav>
   </div>
 </header>
-<main id="main">
+<main id="main" data-uh-tool="color-picker">
   <div class="wrap">
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/">All tools</a> <span aria-hidden="true">/</span> Color Picker
@@ -185,6 +186,7 @@
   update(picker.value);
 })();
 </script>
+    <p class="suggest-cta"><a href="/suggest/?tool=color-picker">Suggest an improvement to this tool</a></p>
     <section class="faq" aria-labelledby="faq-heading">
       <h2 id="faq-heading">Frequently asked questions</h2>
       <details>
@@ -204,9 +206,23 @@
 </main>
 <footer class="site">
   <div class="wrap">
-    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
-    <p>Everything runs in your browser.</p>
+    <p>&copy; <span data-year>2026</span> Umang Mittal. Tools run in your browser &mdash; what you type never leaves your device.</p>
+    <p><a href="/privacy/">Privacy</a><span data-uh-js hidden> &middot; <button type="button" class="linkbtn" data-uh-consent-open>Privacy choices</button></span> &middot; <a href="/suggest/">Suggest a feature</a></p>
   </div>
 </footer>
+<section class="consent" id="uh-consent" aria-label="Privacy choices" hidden>
+  <p class="consent-title">Help us decide which tools to improve?</p>
+  <p>We would like to count which tools, options and buttons get used, and for how long.
+  What you type and the results stay on your device &mdash; we never see them.
+  <a href="/privacy/">How this works</a></p>
+  <p class="consent-note"><strong>Essential only</strong>: anonymous counts, no ID kept between visits.
+  <strong>Accept all</strong>: adds a random ID so we can tell when you come back.
+  <strong>Reject</strong>: nothing is sent.</p>
+  <div class="actions">
+    <button type="button" data-uh-choice="all">Accept all</button>
+    <button type="button" class="btn-ghost" data-uh-choice="essential">Essential only</button>
+    <button type="button" class="btn-ghost" data-uh-choice="reject">Reject</button>
+  </div>
+</section>
 </body>
 </html>

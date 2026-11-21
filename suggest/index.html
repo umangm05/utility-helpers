@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Suggest a feature or change — Utility Helpers</title>
+    <meta name="description" content="Ask for a new tool, a design change, report a bug, or tell us what to remove. Suggestions go straight to the people who decide what gets built.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/suggest/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Suggest a feature or change — Utility Helpers">
+    <meta property="og:description" content="Ask for a new tool, a design change, report a bug, or tell us what to remove. Suggestions go straight to the people who decide what gets built.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/suggest/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Suggest a feature or change — Utility Helpers">
+    <meta name="twitter:description" content="Ask for a new tool, a design change, report a bug, or tell us what to remove. Suggestions go straight to the people who decide what gets built.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="/suggest/">Suggest</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <h1>Suggest a feature or change</h1>
+    <p class="lede">Want a new tool, a better design, found a bug, or think something should go?
+    Tell us. Every suggestion is read when we decide what to build next.</p>
+    <form class="tool" id="uh-suggest" action="/api/suggest" method="post">
+      <div class="form-grid">
+        <div>
+          <label for="s-type">What kind of suggestion?</label>
+          <select id="s-type" name="type" required>
+            <option value="feature">New feature or tool</option>
+            <option value="design">Design or usability change</option>
+            <option value="bug">Something is broken</option>
+            <option value="remove">Remove or simplify something</option>
+          </select>
+        </div>
+        <div>
+          <label for="s-tool">Which tool is it about? (optional)</label>
+          <select id="s-tool" name="tool">
+            <option value="">The whole site / a new tool</option>
+          <option value="word-counter">Word Counter</option>
+          <option value="password-generator">Password Generator</option>
+          <option value="unit-converter">Unit Converter</option>
+          <option value="json-formatter">JSON Formatter</option>
+          <option value="base64-encoder-decoder">Base64 Encoder Decoder</option>
+          <option value="url-encoder-decoder">URL Encoder Decoder</option>
+          <option value="color-picker">Color Picker</option>
+          <option value="timestamp-converter">Timestamp Converter</option>
+          <option value="text-case-converter">Text Case Converter</option>
+          <option value="lorem-ipsum-generator">Lorem Ipsum Generator</option>
+          </select>
+        </div>
+        <div>
+          <label for="s-text">Your suggestion</label>
+          <textarea id="s-text" name="text" maxlength="1000" minlength="3" required rows="6"
+            aria-describedby="uh-suggest-count uh-suggest-note"></textarea>
+          <p id="uh-suggest-count" class="muted" style="margin:.35rem 0 0;font-size:.875rem">Up to 1000 characters.</p>
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label for="s-website">Leave this field empty</label>
+          <input id="s-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div><button type="submit">Send suggestion</button></div>
+        <p id="uh-suggest-status" role="status" aria-live="polite" style="margin:0"></p>
+        <p id="uh-suggest-note" class="muted" style="margin:0;font-size:.875rem">Please do not include
+        personal details. Only your text, the kind of suggestion and the tool are stored.
+        <a href="/privacy/">Privacy</a></p>
+      </div>
+    </form>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. Tools run in your browser &mdash; what you type never leaves your device.</p>
+    <p><a href="/privacy/">Privacy</a><span data-uh-js hidden> &middot; <button type="button" class="linkbtn" data-uh-consent-open>Privacy choices</button></span> &middot; <a href="/suggest/">Suggest a feature</a></p>
+  </div>
+</footer>
+<section class="consent" id="uh-consent" aria-label="Privacy choices" hidden>
+  <p class="consent-title">Help us decide which tools to improve?</p>
+  <p>We would like to count which tools, options and buttons get used, and for how long.
+  What you type and the results stay on your device &mdash; we never see them.
+  <a href="/privacy/">How this works</a></p>
+  <p class="consent-note"><strong>Essential only</strong>: anonymous counts, no ID kept between visits.
+  <strong>Accept all</strong>: adds a random ID so we can tell when you come back.
+  <strong>Reject</strong>: nothing is sent.</p>
+  <div class="actions">
+    <button type="button" data-uh-choice="all">Accept all</button>
+    <button type="button" class="btn-ghost" data-uh-choice="essential">Essential only</button>
+    <button type="button" class="btn-ghost" data-uh-choice="reject">Reject</button>
+  </div>
+</section>
+</body>
+</html>
