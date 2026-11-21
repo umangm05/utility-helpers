@@ -67,17 +67,22 @@ def word_counter_html() -> str:
 
 def password_generator_html() -> str:
     return '''\
+<style>
+  /* Whole row is the tap target: 44px tall, checkbox itself >= 24px (WCAG 2.2 SC 2.5.8). */
+  .pg-option { display:flex; align-items:center; gap:.75rem; min-height:44px; padding:0 .25rem; cursor:pointer; margin:0; }
+  .pg-option input[type=checkbox] { width:24px; height:24px; margin:0; flex:none; accent-color:var(--accent); cursor:pointer; }
+</style>
 <div class="tool">
   <div style="display:grid;gap:1rem;max-width:24rem">
     <div>
       <label for="pg-length">Password length</label>
       <input type="number" id="pg-length" value="16" min="4" max="128" style="width:100%">
     </div>
-    <div style="display:grid;gap:.5rem">
-      <label><input type="checkbox" id="pg-upper" checked> Uppercase (A-Z)</label>
-      <label><input type="checkbox" id="pg-lower" checked> Lowercase (a-z)</label>
-      <label><input type="checkbox" id="pg-numbers" checked> Numbers (0-9)</label>
-      <label><input type="checkbox" id="pg-symbols" checked> Symbols (!@#$...)</label>
+    <div class="pg-options" style="display:grid;gap:.25rem">
+      <label class="pg-option"><input type="checkbox" id="pg-upper" checked> Uppercase (A-Z)</label>
+      <label class="pg-option"><input type="checkbox" id="pg-lower" checked> Lowercase (a-z)</label>
+      <label class="pg-option"><input type="checkbox" id="pg-numbers" checked> Numbers (0-9)</label>
+      <label class="pg-option"><input type="checkbox" id="pg-symbols" checked> Symbols (!@#$...)</label>
     </div>
     <button id="pg-generate" type="button">Generate password</button>
     <div>
@@ -97,19 +102,21 @@ def password_generator_html() -> str:
   var output = document.getElementById('pg-output');
   var generate = document.getElementById('pg-generate');
   var copy = document.getElementById('pg-copy');
+  function randInt(n) { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
   function generatePassword() {
-    var chars = '';
-    if (upper.checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (lower.checked) chars += 'abcdefghijklmnopqrstuvwxyz';
-    if (numbers.checked) chars += '0123456789';
-    if (symbols.checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    if (!chars) { output.value = ''; return; }
+    var sets = [];
+    if (upper.checked) sets.push('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+    if (lower.checked) sets.push('abcdefghijklmnopqrstuvwxyz');
+    if (numbers.checked) sets.push('0123456789');
+    if (symbols.checked) sets.push('!@#$%^&*()_+-=[]{}|;:,.<>?');
+    if (!sets.length) { output.value = ''; return; }
+    var chars = sets.join('');
     var length = Math.max(4, Math.min(128, parseInt(len.value, 10) || 16));
-    var arr = new Uint32Array(length);
-    crypto.getRandomValues(arr);
-    var pwd = '';
-    for (var i = 0; i < length; i++) pwd += chars[arr[i] % chars.length];
-    output.value = pwd;
+    // One character from every selected set (length >= 4 >= sets), the rest from the pool, then shuffle.
+    var pwd = sets.map(function(set) { return set[randInt(set.length)]; });
+    while (pwd.length < length) pwd.push(chars[randInt(chars.length)]);
+    for (var i = pwd.length - 1; i > 0; i--) { var j = randInt(i + 1); var t = pwd[i]; pwd[i] = pwd[j]; pwd[j] = t; }
+    output.value = pwd.join('');
   }
   generate.addEventListener('click', generatePassword);
   copy.addEventListener('click', function() { window.uhCopy(output.value); });
@@ -431,7 +438,6 @@ def timestamp_converter_html() -> str:
       <label for="ts-input">Unix timestamp (seconds or milliseconds)</label>
       <input type="number" id="ts-input" placeholder="e.g. 1697452800" style="width:100%;font-family:monospace">
     </div>
-    <button id="ts-convert" type="button">Convert to date</button>
     <div>
       <label>Human-readable date</label>
       <div id="ts-output" style="padding:.75rem;border:1px solid var(--border);border-radius:8px;background:var(--panel-2);font-family:monospace">—</div>
@@ -441,7 +447,6 @@ def timestamp_converter_html() -> str:
       <label for="ts-date-input">Date to convert</label>
       <input type="datetime-local" id="ts-date-input" style="width:100%">
     </div>
-    <button id="ts-to-timestamp" type="button" style="background:var(--panel-2);color:var(--fg);border-color:var(--border)">Convert to timestamp</button>
     <div>
       <label>Unix timestamp</label>
       <div id="ts-timestamp-output" style="padding:.75rem;border:1px solid var(--border);border-radius:8px;background:var(--panel-2);font-family:monospace">—</div>
@@ -452,10 +457,8 @@ def timestamp_converter_html() -> str:
 (function() {
   var tsInput = document.getElementById('ts-input');
   var tsOutput = document.getElementById('ts-output');
-  var convert = document.getElementById('ts-convert');
   var dateInput = document.getElementById('ts-date-input');
   var tsTimestampOutput = document.getElementById('ts-timestamp-output');
-  var toTimestamp = document.getElementById('ts-to-timestamp');
   function convertTs() {
     var val = parseFloat(tsInput.value);
     if (isNaN(val)) { tsOutput.textContent = '—'; return; }
@@ -472,9 +475,10 @@ def timestamp_converter_html() -> str:
     var sec = Math.floor(d.getTime() / 1000);
     tsTimestampOutput.textContent = sec + ' (seconds) / ' + d.getTime() + ' (milliseconds)';
   }
-  convert.addEventListener('click', convertTs);
-  toTimestamp.addEventListener('click', convertDate);
+  // Both directions convert as you type -- no Convert buttons (they were no-ops; committee 2026-11-21).
   tsInput.addEventListener('input', convertTs);
+  dateInput.addEventListener('input', convertDate);
+  dateInput.addEventListener('change', convertDate);
 })();
 </script>'''
 
@@ -499,7 +503,6 @@ def text_case_converter_html() -> str:
         <option value="snake">snake_case</option>
       </select>
     </div>
-    <button id="tc-convert" type="button">Convert</button>
     <div>
       <label for="tc-output">Result</label>
       <textarea id="tc-output" rows="6" readonly style="width:100%"></textarea>
@@ -512,7 +515,6 @@ def text_case_converter_html() -> str:
   var input = document.getElementById('tc-input');
   var format = document.getElementById('tc-format');
   var output = document.getElementById('tc-output');
-  var convert = document.getElementById('tc-convert');
   var copy = document.getElementById('tc-copy');
   function toWords(text) { return text.trim().split(/\\s+/).filter(Boolean); }
   function convertText() {
@@ -528,10 +530,10 @@ def text_case_converter_html() -> str:
     else if (fmt === 'snake') result = toWords(text).map(function(w) { return w.toLowerCase(); }).join('_');
     output.value = result;
   }
-  convert.addEventListener('click', convertText);
   copy.addEventListener('click', function() { window.uhCopy(output.value); });
   input.addEventListener('input', convertText);
   format.addEventListener('change', convertText);
+  convertText();   // pre-filled text (back/forward cache, autofill) converts on load
 })();
 </script>'''
 
@@ -552,7 +554,6 @@ def lorem_ipsum_html() -> str:
         <option value="words">Words</option>
       </select>
     </div>
-    <button id="li-generate" type="button">Generate</button>
     <div>
       <label for="li-output">Generated text</label>
       <textarea id="li-output" rows="10" readonly style="width:100%"></textarea>
@@ -567,7 +568,6 @@ def lorem_ipsum_html() -> str:
   var count = document.getElementById('li-count');
   var type = document.getElementById('li-type');
   var output = document.getElementById('li-output');
-  var generate = document.getElementById('li-generate');
   var copy = document.getElementById('li-copy');
   function generateText() {
     var n = Math.max(1, Math.min(20, parseInt(count.value, 10) || 3));
@@ -592,7 +592,9 @@ def lorem_ipsum_html() -> str:
     }
     output.value = result;
   }
-  generate.addEventListener('click', generateText);
+  // Regenerates on every option change -- no Generate button (committee 2026-11-21).
+  count.addEventListener('input', generateText);
+  type.addEventListener('change', generateText);
   copy.addEventListener('click', function() { window.uhCopy(output.value); });
   generateText();
 })();
