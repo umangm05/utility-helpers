@@ -1,15 +1,24 @@
 # Utility Helpers
 
-Free browser tools that run **entirely on your device**. No uploads, no accounts,
-no tracking, no backend.
+Free browser tools that run **entirely on your device**. What you type, paste or
+generate is never uploaded, and there are no accounts.
+
+**What we do collect, and only if you allow it:** a consent banner on every page
+offers *Accept all*, *Essential only* or *Reject*. With consent, the site sends
+anonymous, first-party usage events (which tool, which options and buttons, time
+on page, errors) so we can see which tools to improve or drop. Reject sends
+nothing. Tool input and output are never collected. Full details:
+[/privacy/](https://utility-helpers.netlify.app/privacy/).
 
 Live site: https://utility-helpers.netlify.app
 
 ## What this is
 
-A static, serverless site. Every page is plain HTML committed to the repository
-root — there is **no framework runtime and no external CDN dependency** for core
-functionality. Netlify publishes the repo as-is.
+A static site. Every page is plain HTML committed to the repository root — there
+is **no framework runtime and no external CDN dependency** for core
+functionality. Netlify publishes the repo as-is. The only server code is two
+small first-party Netlify Functions (usage events and the suggestion form) plus a
+daily retention sweep — no tool depends on them.
 
 ```
 .
@@ -17,13 +26,21 @@ functionality. Netlify publishes the repo as-is.
 ├── scripts/build.py      ← stdlib-only generator; writes the HTML below
 ├── index.html            ← GENERATED — home page with the tool grid
 ├── <tool-slug>/index.html← GENERATED — one page per tool
+├── privacy/index.html    ← GENERATED — what is (and is never) collected
+├── suggest/index.html    ← GENERATED — public suggestion form
 ├── 404.html              ← GENERATED — not-found page (noindex)
 ├── sitemap.xml           ← GENERATED — indexable URLs
 ├── robots.txt            ← GENERATED — allow all + sitemap pointer
 ├── assets/
 │   ├── site.css          ← GENERATED — styles
-│   ├── site.js           ← GENERATED — tiny helpers (no framework)
+│   ├── site.js           ← GENERATED — helpers + consent banner + usage events
 │   └── favicon.svg       ← GENERATED
+├── netlify/
+│   ├── functions/        ← e.mjs (/api/e), suggest.mjs (/api/suggest), retention.mjs (@daily)
+│   ├── lib/core.mjs      ← validation allowlists + handlers (unit-tested)
+│   ├── lib/tool-slugs.mjs← GENERATED — tool slugs the suggestion form accepts
+│   └── tests/            ← `npm test`
+├── package.json          ← @netlify/blobs (functions only; the site has no build)
 └── netlify.toml          ← publish = "." (no build step)
 ```
 
@@ -78,6 +95,42 @@ The generator enforces, and will refuse to build on:
 
 It warns (without failing) when a title exceeds 60 chars or a description 155.
 
+## Usage analytics and suggestions
+
+Decisions D-UH-CONSENT-ANALYTICS and D-UH-SUGGEST-FORM (2026-11-21).
+
+| Choice | Sent to `/api/e` | Stored in the browser |
+|---|---|---|
+| no choice yet | nothing | nothing |
+| Reject | nothing | `uh-consent` only |
+| Essential only | anonymous events + per-tab session id | `uh-consent`, `uh-sid` (sessionStorage) |
+| Accept all | the same + random persistent visitor id | `uh-consent`, `uh-sid`, `uh-vid` |
+
+- **Events** (`assets/site.js`, generated from `scripts/build.py`): `view`, `use`,
+  `opt` (value of a `<select>`/checkbox/radio/range, or a number input marked
+  `data-uh-opt`), `act` (button id), `time` (visible ms), `err` (error-box id or JS
+  error name — never the message). Text inputs, textareas and unmarked number
+  inputs are never read. Batched and sent with `sendBeacon`.
+- **Server** (`netlify/lib/core.mjs`): every field passes an allowlist; anything
+  else is dropped. No IP address or user agent is stored. Blobs store `uh-events`,
+  keys `YYYY-MM-DD/<ms>-<rand>`; raw events are deleted after 90 days by
+  `retention.mjs`.
+- **Suggestions**: `/suggest/` posts to `/api/suggest` (type
+  feature/design/bug/remove, ≤ 1000 chars, optional tool). Honeypot field, a
+  platform rate limit (3 per 3 min per IP) and a per-client hourly cap (5, keyed by
+  a daily hash of the IP salted with the secret `UH_RL_SALT`, never the raw IP;
+  buckets deleted after 2 days). `UH_RL_SALT` must be set in Netlify env: without
+  it the per-client cap is skipped (warning logged) — there is no fallback salt. Stored in `uh-suggestions`. Works
+  without JavaScript (plain form POST + redirect).
+- **Export**: the Hermes host pulls both stores daily with
+  `common/scripts/uh_usage_export.py` (aggregates only, zero LLM).
+- **Tests**: `python3 scripts/test_consent.py` (real browser; counts `/api/e`
+  requests from Chrome's own net-log; `--base <url>` runs it against a deploy) and
+  `npm test` (function handlers).
+
+When you add a tool: mark number inputs that are *settings* (lengths, counts)
+with `data-uh-opt`; leave inputs that hold the user's content unmarked.
+
 ## Deploy
 
 The site is live at **https://utility-helpers.netlify.app**.
@@ -92,6 +145,7 @@ cd /root/projects/utility-helpers
 npx netlify deploy --prod
 ```
 
+Run `npm ci` first so the CLI can bundle the functions with `@netlify/blobs`.
 `netlify.toml` sets `publish = "."` (no build step), security headers,
 `/assets/*` caching, and a custom 404 fallback.
 
@@ -134,7 +188,10 @@ Once deployed, verify at `https://utility-helpers.netlify.app/google-site-verifi
 
 ## Conventions
 
-- **No backend, ever.** A tool that needs a server does not belong here.
+- **No tool needs a backend.** A tool that needs a server does not belong here.
+  The only functions are the consent-gated usage counter and the suggestion form.
+- **Never collect tool content.** Analytics may record which control was used,
+  never what was typed into it or produced by it.
 - **No external CDN** for core functionality — self-host CSS/JS.
 - **Progressive enhancement:** the page must render and read correctly with
   JavaScript disabled; JS only adds interaction.

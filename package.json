@@ -1,0 +1,12 @@
+{
+  "name": "utility-helpers",
+  "private": true,
+  "type": "module",
+  "description": "Netlify Functions for anonymous, consent-gated usage counts and the suggestion form. The site itself has no build step.",
+  "scripts": {
+    "test": "node --test netlify/tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^10.0.0"
+  }
+}

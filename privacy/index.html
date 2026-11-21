@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Privacy — what Utility Helpers counts and what it never sees</title>
+    <meta name="description" content="Tool input never leaves your device. With your consent we count which tools, options and buttons get used. Reject and nothing is sent.">
+    <link rel="canonical" href="https://utility-helpers.netlify.app/privacy/">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#f59e0b">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Utility Helpers">
+    <meta property="og:title" content="Privacy — what Utility Helpers counts and what it never sees">
+    <meta property="og:description" content="Tool input never leaves your device. With your consent we count which tools, options and buttons get used. Reject and nothing is sent.">
+    <meta property="og:url" content="https://utility-helpers.netlify.app/privacy/">
+    <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Privacy — what Utility Helpers counts and what it never sees">
+    <meta name="twitter:description" content="Tool input never leaves your device. With your consent we count which tools, options and buttons get used. Reject and nothing is sent.">
+    <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
+    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script defer src="/assets/site.js"></script>
+    <meta name="uh-ads-client" content="ca-pub-1022245151400390">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/">All tools</a>
+      <a href="/suggest/">Suggest</a>
+      <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <h1>Privacy</h1>
+    <p class="lede">Every tool runs in your browser. What you type, paste, generate or convert
+    never leaves your device. If you allow it, we count how the tools are used so we know
+    which ones to improve and which ones nobody needs.</p>
+    <div class="prose">
+    <p>Your current choice: <strong data-uh-consent-state>not chosen yet</strong>.
+    <span data-uh-js hidden><button type="button" class="linkbtn" data-uh-consent-open>Change your privacy choices</button></span></p>
+
+    <h2>The three choices</h2>
+    <table>
+      <thead><tr><th scope="col">Choice</th><th scope="col">What is sent</th><th scope="col">What is stored in your browser</th></tr></thead>
+      <tbody>
+        <tr><td>Reject</td><td>Nothing.</td><td>Only the fact that you chose Reject.</td></tr>
+        <tr><td>Essential only</td><td>Anonymous usage events (listed below) with a random session id that is
+          forgotten when you close the tab.</td><td>Your choice, plus the per-tab session id.</td></tr>
+        <tr><td>Accept all</td><td>The same events, plus a random visitor id so we can see whether people come
+          back and which tools they use together. Google ads are also loaded (see below).</td><td>Your choice, the session id,
+          the random visitor id, and Google&rsquo;s advertising cookies.</td></tr>
+      </tbody>
+    </table>
+    <p>Nothing is sent before you choose. You can change your mind at any time from the
+    &ldquo;Privacy choices&rdquo; link at the bottom of every page; switching to Reject or
+    Essential only deletes the visitor id from your browser.</p>
+
+    <h2>What a usage event contains</h2>
+    <ul>
+      <li>Which page was opened and which tool was used.</li>
+      <li>Which options were picked (for example a unit pair, a text case, a password length).</li>
+      <li>Which buttons were pressed (for example Copy, Format, Encode) and whether the tool showed an error.</li>
+      <li>How long the page was visible.</li>
+      <li>A rough device class: mobile, tablet or desktop.</li>
+    </ul>
+
+    <h2>What we never collect</h2>
+    <ul>
+      <li>Anything you type, paste or get back from a tool: text, JSON, passwords, URLs, colours, dates.</li>
+      <li>Your name, email or any account. There are no accounts.</li>
+      <li>Your IP address, browser fingerprint or user agent. Our code never stores them; the only device detail is mobile, tablet or desktop.</li>
+      <li>Data for anyone else. There are no third-party analytics scripts. The only third party
+      is Google AdSense, and only if you choose Accept all.</li>
+    </ul>
+
+    <h2>Ads</h2>
+    <p>The site is kept free by Google AdSense. The ad script is loaded <strong>only after you
+    choose Accept all</strong>. With no choice, Essential only or Reject, your browser never
+    contacts Google&rsquo;s ad servers. When it is loaded, Google may set cookies and use them to
+    show and measure ads; that is governed by
+    <a href="https://policies.google.com/technologies/ads">Google&rsquo;s advertising policy</a>,
+    not by us. Ads never see what you type into a tool. If you later switch to Essential only or
+    Reject, ads stop from the next page you open; Google&rsquo;s cookies can be cleared in your
+    browser settings.</p>
+
+    <h2>Where it goes and for how long</h2>
+    <p>Events go to a small first-party function on this site and are stored in the site&rsquo;s own
+    storage on Netlify, our host. Raw events are deleted after 90 days. We keep only
+    aggregated counts, such as &ldquo;Word Counter was used 120 times this week&rdquo;.</p>
+
+    <h2>Suggestions</h2>
+    <p>The <a href="/suggest/">suggestion form</a> is separate from the choices above: it sends only
+    what you write in it, plus the kind of suggestion and the tool it is about. Please leave
+    personal details out. Suggestions are read by the people deciding what to build next.</p>
+    <p>To stop the form being flooded, each submission is counted against a one-way hash of
+    your IP address mixed with a secret value and the current date. The hash cannot be turned
+    back into your IP, is never stored with your suggestion, and is deleted after 2 days.
+    Your IP address itself is never stored.</p>
+
+    <h2>The code</h2>
+    <p>The site is open source. You can read exactly what is sent in
+    <a href="https://github.com/umangm05/utility-helpers/blob/master/scripts/build.py" rel="noopener">scripts/build.py</a> and
+    <a href="https://github.com/umangm05/utility-helpers/blob/master/netlify/lib/core.mjs" rel="noopener">netlify/lib/core.mjs</a>.</p>
+    </div>
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p>&copy; <span data-year>2026</span> Umang Mittal. Tools run in your browser &mdash; what you type never leaves your device.</p>
+    <p><a href="/privacy/">Privacy</a><span data-uh-js hidden> &middot; <button type="button" class="linkbtn" data-uh-consent-open>Privacy choices</button></span> &middot; <a href="/suggest/">Suggest a feature</a></p>
+  </div>
+</footer>
+<section class="consent" id="uh-consent" aria-label="Privacy choices" hidden>
+  <p class="consent-title">Help us decide which tools to improve?</p>
+  <p>We would like to count which tools, options and buttons get used, and for how long.
+  What you type and the results stay on your device &mdash; we never see them.
+  <a href="/privacy/">How this works</a></p>
+  <p class="consent-note"><strong>Essential only</strong>: anonymous counts, no ID kept between visits.
+  <strong>Accept all</strong>: adds a random ID so we can tell when you come back, and shows
+  Google ads, which use cookies.
+  <strong>Reject</strong>: nothing is sent.</p>
+  <div class="actions">
+    <button type="button" data-uh-choice="all">Accept all</button>
+    <button type="button" class="btn-ghost" data-uh-choice="essential">Essential only</button>
+    <button type="button" class="btn-ghost" data-uh-choice="reject">Reject</button>
+  </div>
+</section>
+</body>
+</html>

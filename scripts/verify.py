@@ -110,6 +110,9 @@ def on_disk_html_routes(root: Path) -> list[str]:
     """Every HTML page actually emitted into the tree."""
     out = []
     for p in sorted(root.rglob("index.html")):
+        # Dependency/tooling trees are not part of the published site.
+        if any(part in ("node_modules", ".netlify", ".git") for part in p.relative_to(root).parts):
+            continue
         rel = "/" + str(p.parent.relative_to(root))
         out.append("/" if rel == "/." else rel.rstrip("/") + "/")
     for p in sorted(root.glob("*.html")):

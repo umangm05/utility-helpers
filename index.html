@@ -4,32 +4,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Utility Helpers — Free browser tools that run entirely on yo</title>
-    <meta name="description" content="Free, fast, private browser tools. Every utility runs entirely in your browser — nothing is uploaded, nothing is stored, no account required.">
+    <meta name="description" content="Free, fast, private browser tools. Every utility runs entirely in your browser — what you type is never uploaded, and no account is required.">
     <link rel="canonical" href="https://utility-helpers.netlify.app/">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#f59e0b">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Utility Helpers">
     <meta property="og:title" content="Utility Helpers — Free browser tools that run entirely on yo">
-    <meta property="og:description" content="Free, fast, private browser tools. Every utility runs entirely in your browser — nothing is uploaded, nothing is stored, no account required.">
+    <meta property="og:description" content="Free, fast, private browser tools. Every utility runs entirely in your browser — what you type is never uploaded, and no account is required.">
     <meta property="og:url" content="https://utility-helpers.netlify.app/">
     <meta property="og:image" content="https://utility-helpers.netlify.app/assets/og.png">
     <meta property="og:locale" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Utility Helpers — Free browser tools that run entirely on yo">
-    <meta name="twitter:description" content="Free, fast, private browser tools. Every utility runs entirely in your browser — nothing is uploaded, nothing is stored, no account required.">
+    <meta name="twitter:description" content="Free, fast, private browser tools. Every utility runs entirely in your browser — what you type is never uploaded, and no account is required.">
     <meta name="twitter:image" content="https://utility-helpers.netlify.app/assets/og.png">
     <link rel="stylesheet" href="/assets/site.css">
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
     <script defer src="/assets/site.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1022245151400390" crossorigin="anonymous"></script>
+    <meta name="uh-ads-client" content="ca-pub-1022245151400390">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Utility Helpers",
   "url": "https://utility-helpers.netlify.app/",
-  "description": "Free, fast, private browser tools. Every utility runs entirely in your browser — nothing is uploaded, nothing is stored, no account required.",
+  "description": "Free, fast, private browser tools. Every utility runs entirely in your browser — what you type is never uploaded, and no account is required.",
   "inLanguage": "en"
 }
 </script>
@@ -121,6 +121,7 @@
     <a class="brand" href="/">Utility<span>Helpers</span></a>
     <nav aria-label="Primary">
       <a href="/">All tools</a>
+      <a href="/suggest/">Suggest</a>
       <a href="https://github.com/umangm05/utility-helpers" rel="noopener">GitHub</a>
     </nav>
   </div>
@@ -128,7 +129,7 @@
 <main id="main">
   <div class="wrap">
     <h1>Utility Helpers</h1>
-    <p class="lede">Free, fast, private browser tools. Every utility runs entirely in your browser — nothing is uploaded, nothing is stored, no account required.</p>
+    <p class="lede">Free, fast, private browser tools. Every utility runs entirely in your browser — what you type is never uploaded, and no account is required.</p>
       <div class="grid">
         <a class="tile" href="/word-counter/">
           <p class="tile-title">Word Counter</p>
@@ -175,9 +176,24 @@
 </main>
 <footer class="site">
   <div class="wrap">
-    <p>&copy; <span data-year>2026</span> Umang Mittal. No tracking, no uploads.</p>
-    <p>Everything runs in your browser.</p>
+    <p>&copy; <span data-year>2026</span> Umang Mittal. Tools run in your browser &mdash; what you type never leaves your device.</p>
+    <p><a href="/privacy/">Privacy</a><span data-uh-js hidden> &middot; <button type="button" class="linkbtn" data-uh-consent-open>Privacy choices</button></span> &middot; <a href="/suggest/">Suggest a feature</a></p>
   </div>
 </footer>
+<section class="consent" id="uh-consent" aria-label="Privacy choices" hidden>
+  <p class="consent-title">Help us decide which tools to improve?</p>
+  <p>We would like to count which tools, options and buttons get used, and for how long.
+  What you type and the results stay on your device &mdash; we never see them.
+  <a href="/privacy/">How this works</a></p>
+  <p class="consent-note"><strong>Essential only</strong>: anonymous counts, no ID kept between visits.
+  <strong>Accept all</strong>: adds a random ID so we can tell when you come back, and shows
+  Google ads, which use cookies.
+  <strong>Reject</strong>: nothing is sent.</p>
+  <div class="actions">
+    <button type="button" data-uh-choice="all">Accept all</button>
+    <button type="button" class="btn-ghost" data-uh-choice="essential">Essential only</button>
+    <button type="button" class="btn-ghost" data-uh-choice="reject">Reject</button>
+  </div>
+</section>
 </body>
 </html>
