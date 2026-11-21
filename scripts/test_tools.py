@@ -159,7 +159,6 @@ def test_timestamp_converter(page, base: str) -> dict:
     """Test: timestamp 0 → 1970-01-01."""
     page.goto(base + "/timestamp-converter/", wait_until="domcontentloaded")
     page.fill("#ts-input", "0")
-    page.click("#ts-convert")
     page.wait_for_timeout(200)
     output = page.text_content("#ts-output")
     observed = {"output": output}
@@ -184,7 +183,6 @@ def test_lorem_ipsum(page, base: str) -> dict:
     page.goto(base + "/lorem-ipsum-generator/", wait_until="domcontentloaded")
     page.fill("#li-count", "1")
     page.select_option("#li-type", "paragraphs")
-    page.click("#li-generate")
     page.wait_for_timeout(200)
     output = page.input_value("#li-output")
     observed = {"output_preview": output[:100], "length": len(output)}

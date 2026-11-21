@@ -116,7 +116,6 @@
       <label for="ts-input">Unix timestamp (seconds or milliseconds)</label>
       <input type="number" id="ts-input" placeholder="e.g. 1697452800" style="width:100%;font-family:monospace">
     </div>
-    <button id="ts-convert" type="button">Convert to date</button>
     <div>
       <label>Human-readable date</label>
       <div id="ts-output" style="padding:.75rem;border:1px solid var(--border);border-radius:8px;background:var(--panel-2);font-family:monospace">—</div>
@@ -126,7 +125,6 @@
       <label for="ts-date-input">Date to convert</label>
       <input type="datetime-local" id="ts-date-input" style="width:100%">
     </div>
-    <button id="ts-to-timestamp" type="button" style="background:var(--panel-2);color:var(--fg);border-color:var(--border)">Convert to timestamp</button>
     <div>
       <label>Unix timestamp</label>
       <div id="ts-timestamp-output" style="padding:.75rem;border:1px solid var(--border);border-radius:8px;background:var(--panel-2);font-family:monospace">—</div>
@@ -137,10 +135,8 @@
 (function() {
   var tsInput = document.getElementById('ts-input');
   var tsOutput = document.getElementById('ts-output');
-  var convert = document.getElementById('ts-convert');
   var dateInput = document.getElementById('ts-date-input');
   var tsTimestampOutput = document.getElementById('ts-timestamp-output');
-  var toTimestamp = document.getElementById('ts-to-timestamp');
   function convertTs() {
     var val = parseFloat(tsInput.value);
     if (isNaN(val)) { tsOutput.textContent = '—'; return; }
@@ -157,9 +153,10 @@
     var sec = Math.floor(d.getTime() / 1000);
     tsTimestampOutput.textContent = sec + ' (seconds) / ' + d.getTime() + ' (milliseconds)';
   }
-  convert.addEventListener('click', convertTs);
-  toTimestamp.addEventListener('click', convertDate);
+  // Both directions convert as you type -- no Convert buttons (they were no-ops; committee 2026-11-21).
   tsInput.addEventListener('input', convertTs);
+  dateInput.addEventListener('input', convertDate);
+  dateInput.addEventListener('change', convertDate);
 })();
 </script>
     <section class="faq" aria-labelledby="faq-heading">

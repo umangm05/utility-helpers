@@ -124,7 +124,6 @@
         <option value="words">Words</option>
       </select>
     </div>
-    <button id="li-generate" type="button">Generate</button>
     <div>
       <label for="li-output">Generated text</label>
       <textarea id="li-output" rows="10" readonly style="width:100%"></textarea>
@@ -139,7 +138,6 @@
   var count = document.getElementById('li-count');
   var type = document.getElementById('li-type');
   var output = document.getElementById('li-output');
-  var generate = document.getElementById('li-generate');
   var copy = document.getElementById('li-copy');
   function generateText() {
     var n = Math.max(1, Math.min(20, parseInt(count.value, 10) || 3));
@@ -164,7 +162,9 @@
     }
     output.value = result;
   }
-  generate.addEventListener('click', generateText);
+  // Regenerates on every option change -- no Generate button (committee 2026-11-21).
+  count.addEventListener('input', generateText);
+  type.addEventListener('change', generateText);
   copy.addEventListener('click', function() { window.uhCopy(output.value); });
   generateText();
 })();

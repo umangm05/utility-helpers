@@ -128,7 +128,6 @@
         <option value="snake">snake_case</option>
       </select>
     </div>
-    <button id="tc-convert" type="button">Convert</button>
     <div>
       <label for="tc-output">Result</label>
       <textarea id="tc-output" rows="6" readonly style="width:100%"></textarea>
@@ -141,7 +140,6 @@
   var input = document.getElementById('tc-input');
   var format = document.getElementById('tc-format');
   var output = document.getElementById('tc-output');
-  var convert = document.getElementById('tc-convert');
   var copy = document.getElementById('tc-copy');
   function toWords(text) { return text.trim().split(/\s+/).filter(Boolean); }
   function convertText() {
@@ -157,10 +155,10 @@
     else if (fmt === 'snake') result = toWords(text).map(function(w) { return w.toLowerCase(); }).join('_');
     output.value = result;
   }
-  convert.addEventListener('click', convertText);
   copy.addEventListener('click', function() { window.uhCopy(output.value); });
   input.addEventListener('input', convertText);
   format.addEventListener('change', convertText);
+  convertText();   // pre-filled text (back/forward cache, autofill) converts on load
 })();
 </script>
     <section class="faq" aria-labelledby="faq-heading">
