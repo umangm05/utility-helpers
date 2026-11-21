@@ -19,9 +19,9 @@ export default async (req, context) =>
     {
       toolSlugs,
       ip: context.ip,
-      // The salt only needs to be unguessable from outside; the site id is not
-      // public in page HTML, and the bucket rotates daily anyway.
-      salt: process.env.UH_RL_SALT || context.site?.id || "uh",
+      // Secret, never a fallback: a guessable salt makes the daily IP hash
+      // reversible. Unset => core skips the per-client cap and logs a warning.
+      salt: process.env.UH_RL_SALT || "",
     },
   );
 

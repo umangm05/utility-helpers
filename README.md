@@ -118,7 +118,9 @@ Decisions D-UH-CONSENT-ANALYTICS and D-UH-SUGGEST-FORM (2026-11-21).
 - **Suggestions**: `/suggest/` posts to `/api/suggest` (type
   feature/design/bug/remove, ≤ 1000 chars, optional tool). Honeypot field, a
   platform rate limit (3 per 3 min per IP) and a per-client hourly cap (5, keyed by
-  a salted daily hash, never the raw IP). Stored in `uh-suggestions`. Works
+  a daily hash of the IP salted with the secret `UH_RL_SALT`, never the raw IP;
+  buckets deleted after 2 days). `UH_RL_SALT` must be set in Netlify env: without
+  it the per-client cap is skipped (warning logged) — there is no fallback salt. Stored in `uh-suggestions`. Works
   without JavaScript (plain form POST + redirect).
 - **Export**: the Hermes host pulls both stores daily with
   `common/scripts/uh_usage_export.py` (aggregates only, zero LLM).

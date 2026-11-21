@@ -129,6 +129,13 @@ export function sanitizeSuggestion(fields, toolSlugs, now = new Date()) {
   return { ok: true, spam: false, record };
 }
 
+let warnedNoSalt = false;
+function warnNoSalt() {
+  if (warnedNoSalt) return;
+  warnedNoSalt = true;
+  console.warn("uh: UH_RL_SALT is not set; per-client suggestion cap disabled (platform rate limit still applies)");
+}
+
 /** One-way, daily-salted client fingerprint used ONLY as a rate-limit bucket key. */
 export function clientBucket(ip, now, salt) {
   const h = createHash("sha256").update(`${salt}|${dayKey(now)}|${ip || "unknown"}`).digest("hex");
@@ -202,10 +209,18 @@ export async function handleSuggest(req, stores, { toolSlugs, ip, salt }, now = 
   if (!res.ok) return reply(400, res.reason);
   if (res.spam) return reply(200, "ok"); // pretend success; store nothing
 
-  const bucket = clientBucket(ip, now, salt);
-  const seen = (await stores.ratelimit.get(bucket, { type: "json" })) || { n: 0 };
-  if (seen.n >= SUGGESTIONS_PER_HOUR) return reply(429, "rate-limited");
-  await stores.ratelimit.setJSON(bucket, { n: seen.n + 1 });
+  // Per-client hourly cap. Needs a secret salt (UH_RL_SALT): with a guessable
+  // salt the daily hash of an IP can be brute-forced back to the IP, so with no
+  // salt we skip the cap entirely (the platform rate limit in suggest.mjs still
+  // applies) rather than store a reversible key.
+  if (salt) {
+    const bucket = clientBucket(ip, now, salt);
+    const seen = (await stores.ratelimit.get(bucket, { type: "json" })) || { n: 0 };
+    if (seen.n >= SUGGESTIONS_PER_HOUR) return reply(429, "rate-limited");
+    await stores.ratelimit.setJSON(bucket, { n: seen.n + 1 });
+  } else {
+    warnNoSalt();
+  }
 
   await stores.suggestions.setJSON(blobKey(now), res.record);
   return reply(201, "ok");

@@ -121,6 +121,23 @@ test("suggest: form post redirects, honeypot stores nothing, limits enforced", a
   assert.equal(stores.suggestions.data.size, SUGGESTIONS_PER_HOUR);
 });
 
+test("suggest: no salt skips the per-client cap, stores no bucket, warns", async (t) => {
+  const warn = t.mock.method(console, "warn", () => {});
+  const stores = suggestStores();
+  for (const salt of [undefined, ""]) {
+    for (let i = 0; i <= SUGGESTIONS_PER_HOUR; i++) {
+      const r = await handleSuggest(
+        post("/api/suggest", { type: "design", text: `idea ${i}` }, { "content-type": "application/json" }),
+        stores, { ...ctx, salt }, NOW);
+      assert.equal(r.status, 201);
+    }
+  }
+  assert.equal(stores.ratelimit.data.size, 0);
+  assert.equal(stores.suggestions.data.size, 2 * (SUGGESTIONS_PER_HOUR + 1));
+  assert.equal(warn.mock.callCount(), 1); // once per instance, not per request
+  assert.ok(warn.mock.calls.every((c) => String(c.arguments[0]).includes("UH_RL_SALT")));
+});
+
 test("retention prunes only day-keys older than the window", async () => {
   const s = new MemStore();
   await s.setJSON("2026-08-22/1-a", {}); // 91 days before NOW -> pruned

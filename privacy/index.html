@@ -99,6 +99,10 @@
     <p>The <a href="/suggest/">suggestion form</a> is separate from the choices above: it sends only
     what you write in it, plus the kind of suggestion and the tool it is about. Please leave
     personal details out. Suggestions are read by the people deciding what to build next.</p>
+    <p>To stop the form being flooded, each submission is counted against a one-way hash of
+    your IP address mixed with a secret value and the current date. The hash cannot be turned
+    back into your IP, is never stored with your suggestion, and is deleted after 2 days.
+    Your IP address itself is never stored.</p>
 
     <h2>The code</h2>
     <p>The site is open source. You can read exactly what is sent in
