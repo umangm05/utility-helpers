@@ -235,6 +235,13 @@ def render_page(*, site: dict, title: str, description: str, path: str,
         '<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">',
         '<script defer src="/assets/site.js"></script>',
     ]
+    # Google AdSense — only on indexable content pages (not the noindex 404,
+    # which AdSense treats as a no-content page).
+    if site.get("adsenseClient") and not noindex:
+        head.append(
+            '<script async src="https://pagead2.googlesyndication.com/pagead/js/'
+            f'adsbygoogle.js?client={esc(site["adsenseClient"])}" crossorigin="anonymous"></script>'
+        )
     for block in jsonld_blocks:
         head.append(f'<script type="application/ld+json">\n{jsonld(block)}\n</script>')
 
@@ -554,6 +561,14 @@ def build(check_only: bool = False) -> int:
 
     (ROOT / "robots.txt").write_text(render_robots(site=site_cfg), encoding="utf-8")
     print("  wrote robots.txt")
+
+    # ads.txt — authorises Google as the seller for this publisher ID.
+    # Without it, the /* → 404 redirect would answer /ads.txt with a 404.
+    if site_cfg.get("adsenseClient"):
+        pub_id = site_cfg["adsenseClient"].removeprefix("ca-")
+        (ROOT / "ads.txt").write_text(
+            f"google.com, {pub_id}, DIRECT, f08c47fec0942fa0\n", encoding="utf-8")
+        print("  wrote ads.txt")
 
     print("\nOK — build complete.")
     return 0
