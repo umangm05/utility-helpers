@@ -368,8 +368,28 @@ SITE_JS = """\
     if (b) b.hidden = true;
     renderState();
     begin();
+    loadAds();
   }
   window.uhConsent = { get: consent, set: choose, open: function () { showBanner(true); } };
+
+  // --- ads -----------------------------------------------------------------
+  // Google AdSense sets third-party cookies, so adsbygoogle.js is requested
+  // ONLY after "Accept all". No choice / Essential only / Reject -> never
+  // requested. Withdrawing consent stops it on the next page load (a loaded
+  // third-party script cannot be unloaded from the current page).
+  var adsLoaded = false;
+  function loadAds() {
+    if (adsLoaded || consent() !== "all") return;
+    var meta = document.querySelector('meta[name="uh-ads-client"]');
+    var client = meta && meta.getAttribute("content");
+    if (!client || !/^ca-pub-[0-9]{10,20}$/.test(client)) return;
+    adsLoaded = true;
+    var s = document.createElement("script");
+    s.async = true;
+    s.crossOrigin = "anonymous";
+    s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + client;
+    document.head.appendChild(s);
+  }
 
   document.addEventListener("DOMContentLoaded", function () {
     var c = consent();
@@ -389,7 +409,7 @@ SITE_JS = """\
     }
     renderState();
     if (!c) showBanner(false);
-    else begin();
+    else { begin(); loadAds(); }
   });
 
   // --- suggestion form (/suggest/) ----------------------------------------
@@ -485,7 +505,8 @@ CONSENT_BANNER = """\
   What you type and the results stay on your device &mdash; we never see them.
   <a href="/privacy/">How this works</a></p>
   <p class="consent-note"><strong>Essential only</strong>: anonymous counts, no ID kept between visits.
-  <strong>Accept all</strong>: adds a random ID so we can tell when you come back.
+  <strong>Accept all</strong>: adds a random ID so we can tell when you come back, and shows
+  Google ads, which use cookies.
   <strong>Reject</strong>: nothing is sent.</p>
   <div class="actions">
     <button type="button" data-uh-choice="all">Accept all</button>
@@ -534,12 +555,11 @@ def render_page(*, site: dict, title: str, description: str, path: str,
         '<script defer src="/assets/site.js"></script>',
     ]
     # Google AdSense — only on indexable content pages (not the noindex 404,
-    # which AdSense treats as a no-content page).
+    # which AdSense treats as a no-content page). The loader is NOT emitted
+    # statically: site.js injects adsbygoogle.js only after "Accept all"
+    # (D-UH-CONSENT-ANALYTICS). This meta just tells it which client to load.
     if site.get("adsenseClient") and not noindex:
-        head.append(
-            '<script async src="https://pagead2.googlesyndication.com/pagead/js/'
-            f'adsbygoogle.js?client={esc(site["adsenseClient"])}" crossorigin="anonymous"></script>'
-        )
+        head.append(f'<meta name="uh-ads-client" content="{esc(site["adsenseClient"])}">')
     for block in jsonld_blocks:
         head.append(f'<script type="application/ld+json">\n{jsonld(block)}\n</script>')
 
@@ -744,7 +764,8 @@ def render_privacy(*, site: dict) -> str:
         <tr><td>Essential only</td><td>Anonymous usage events (listed below) with a random session id that is
           forgotten when you close the tab.</td><td>Your choice, plus the per-tab session id.</td></tr>
         <tr><td>Accept all</td><td>The same events, plus a random visitor id so we can see whether people come
-          back and which tools they use together.</td><td>Your choice, the session id, and the random visitor id.</td></tr>
+          back and which tools they use together. Google ads are also loaded (see below).</td><td>Your choice, the session id,
+          the random visitor id, and Google&rsquo;s advertising cookies.</td></tr>
       </tbody>
     </table>
     <p>Nothing is sent before you choose. You can change your mind at any time from the
@@ -765,8 +786,19 @@ def render_privacy(*, site: dict) -> str:
       <li>Anything you type, paste or get back from a tool: text, JSON, passwords, URLs, colours, dates.</li>
       <li>Your name, email or any account. There are no accounts.</li>
       <li>Your IP address, browser fingerprint or user agent. Our code never stores them; the only device detail is mobile, tablet or desktop.</li>
-      <li>Data for anyone else. There are no third-party analytics, ads or tracking scripts.</li>
+      <li>Data for anyone else. There are no third-party analytics scripts. The only third party
+      is Google AdSense, and only if you choose Accept all.</li>
     </ul>
+
+    <h2>Ads</h2>
+    <p>The site is kept free by Google AdSense. The ad script is loaded <strong>only after you
+    choose Accept all</strong>. With no choice, Essential only or Reject, your browser never
+    contacts Google&rsquo;s ad servers. When it is loaded, Google may set cookies and use them to
+    show and measure ads; that is governed by
+    <a href="https://policies.google.com/technologies/ads">Google&rsquo;s advertising policy</a>,
+    not by us. Ads never see what you type into a tool. If you later switch to Essential only or
+    Reject, ads stop from the next page you open; Google&rsquo;s cookies can be cleared in your
+    browser settings.</p>
 
     <h2>Where it goes and for how long</h2>
     <p>Events go to a small first-party function on this site and are stored in the site&rsquo;s own

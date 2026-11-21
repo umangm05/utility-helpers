@@ -68,15 +68,28 @@ def serve_recording(root: Path, port: int):
     return httpd
 
 
-def netlog_api_requests(path: Path) -> int:
-    """Count distinct network requests to /api/e in a Chrome net-log file."""
+def netlog_requests(path: Path, match) -> int:
+    """Count distinct network requests whose URL satisfies match() in a Chrome net-log file."""
     data = json.loads(path.read_text(encoding="utf-8"))
     ids = set()
     for ev in data.get("events", []):
         url = (ev.get("params") or {}).get("url", "")
-        if url.split("?")[0].endswith("/api/e"):
+        if url and match(url):
             ids.add(ev.get("source", {}).get("id"))
     return len(ids)
+
+
+def netlog_api_requests(path: Path) -> int:
+    return netlog_requests(path, lambda u: u.split("?")[0].endswith("/api/e"))
+
+
+def netlog_ads_requests(path: Path) -> int:
+    """Requests to Google's AdSense loader (pagead2.googlesyndication.com)."""
+    return netlog_requests(path, lambda u: "googlesyndication.com" in u or "adsbygoogle" in u)
+
+
+def ads_tag(page) -> int:
+    return page.evaluate("() => document.querySelectorAll('script[src*=adsbygoogle]').length")
 
 
 class Phase:
@@ -109,6 +122,7 @@ class Phase:
         self.ctx.close()
         self.browser.close()          # flushes and closes the net-log file
         self.netlog_count = netlog_api_requests(self.netlog)
+        self.ads_count = netlog_ads_requests(self.netlog)
         return self.netlog_count
 
 
@@ -157,6 +171,7 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
         check(page.is_visible("#uh-consent"), "banner still shown on later pages until chosen")
         n = ph.close()
         check(n == 0, "network log: zero /api/e requests before a choice", n)
+        check(ph.ads_count == 0, "network log: adsbygoogle NOT requested before a choice", ph.ads_count)
         if local:
             check(len(ph.bodies) == 0, "server: zero /api/e bodies received", len(ph.bodies))
 
@@ -172,6 +187,7 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
               "Reject -> only the choice itself is stored", st)
         n = ph.close()
         check(n == 0, "network log: Reject -> zero /api/e requests", n)
+        check(ph.ads_count == 0, "network log: Reject -> adsbygoogle never requested", ph.ads_count)
         if local:
             check(len(ph.bodies) == 0, "server: Reject -> zero /api/e bodies received", len(ph.bodies))
 
@@ -185,6 +201,7 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
         check(st["vid"] is None and st["sid"] is not None, "Essential -> session id only in storage", st)
         n = ph.close()
         check(n > 0, "network log: Essential -> /api/e requests sent", n)
+        check(ph.ads_count == 0, "network log: Essential -> adsbygoogle never requested", ph.ads_count)
         if local:
             batches = ph.batches
             evs = [e for b in batches for e in b.get("ev", [])]
@@ -204,6 +221,7 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
         ph = Phase(pw, "accept", netlog_dir); page = ph.page
         page.goto(base + "/", wait_until="domcontentloaded")
         page.click("[data-uh-choice=all]")
+        check(ads_tag(page) == 1, "Accept -> adsbygoogle loader injected once", ads_tag(page))
         use_tools(page, base)
         vid1 = storage(page)["vid"]
         page.reload(wait_until="domcontentloaded")
@@ -224,8 +242,10 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
         use_tools(page, base)
         st = storage(page)
         check(st["vid"] is None and st["sid"] is None, "switching to Reject deletes both ids", st)
+        check(ads_tag(page) == 0, "after switching to Reject the next page has no adsbygoogle tag", ads_tag(page))
         n = ph.close()
         check(n > 0, "network log: Accept phase sent /api/e requests", n)
+        check(ph.ads_count > 0, "network log: Accept -> adsbygoogle requested", ph.ads_count)
         if local:
             check(len(RECEIVED) == before, "after switching to Reject nothing more is sent", len(RECEIVED) - before)
     return failures
