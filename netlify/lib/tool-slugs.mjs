@@ -3,8 +3,13 @@
 export default [
   "resize-image",
   "pdf-tools",
+  "background-remover",
   "heic-to-jpg",
   "passport-size-photo",
+  "emi-calculator",
+  "age-calculator",
+  "typing-speed-test",
+  "spin-the-wheel",
   "qr-code-generator",
   "word-counter",
   "password-generator",

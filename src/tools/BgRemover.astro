@@ -1,0 +1,50 @@
+---
+// Background remover (UH-T3 tool 10). In-browser AI: U²-Net "u2netp" (Apache-2.0)
+// run by ONNX Runtime Web's WebGL backend (pure JS, MIT). Both are self-hosted on this site and
+// loaded only when the user presses Remove background; the photo never leaves the tab.
+import "../styles/tools.css";
+---
+<div class="tool ft" id="bg">
+  <div class="ft-pick" id="bg-drop">
+    <input id="bg-file" class="sr-only" type="file" accept="image/*">
+    <label class="btn" for="bg-file">Choose a photo</label>
+    <button type="button" class="btn-ghost" id="bg-sample">Try a sample</button>
+    <p>or drop a JPG, PNG or WebP here. Works best with one clear subject: a person, product or pet.</p>
+  </div>
+  <p class="ft-status" id="bg-in" role="status" aria-live="polite">No photo chosen yet.</p>
+  <div class="ft-opts">
+    <div>
+      <label for="bg-fill">New background</label>
+      <select id="bg-fill">
+        <option value="" selected>Transparent (PNG)</option>
+        <option value="#ffffff">White (JPG)</option>
+        <option value="custom">Pick a colour (JPG)</option>
+      </select>
+    </div>
+    <div id="bg-color-wrap" hidden><label for="bg-color">Colour</label><input id="bg-color" type="color" value="#2563eb"></div>
+  </div>
+  <div class="ft-row">
+    <button type="button" id="bg-go" disabled>Remove background</button>
+    <button type="button" class="btn-ghost" id="bg-dl" disabled>Download</button>
+    <button type="button" class="btn-ghost sfx-toggle" aria-pressed="true">Sound: on</button>
+  </div>
+  <div class="bg-prog" id="bg-prog" hidden><span id="bg-bar"></span></div>
+  <p class="ft-status" id="bg-status" role="status" aria-live="polite"></p>
+  <div class="bg-views" id="bg-views" hidden>
+    <figure><figcaption>Before</figcaption><canvas id="bg-before" width="1" height="1" role="img" aria-label="Original photo"></canvas></figure>
+    <figure><figcaption>After</figcaption><canvas id="bg-after" class="checker" width="1" height="1" role="img" aria-label="Photo with background removed"></canvas></figure>
+  </div>
+  <p class="ft-note">The first time, the page downloads its AI model (about 5 MB). After that it works offline. Your photo is processed on this device, using its graphics chip, and never uploaded.</p>
+</div>
+<style>
+  .bg-prog { height: 6px; border-radius: 99px; background: var(--panel-2); overflow: hidden; }
+  .bg-prog span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s linear; }
+  .bg-prog[hidden] { display: none; }
+  .bg-views { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  .bg-views figure { margin: 0; display: grid; gap: .35rem; }
+  .bg-views figcaption { color: var(--muted); font-size: .875rem; }
+  .bg-views canvas { width: 100%; height: auto; max-height: 26rem; object-fit: contain; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--panel-2); }
+  .bg-views canvas.checker { background: repeating-conic-gradient(#d4d4d4 0 25%, #fff 0 50%) 0 0 / 20px 20px; }
+  #bg-color-wrap[hidden], .bg-views[hidden] { display: none; }
+</style>
+<script>import "./bg-remover.ts";</script>
