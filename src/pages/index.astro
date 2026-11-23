@@ -1,0 +1,193 @@
+---
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import { site, tools, sections, pageUrl, homeTitle } from "../lib/site";
+
+const jsonld = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    url: pageUrl("/"),
+    description: site.description,
+    inLanguage: "en",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `${site.name} — all tools`,
+    numberOfItems: tools.length,
+    itemListElement: tools.map((t, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: t.name,
+      description: t.summary,
+      url: pageUrl(`/${t.slug}/`),
+    })),
+  },
+];
+const names = Object.fromEntries(tools.map((t) => [t.slug, t.name]));
+const isColor = (s: string) => /^#[0-9a-f]{6}$/i.test(s);
+// Card blurb = first sentence of the meta description (short, user-facing).
+const blurb = (d: string) => (d.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? d);
+---
+<Base title={homeTitle} description={site.description} path="/" jsonld={jsonld}>
+  <section class="hero">
+    <h1>{site.name}</h1>
+    <p class="lede">{site.description}</p>
+    <p class="badge"><Icon name="shield" size={16} /> Files never leave your device</p>
+  </section>
+
+  <section class="drop" id="drop" aria-labelledby="drop-heading" data-js-only>
+    <div class="drop-zone" id="drop-zone">
+      <span class="drop-icon" aria-hidden="true"><Icon name="upload" size={28} /></span>
+      <h2 id="drop-heading">Drop anything</h2>
+      <p class="muted">Drop a file or some text and we will suggest the right tool. It is read on this page only.</p>
+      <div class="drop-actions">
+        <label class="btn" for="drop-file">Choose a file</label>
+        <input id="drop-file" class="sr-only" type="file">
+        <span class="muted">or</span>
+        <label class="sr-only" for="drop-text">Paste text</label>
+        <textarea id="drop-text" rows="1" placeholder="paste text here"></textarea>
+      </div>
+    </div>
+    <div class="drop-result" id="drop-result" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="recent" id="recent" aria-labelledby="recent-heading" hidden>
+    <h2 id="recent-heading"><Icon name="history" size={20} /> Recently used</h2>
+    <ul class="chips" id="recent-list"></ul>
+  </section>
+  {/* Rendered synchronously, before first paint, so the grid below never jumps (CLS). */}
+  <script is:inline define:vars={{ names }}>
+  (function () {
+    try {
+      if (localStorage.getItem("uh-consent") === "reject") return;
+      var r = JSON.parse(localStorage.getItem("uh-recent") || "[]");
+      var ul = document.getElementById("recent-list");
+      r.filter(function (s) { return names[s]; }).slice(0, 6).forEach(function (s) {
+        var li = document.createElement("li"), a = document.createElement("a");
+        a.href = "/" + s + "/"; a.textContent = names[s]; li.appendChild(a); ul.appendChild(li);
+      });
+      if (ul.children.length) document.getElementById("recent").hidden = false;
+    } catch (e) {}
+  })();
+  </script>
+
+  {sections.map((sec) => {
+    const list = tools.filter((t) => t.section === sec.id);
+    return (
+      <section class="tools-section" id={sec.id} aria-labelledby={`${sec.id}-heading`}>
+        <h2 id={`${sec.id}-heading`}>{sec.name}</h2>
+        <p class="muted section-blurb">{sec.blurb}</p>
+        <div class="grid">
+          {list.map((t) => (
+            <a class="card" href={`/${t.slug}/`}>
+              <span class="card-top">
+                <span class="tool-icon" aria-hidden="true"><Icon name={t.icon} size={22} /></span>
+                <span class="card-title">{t.name}</span>
+              </span>
+              <span class="preview" aria-hidden="true">
+                {isColor(t.preview) && <span class="swatch" style={`background:${t.preview}`}></span>}
+                {t.preview}
+              </span>
+              <span class="card-desc">{blurb(t.description)}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    );
+  })}
+</Base>
+
+<script>
+import { tools } from "../scripts/ui.ts";
+
+// ---- drop anything ---------------------------------------------------------
+// Everything is read locally (FileReader / DataTransfer). Text handed to a tool
+// goes through sessionStorage in this tab only; nothing is sent over the network.
+const zone = document.getElementById("drop-zone")!;
+const result = document.getElementById("drop-result")!;
+const fileInput = document.getElementById("drop-file") as HTMLInputElement;
+const textInput = document.getElementById("drop-text") as HTMLTextAreaElement;
+const TEXT_FILE = /\.(txt|md|csv|json|log|xml|html?|js|ts|css|ya?ml)$/i;
+const MAX_TEXT = 200_000;
+
+function kinds(text: string): string[] {
+  const s = text.trim();
+  const k = ["text"];
+  if (!s) return [];
+  if (/^[\[{]/.test(s)) { try { JSON.parse(s); k.unshift("json"); } catch { /* not JSON */ } }
+  if (/^#?[0-9a-f]{6}$/i.test(s) || /^#[0-9a-f]{3}$/i.test(s) || /^rgba?\(/i.test(s)) k.unshift("color");
+  if (/^\d{9,13}$/.test(s)) k.unshift("timestamp");
+  else if (/^-?\d+(\.\d+)?$/.test(s)) k.unshift("number");
+  if (/%[0-9a-f]{2}/i.test(s)) k.unshift("urlencoded");
+  if (/^https?:\/\//i.test(s)) k.unshift("url");
+  if (s.length >= 8 && s.length % 4 === 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(s) && !/^\d+$/.test(s)) k.unshift("base64");
+  return k;
+}
+
+function offer(text: string, label: string) {
+  const ks = kinds(text);
+  const ranked = tools
+    .map((t) => ({ t, r: Math.min(...t.accepts.map((a) => (ks.indexOf(a) + 1) || 99)) }))
+    .filter((x) => x.r < 99)
+    .sort((a, b) => a.r - b.r);
+  result.replaceChildren();
+  const p = document.createElement("p");
+  p.textContent = ranked.length ? `${label} — open it in:` : `${label} — no tool for this yet.`;
+  result.append(p);
+  const ul = document.createElement("ul");
+  ul.className = "chips";
+  for (const { t } of ranked) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = `/${t.slug}/`;
+    a.textContent = t.name;
+    a.addEventListener("click", () => {
+      try { sessionStorage.setItem("uh-drop", JSON.stringify({ slug: t.slug, text: text.slice(0, MAX_TEXT) })); } catch { /* full */ }
+    });
+    li.append(a);
+    ul.append(li);
+  }
+  if (ranked.length) result.append(ul);
+}
+
+function unsupported(name: string) {
+  result.replaceChildren();
+  const p = document.createElement("p");
+  p.append(`${name}: image and PDF tools are on the way. `);
+  const a = document.createElement("a");
+  a.href = "/suggest/";
+  a.textContent = "Tell us what you need";
+  p.append(a);
+  result.append(p);
+}
+
+function handleFile(f: File) {
+  if (f.type.startsWith("text/") || f.type === "application/json" || TEXT_FILE.test(f.name)) {
+    f.slice(0, MAX_TEXT).text().then((t) => offer(t, `"${f.name}"`));
+  } else {
+    unsupported(`"${f.name}"`);
+  }
+}
+
+zone.addEventListener("dragover", (e) => { e.preventDefault(); zone.classList.add("over"); });
+zone.addEventListener("dragleave", () => zone.classList.remove("over"));
+zone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  zone.classList.remove("over");
+  const dt = e.dataTransfer;
+  if (!dt) return;
+  if (dt.files.length) handleFile(dt.files[0]);
+  else {
+    const t = dt.getData("text/plain");
+    if (t) offer(t, "Your text");
+  }
+});
+fileInput.addEventListener("change", () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+textInput.addEventListener("input", () => {
+  if (textInput.value.trim()) offer(textInput.value, "Your text");
+  else result.replaceChildren();
+});
+</script>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render the shared social-share image assets/og.png (1200x630).
 
-Every page's og:image / twitter:image points at /assets/og.png (scripts/build.py).
+Every page's og:image / twitter:image points at /assets/og.png (src/layouts/Base.astro).
 This is a one-off asset generator, NOT part of the zero-dependency build: it needs
 Pillow (`pip install pillow`). Re-run only when the site name, tagline or tool
 list in site.config.json changes, then commit the PNG.
@@ -18,7 +18,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "assets" / "og.png"
+OUT = ROOT / "public" / "assets" / "og.png"
 W, H = 1200, 630
 BG, PANEL, BORDER = "#0b0d10", "#14171c", "#262b33"
 FG, MUTED, ACCENT, ACCENT_FG = "#e7e9ee", "#9aa3af", "#f59e0b", "#1a1206"

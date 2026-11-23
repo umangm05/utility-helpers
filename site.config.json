@@ -1,5 +1,5 @@
 {
-  "$comment": "Single source of truth for the Utility Helpers site. Edit this file, then run `python3 scripts/build.py`. Tool entries are added by UH-BUILD-TOOLS once Edith's research lands (UH-RESEARCH).",
+  "$comment": "Single source of truth for the Utility Helpers site. Edit this file, then run `npm run build` (Astro, see src/). Pages, sitemap.xml, robots.txt, ads.txt and netlify/lib/tool-slugs.mjs are all generated from it.",
   "site": {
     "name": "Utility Helpers",
     "baseUrl": "https://utility-helpers.netlify.app",
@@ -11,10 +11,40 @@
     "themeColor": "#f59e0b",
     "adsenseClient": "ca-pub-1022245151400390"
   },
+  "sections": [
+    {
+      "id": "developer",
+      "name": "Developer tools",
+      "blurb": "Format, encode, convert and generate — the everyday helpers for code and text."
+    }
+  ],
+  "moreFromUs": [
+    {
+      "name": "Utility Helpers",
+      "url": "https://utility-helpers.netlify.app/",
+      "blurb": "Free private browser tools"
+    },
+    {
+      "name": "PromptForge",
+      "url": "https://prmoptforge.netlify.app/",
+      "blurb": "Turn-based battle of arguments"
+    },
+    {
+      "name": "Auto Crash Chase",
+      "url": "https://auto-crash-chase.netlify.app/",
+      "blurb": "Top-down AI car-chase game"
+    }
+  ],
   "tools": [
     {
       "slug": "word-counter",
       "name": "Word Counter",
+      "section": "developer",
+      "icon": "text",
+      "preview": "128 words · 742 chars",
+      "accepts": [
+        "text"
+      ],
       "summary": "Students, writers, and social media managers constantly need to check word and character limits for essays, posts, captions, and SEO meta descriptions.",
       "title": "Word Counter — Free Online Word & Character Count Tool",
       "description": "Count words, characters, sentences and paragraphs instantly. Free online word counter with no signup, no limits, works offline in your browser.",
@@ -38,6 +68,10 @@
     {
       "slug": "password-generator",
       "name": "Password Generator",
+      "section": "developer",
+      "icon": "key",
+      "preview": "k9#Qz!v2Lp@7",
+      "accepts": [],
       "summary": "With data breaches in the news constantly, people need to create unique passwords for new accounts and update old ones regularly.",
       "title": "Password Generator — Create Strong Random Passwords Online",
       "description": "Generate strong, secure random passwords instantly. Customize length, characters, and more. Free online password generator with no signup.",
@@ -61,6 +95,12 @@
     {
       "slug": "unit-converter",
       "name": "Unit Converter",
+      "section": "developer",
+      "icon": "ruler",
+      "preview": "1 km = 1000 m",
+      "accepts": [
+        "number"
+      ],
       "summary": "Students, engineers, cooks, and travelers constantly need to convert between units — kilometers to miles, Celsius to Fahrenheit, kilograms to pounds.",
       "title": "Unit Converter — Free Online Measurement Conversion Tool",
       "description": "Convert between units instantly: length, weight, temperature, volume, area, speed, and more. Free online unit converter, no signup needed.",
@@ -84,6 +124,13 @@
     {
       "slug": "json-formatter",
       "name": "JSON Formatter",
+      "section": "developer",
+      "icon": "braces",
+      "preview": "{ \"ok\": true }",
+      "accepts": [
+        "json",
+        "text"
+      ],
       "summary": "Developers work with JSON data daily — APIs return it, config files use it, and debugging requires reading minified JSON.",
       "title": "JSON Formatter — Free Online JSON Validator & Beautifier",
       "description": "Format, validate, and beautify your JSON data instantly. Free online JSON formatter with syntax highlighting and error detection. No signup.",
@@ -107,6 +154,13 @@
     {
       "slug": "base64-encoder-decoder",
       "name": "Base64 Encoder Decoder",
+      "section": "developer",
+      "icon": "binary",
+      "preview": "SGVsbG8= ⇄ Hello",
+      "accepts": [
+        "base64",
+        "text"
+      ],
       "summary": "Developers constantly encode and decode Base64 for email attachments, data URIs, API authentication tokens, and embedding images in HTML/CSS.",
       "title": "Base64 Encoder Decoder — Free Online Base64 Converter",
       "description": "Encode and decode Base64 instantly. Convert text to Base64 and back. Free online tool for developers, no signup, works in your browser.",
@@ -130,6 +184,14 @@
     {
       "slug": "url-encoder-decoder",
       "name": "URL Encoder Decoder",
+      "section": "developer",
+      "icon": "link",
+      "preview": "a%20b%26c ⇄ a b&c",
+      "accepts": [
+        "urlencoded",
+        "url",
+        "text"
+      ],
       "summary": "Developers and marketers constantly encode URLs with special characters for query parameters, API calls, and sharing links.",
       "title": "URL Encoder Decoder — Free Online URL Encoding Tool",
       "description": "Encode and decode URLs instantly. Convert special characters to percent-encoded format and back. Free online URL encoder decoder.",
@@ -153,6 +215,12 @@
     {
       "slug": "color-picker",
       "name": "Color Picker",
+      "section": "developer",
+      "icon": "palette",
+      "preview": "#F59E0B",
+      "accepts": [
+        "color"
+      ],
       "summary": "Designers, developers, and digital marketers need to pick colors, convert between formats (hex, RGB, HSL), and match brand colors daily.",
       "title": "Color Picker — Free Online Hex, RGB & HSL Converter",
       "description": "Pick colors and convert between Hex, RGB, and HSL instantly. Free online color picker with live preview. No signup, works in your browser.",
@@ -176,6 +244,12 @@
     {
       "slug": "timestamp-converter",
       "name": "Timestamp Converter",
+      "section": "developer",
+      "icon": "clock",
+      "preview": "1700000000 → 2023-11-14",
+      "accepts": [
+        "timestamp"
+      ],
       "summary": "Developers and data analysts constantly convert between Unix timestamps and human-readable dates when working with APIs, databases, and logs.",
       "title": "Timestamp Converter — Unix Epoch to Date Converter",
       "description": "Convert Unix timestamps to human-readable dates and back. Free online timestamp converter with UTC and local timezone support.",
@@ -199,6 +273,12 @@
     {
       "slug": "text-case-converter",
       "name": "Text Case Converter",
+      "section": "developer",
+      "icon": "case",
+      "preview": "Aa → AA → aa",
+      "accepts": [
+        "text"
+      ],
       "summary": "Writers, students, and professionals constantly need to fix capitalization — converting ALL CAPS text to sentence case, or formatting titles.",
       "title": "Text Case Converter — Uppercase, Lowercase & Title Case",
       "description": "Convert text between uppercase, lowercase, sentence case, title case, and more. Free online case converter, instant results.",
@@ -222,6 +302,10 @@
     {
       "slug": "lorem-ipsum-generator",
       "name": "Lorem Ipsum Generator",
+      "section": "developer",
+      "icon": "paragraph",
+      "preview": "Lorem ipsum dolor sit…",
+      "accepts": [],
       "summary": "Designers and developers constantly need placeholder text for wireframes, mockups, and prototypes before real content is available.",
       "title": "Lorem Ipsum Generator — Free Online Dummy Text Tool",
       "description": "Generate lorem ipsum placeholder text instantly. Choose the number of paragraphs, sentences, or words. Free online tool, no signup.",

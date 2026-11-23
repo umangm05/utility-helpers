@@ -1,0 +1,50 @@
+---
+import Base from "../layouts/Base.astro";
+import { tools, TITLE_MAX } from "../lib/site";
+const TITLE = "Suggest a feature or change — Utility Helpers";
+const DESC = "Ask for a new tool, a design change, report a bug, or tell us what to remove. " +
+  "Suggestions go straight to the people who decide what gets built.";
+const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const toolOpts = tools.map((t) => `          <option value="${esc(t.slug)}">${esc(t.name)}</option>`).join("\n");
+const body = `    <h1>Suggest a feature or change</h1>
+    <p class="lede">Want a new tool, a better design, found a bug, or think something should go?
+    Tell us. Every suggestion is read when we decide what to build next.</p>
+    <form class="tool" id="uh-suggest" action="/api/suggest" method="post">
+      <div class="form-grid">
+        <div>
+          <label for="s-type">What kind of suggestion?</label>
+          <select id="s-type" name="type" required>
+            <option value="feature">New feature or tool</option>
+            <option value="design">Design or usability change</option>
+            <option value="bug">Something is broken</option>
+            <option value="remove">Remove or simplify something</option>
+          </select>
+        </div>
+        <div>
+          <label for="s-tool">Which tool is it about? (optional)</label>
+          <select id="s-tool" name="tool">
+            <option value="">The whole site / a new tool</option>
+${toolOpts}
+          </select>
+        </div>
+        <div>
+          <label for="s-text">Your suggestion</label>
+          <textarea id="s-text" name="text" maxlength="1000" minlength="3" required rows="6"
+            aria-describedby="uh-suggest-count uh-suggest-note"></textarea>
+          <p id="uh-suggest-count" class="muted" style="margin:.35rem 0 0;font-size:.875rem">Up to 1000 characters.</p>
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label for="s-website">Leave this field empty</label>
+          <input id="s-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div><button type="submit">Send suggestion</button></div>
+        <p id="uh-suggest-status" role="status" aria-live="polite" style="margin:0"></p>
+        <p id="uh-suggest-note" class="muted" style="margin:0;font-size:.875rem">Please do not include
+        personal details. Only your text, the kind of suggestion and the tool are stored.
+        <a href="/privacy/">Privacy</a></p>
+      </div>
+    </form>`;
+---
+<Base title={TITLE.slice(0, TITLE_MAX)} description={DESC} path="/suggest/">
+  <Fragment set:html={body} />
+</Base>

@@ -2,11 +2,20 @@
   "name": "utility-helpers",
   "private": true,
   "type": "module",
-  "description": "Netlify Functions for anonymous, consent-gated usage counts and the suggestion form. The site itself has no build step.",
+  "description": "Utility Helpers: Astro static site (dist/) generated from site.config.json, plus Netlify Functions for consent-gated usage counts and the suggestion form.",
   "scripts": {
-    "test": "node --test netlify/tests/*.test.mjs"
+    "gen": "node scripts/gen-tool-slugs.mjs",
+    "build": "node scripts/gen-tool-slugs.mjs && astro build",
+    "dev": "astro dev",
+    "preview": "astro preview",
+    "test": "node --test netlify/tests/*.test.mjs",
+    "check": "python3 scripts/check_dist.py"
   },
   "dependencies": {
-    "@netlify/blobs": "^10.0.0"
+    "@netlify/blobs": "^10.0.0",
+    "astro": "^7.4.13"
+  },
+  "engines": {
+    "node": ">=22.23.4"
   }
 }

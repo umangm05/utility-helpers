@@ -1,0 +1,11 @@
+---
+import Base from "../layouts/Base.astro";
+import { site, TITLE_MAX } from "../lib/site";
+---
+<Base title={`Page not found — ${site.name}`.slice(0, TITLE_MAX)}
+  description="That page does not exist. Browse the free browser tools on Utility Helpers instead."
+  path="/404.html" noindex>
+    <h1>Page not found</h1>
+    <p class="lede">That URL does not exist on this site. It may have been
+    renamed, or the link that brought you here may be out of date.</p>
+    <p><a href="/">Browse all tools</a></p></Base>

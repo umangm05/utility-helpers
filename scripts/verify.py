@@ -4,8 +4,8 @@
 Satisfies the UI/runtime FRESH-CONTEXT PER-ROUTE gate:
 
   1. ENUMERATE ROUTES FROM SOURCE — routes are parsed out of the generator
-     source (`scripts/build.py`), i.e. the thing that *declares* them, not the
-     emitted HTML. The enumeration is then cross-checked against the files
+     source (`src/pages/*.astro` + site.config.json), i.e. the thing that
+     *declares* them, not the emitted HTML in dist/. The enumeration is then cross-checked against the files
      actually on disk; a mismatch is a failure.
   2. ONE DIRECT FRESH-LOAD ASSERTION PER ROUTE — for each route a NEW browser
      context is created and the URL is set BEFORE the page loads.
@@ -31,8 +31,8 @@ import urllib.request
 from pathlib import Path
 
 # Routes served by the host but not declared by the generator (platform files).
-PLATFORM_ROUTES = ["/sitemap.xml", "/robots.txt",
-                   "/assets/site.css", "/assets/site.js", "/assets/favicon.svg"]
+PLATFORM_ROUTES = ["/sitemap.xml", "/robots.txt", "/ads.txt",
+                   "/assets/site.js", "/assets/favicon.svg", "/assets/og.png"]
 
 
 def free_port(preferred: int) -> int:
@@ -75,32 +75,32 @@ def http_status(url: str) -> int:
 
 
 def enumerate_routes_from_source(root: Path) -> tuple[list[str], list[str]]:
-    """Parse the generator source for the routes it declares.
+    """Derive the routes the Astro SOURCE declares (src/pages/*), not the output.
 
-    Returns (html_routes, notes). Raises on a parse failure so a silent empty
-    enumeration can never masquerade as a passing test.
+    Static pages map file -> route (index.astro -> /, privacy.astro -> /privacy/,
+    404.astro -> /404.html); the dynamic [slug].astro page is expanded from the
+    manifest it iterates (site.config.json tools). Raises on a parse failure so a
+    silent empty enumeration can never masquerade as a passing test.
     """
-    src = (root / "scripts" / "build.py").read_text(encoding="utf-8")
+    pages_dir = root / "src" / "pages"
     notes: list[str] = []
-
-    # The generator declares page paths via add(<path>, ...) and via the tool
-    # slug loop. Capture the literal paths plus the slug-derived pattern.
-    literal = set(re.findall(r'add\(\s*[fr]?["\']([^"\']+)["\']', src))
-    literal |= set(re.findall(r'add\(\s*f["\']([^"\']+)["\']', src))
-    notes.append(f"literal add() paths found: {sorted(literal)}")
-
-    declares_tool_loop = bool(re.search(r'add\(\s*f?["\']/\{t\[[\'"]slug', src))
-    notes.append(f"declares per-tool slug loop: {declares_tool_loop}")
-
-    routes = sorted(p for p in literal if p.startswith("/") and not p.startswith("/{"))
-
-    # Expand the tool loop from the manifest (the data the loop iterates).
-    cfg = json.loads((root / "site.config.json").read_text(encoding="utf-8"))
-    if declares_tool_loop:
-        for t in cfg.get("tools", []):
-            routes.append(f"/{t['slug']}/")
-        notes.append(f"expanded {len(cfg.get('tools', []))} tool slug route(s) from site.config.json")
-
+    routes: list[str] = []
+    for p in sorted(pages_dir.glob("*.astro")):
+        stem = p.stem
+        if stem == "index":
+            routes.append("/")
+        elif stem == "404":
+            routes.append("/404.html")
+        elif stem == "[slug]":
+            src = p.read_text(encoding="utf-8")
+            if "getStaticPaths" not in src or "tools.map" not in src:
+                raise RuntimeError("[slug].astro no longer maps site.config.json tools")
+            cfg = json.loads((root / "site.config.json").read_text(encoding="utf-8"))
+            routes += [f"/{t['slug']}/" for t in cfg.get("tools", [])]
+            notes.append(f"expanded {len(cfg.get('tools', []))} tool slug route(s) from site.config.json")
+        elif not stem.startswith("["):
+            routes.append(f"/{stem}/")
+    notes.append(f"page files: {sorted(p.name for p in pages_dir.glob('*.astro'))}")
     if not routes:
         raise RuntimeError("route enumeration from source produced nothing — refusing to pass")
     return sorted(set(routes)), notes
@@ -123,25 +123,27 @@ def on_disk_html_routes(root: Path) -> list[str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--root", default=str(Path(__file__).resolve().parent.parent))
+    ap.add_argument("--root", default=str(Path(__file__).resolve().parent.parent),
+                    help="repo root (source); the built site is served from <root>/dist")
     ap.add_argument("--port", type=int, default=8099)
     args = ap.parse_args()
 
     root = Path(args.root).resolve()
     port = free_port(args.port)
     base = f"http://127.0.0.1:{port}"
-    httpd = serve(root, port)
+    dist = root / "dist"
+    httpd = serve(dist, port)
     time.sleep(0.4)
     failures: list[str] = []
 
     # ---------- 1. enumerate routes from source ----------
-    print("\n=== 1. ROUTE ENUMERATION (from generator source, not output) ===")
+    print("\n=== 1. ROUTE ENUMERATION (from Astro source, not output) ===")
     src_routes, notes = enumerate_routes_from_source(root)
     for n in notes:
         print(f"  note: {n}")
     print(f"  declared HTML routes: {src_routes}")
 
-    disk_routes = on_disk_html_routes(root)
+    disk_routes = on_disk_html_routes(dist)
     print(f"  emitted HTML routes : {disk_routes}")
     if src_routes != disk_routes:
         failures.append(f"route mismatch source={src_routes} disk={disk_routes}")

@@ -262,7 +262,7 @@ def main() -> int:
     if args.base:
         failures = run(args.base.rstrip("/"), local=False, netlog_dir=netlog_dir)
     else:
-        root = Path(__file__).resolve().parent.parent
+        root = Path(__file__).resolve().parent.parent / "dist"   # Astro output (npm run build)
         port = free_port(8098)
         httpd = serve_recording(root, port)
         try:

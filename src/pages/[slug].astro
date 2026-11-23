@@ -1,0 +1,85 @@
+---
+// One pre-rendered page per tool, same slug as before (/<slug>/).
+// The tool UI + its script is `body_html` from site.config.json, injected
+// verbatim: it is the per-tool island and loads only on this page.
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import { site, tools, sections, pageUrl, TITLE_MAX, DESC_MAX, type Tool } from "../lib/site";
+
+export function getStaticPaths() {
+  return tools.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
+}
+const { tool } = Astro.props as { tool: Tool };
+const faqs = tool.faq ?? [];
+const url = pageUrl(`/${tool.slug}/`);
+const section = sections.find((s) => s.id === tool.section);
+const related = tools.filter((t) => t.section === tool.section && t.slug !== tool.slug).slice(0, 4);
+
+const jsonld: object[] = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: tool.name,
+    url,
+    description: tool.summary,
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Any",
+    browserRequirements: "Requires JavaScript",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: site.name, item: pageUrl("/") },
+      { "@type": "ListItem", position: 2, name: tool.name, item: url },
+    ],
+  },
+];
+if (faqs.length) {
+  jsonld.push({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((q) => ({ "@type": "Question", name: q.q, acceptedAnswer: { "@type": "Answer", text: q.a } })),
+  });
+}
+const toolUi = tool.body_html ||
+  '<div class="tool"><p>This tool is being built. It will run entirely in your browser.</p></div>';
+---
+<Base title={tool.title.slice(0, TITLE_MAX)} description={tool.description.slice(0, DESC_MAX)}
+  path={`/${tool.slug}/`} jsonld={jsonld} toolSlug={tool.slug}>
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/">All tools</a> <span aria-hidden="true">/</span>
+    {section && <><a href={`/#${section.id}`}>{section.name}</a> <span aria-hidden="true">/</span></>}
+    {tool.name}
+  </nav>
+  <div class="tool-head">
+    <span class="tool-icon" aria-hidden="true"><Icon name={tool.icon} size={28} /></span>
+    <h1>{tool.name}</h1>
+  </div>
+  <p class="badge"><Icon name="shield" size={16} /> Runs on your device — nothing you enter is uploaded</p>
+  <p class="lede">{tool.intro || tool.summary}</p>
+  <Fragment set:html={toolUi} />
+  <p class="suggest-cta"><a href={`/suggest/?tool=${tool.slug}`}>Suggest an improvement to this tool</a></p>
+  {faqs.length > 0 && (
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      {faqs.map((q) => (
+        <details>
+          <summary>{q.q}</summary>
+          <p>{q.a}</p>
+        </details>
+      ))}
+    </section>
+  )}
+  {related.length > 0 && (
+    <section class="related" aria-labelledby="related-heading">
+      <h2 id="related-heading">More {section?.name.toLowerCase() ?? "tools"}</h2>
+      <ul class="related-list">
+        {related.map((t) => (
+          <li><a href={`/${t.slug}/`}><Icon name={t.icon} size={18} />{t.name}</a></li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Base>
