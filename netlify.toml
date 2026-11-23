@@ -31,7 +31,8 @@
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    # camera=(self): the QR scanner (/qr-code-generator/) reads frames locally; no other origin may ask.
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(self)"
 
 # Serve the custom 404 page for unknown paths.
 [[redirects]]

@@ -1,10 +1,12 @@
 ---
 // One pre-rendered page per tool, same slug as before (/<slug>/).
-// The tool UI + its script is `body_html` from site.config.json, injected
-// verbatim: it is the per-tool island and loads only on this page.
+// The tool UI is either `body_html` from site.config.json (injected verbatim)
+// or, for tools with an `island`, a component from src/tools/ whose script and
+// lazy-loaded libraries ship on this page only.
 import Base from "../layouts/Base.astro";
 import Icon from "../components/Icon.astro";
 import { site, tools, sections, pageUrl, TITLE_MAX, DESC_MAX, type Tool } from "../lib/site";
+import { islands } from "../tools/islands";
 
 export function getStaticPaths() {
   return tools.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
@@ -43,6 +45,8 @@ if (faqs.length) {
     mainEntity: faqs.map((q) => ({ "@type": "Question", name: q.q, acceptedAnswer: { "@type": "Answer", text: q.a } })),
   });
 }
+const Island = tool.island ? islands[tool.island] : undefined;
+if (tool.island && !Island) throw new Error(`site.config.json: tool ${tool.slug} names unknown island ${tool.island}`);
 const toolUi = tool.body_html ||
   '<div class="tool"><p>This tool is being built. It will run entirely in your browser.</p></div>';
 ---
@@ -59,7 +63,7 @@ const toolUi = tool.body_html ||
   </div>
   <p class="badge"><Icon name="shield" size={16} /> Runs on your device — nothing you enter is uploaded</p>
   <p class="lede">{tool.intro || tool.summary}</p>
-  <Fragment set:html={toolUi} />
+  {Island ? <Island /> : <Fragment set:html={toolUi} />}
   <p class="suggest-cta"><a href={`/suggest/?tool=${tool.slug}`}>Suggest an improvement to this tool</a></p>
   {faqs.length > 0 && (
     <section class="faq" aria-labelledby="faq-heading">

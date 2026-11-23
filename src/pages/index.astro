@@ -42,10 +42,10 @@ const blurb = (d: string) => (d.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? d);
     <div class="drop-zone" id="drop-zone">
       <span class="drop-icon" aria-hidden="true"><Icon name="upload" size={28} /></span>
       <h2 id="drop-heading">Drop anything</h2>
-      <p class="muted">Drop a file or some text and we will suggest the right tool. It is read on this page only.</p>
+      <p class="muted">Drop a photo, PDF, iPhone HEIC or some text and we will suggest the right tool. Files stay in your browser.</p>
       <div class="drop-actions">
         <label class="btn" for="drop-file">Choose a file</label>
-        <input id="drop-file" class="sr-only" type="file">
+        <input id="drop-file" class="sr-only" type="file" multiple>
         <span class="muted">or</span>
         <label class="sr-only" for="drop-text">Paste text</label>
         <textarea id="drop-text" rows="1" placeholder="paste text here"></textarea>
@@ -102,6 +102,7 @@ const blurb = (d: string) => (d.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? d);
 
 <script>
 import { tools } from "../scripts/ui.ts";
+import { putHandoff } from "../tools/common";
 
 // ---- drop anything ---------------------------------------------------------
 // Everything is read locally (FileReader / DataTransfer). Text handed to a tool
@@ -156,7 +157,7 @@ function offer(text: string, label: string) {
 function unsupported(name: string) {
   result.replaceChildren();
   const p = document.createElement("p");
-  p.append(`${name}: image and PDF tools are on the way. `);
+  p.append(`${name}: no tool opens this kind of file yet. `);
   const a = document.createElement("a");
   a.href = "/suggest/";
   a.textContent = "Tell us what you need";
@@ -164,11 +165,52 @@ function unsupported(name: string) {
   result.append(p);
 }
 
-function handleFile(f: File) {
-  if (f.type.startsWith("text/") || f.type === "application/json" || TEXT_FILE.test(f.name)) {
+// Files (photos, PDFs, HEIC) go to the tool through IndexedDB in this browser:
+// the tool page picks them up on load. Nothing is uploaded.
+function fileKind(f: File): string | null {
+  if (/\.(heic|heif)$/i.test(f.name) || /^image\/hei[cf]/.test(f.type)) return "heic";
+  if (f.type === "application/pdf" || /\.pdf$/i.test(f.name)) return "pdf";
+  if (f.type.startsWith("image/")) return "image";
+  return null;
+}
+
+function offerFiles(files: File[]) {
+  const ks = [...new Set(files.map(fileKind))];
+  // Mixed drops: photos + PDFs -> PDF tools; anything with HEIC + photos -> HEIC to JPG first.
+  const k = ks.length === 1 ? ks[0]
+    : ks.every((x) => x === "pdf" || x === "image") ? "pdf"
+    : ks.every((x) => x === "heic" || x === "image") ? "heic" : null;
+  const label = files.length === 1 ? `"${files[0].name}"` : `${files.length} files`;
+  if (!k) { unsupported(label); return; }
+  const ranked = tools.filter((t) => t.accepts.includes(k));
+  result.replaceChildren();
+  const p = document.createElement("p");
+  p.textContent = `${label} — open in:`;
+  const ul = document.createElement("ul");
+  ul.className = "chips";
+  for (const t of ranked) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = `/${t.slug}/`;
+    a.textContent = t.name;
+    a.addEventListener("click", async (e) => {
+      e.preventDefault();
+      try { await putHandoff(t.slug, t.slug === "qr-code-generator" ? files.slice(0, 1) : files); } catch { /* storage blocked: open the tool empty */ }
+      location.href = a.href;
+    });
+    li.append(a);
+    ul.append(li);
+  }
+  result.append(p, ul);
+}
+
+function handleFiles(list: FileList | File[]) {
+  const files = [...list];
+  const f = files[0];
+  if (files.length === 1 && (f.type.startsWith("text/") || f.type === "application/json" || TEXT_FILE.test(f.name))) {
     f.slice(0, MAX_TEXT).text().then((t) => offer(t, `"${f.name}"`));
   } else {
-    unsupported(`"${f.name}"`);
+    offerFiles(files);
   }
 }
 
@@ -179,13 +221,13 @@ zone.addEventListener("drop", (e) => {
   zone.classList.remove("over");
   const dt = e.dataTransfer;
   if (!dt) return;
-  if (dt.files.length) handleFile(dt.files[0]);
+  if (dt.files.length) handleFiles(dt.files);
   else {
     const t = dt.getData("text/plain");
     if (t) offer(t, "Your text");
   }
 });
-fileInput.addEventListener("change", () => { if (fileInput.files?.[0]) handleFile(fileInput.files[0]); });
+fileInput.addEventListener("change", () => { if (fileInput.files?.length) handleFiles(fileInput.files); });
 textInput.addEventListener("input", () => {
   if (textInput.value.trim()) offer(textInput.value, "Your text");
   else result.replaceChildren();

@@ -1,0 +1,65 @@
+---
+// PDF tools (UH-T2 tool 2): JPG/images -> PDF, merge, reorder/rotate/remove pages,
+// extract a range, split every page, PDF pages -> JPG.
+// pdf-lib (MIT) builds PDFs; pdf.js (Apache-2.0) renders thumbnails and JPGs.
+// Both are lazy-loaded the first time they are needed.
+import "../styles/tools.css";
+---
+<div class="tool ft" id="pdf">
+  <div class="ft-pick" id="pdf-drop">
+    <input id="pdf-file" class="sr-only" type="file" multiple
+      accept="application/pdf,.pdf,image/jpeg,image/png,image/webp,image/gif,image/bmp">
+    <label class="btn" for="pdf-file">Choose PDFs or photos</label>
+    <button type="button" class="btn-ghost" id="pdf-sample">Try a sample</button>
+    <p>or drop them here. Pages show up below in order; you can add more files at any time.</p>
+  </div>
+  <p class="ft-status" id="pdf-summary" role="status" aria-live="polite">No pages yet.</p>
+  <ol class="pdf-pages" id="pdf-pages" aria-label="Pages in order"></ol>
+  <div class="ft-opts">
+    <div>
+      <label for="pdf-size">Page size for photos</label>
+      <select id="pdf-size">
+        <option value="a4">A4</option>
+        <option value="letter">US Letter</option>
+        <option value="fit">Same as the photo</option>
+      </select>
+    </div>
+    <div>
+      <label for="pdf-range">Pages to extract</label>
+      <input id="pdf-range" type="text" inputmode="numeric" placeholder="e.g. 1-3, 5" autocomplete="off">
+    </div>
+    <div>
+      <label for="pdf-dpi">JPG resolution</label>
+      <select id="pdf-dpi">
+        <option value="150">Normal (150 DPI)</option>
+        <option value="300">High (300 DPI)</option>
+      </select>
+    </div>
+  </div>
+  <div class="ft-row">
+    <button type="button" id="pdf-build">Make one PDF</button>
+    <button type="button" class="btn-ghost" id="pdf-extract">Extract pages</button>
+    <button type="button" class="btn-ghost" id="pdf-split">Split every page</button>
+    <button type="button" class="btn-ghost" id="pdf-jpg">Convert pages to JPG</button>
+    <button type="button" class="btn-ghost" id="pdf-clear">Clear all</button>
+  </div>
+  <p class="ft-status" id="pdf-status" role="status" aria-live="polite"></p>
+  <ul class="ft-results" id="pdf-out" aria-label="Your files"></ul>
+</div>
+<style>
+  .pdf-pages { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem;
+    grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); }
+  .pdf-pages:empty { display: none; }
+  .pdf-pages li { display: grid; gap: .4rem; padding: .5rem; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); background: var(--panel-2); }
+  .pdf-pages li.dragging { opacity: .5; }
+  .pdf-pages .thumb { display: grid; place-items: center; height: 7.5rem; border-radius: 8px; overflow: hidden;
+    background: var(--panel); color: var(--muted); font-size: .8125rem; }
+  .pdf-pages .thumb img, .pdf-pages .thumb canvas { max-width: 100%; max-height: 100%; transition: transform .2s; }
+  .pdf-pages .lab { font-size: .8125rem; overflow-wrap: anywhere; line-height: 1.3; }
+  .pdf-pages .lab b { font-weight: 650; }
+  .pdf-pages .acts { display: grid; grid-template-columns: repeat(4, 1fr); gap: .25rem; }
+  .pdf-pages .acts button { min-height: 44px; min-width: 0; padding: 0; background: var(--panel); color: var(--fg);
+    border-color: var(--border); font-size: 1rem; }
+</style>
+<script>import "./pdf-tools.ts";</script>

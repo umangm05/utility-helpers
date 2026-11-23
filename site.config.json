@@ -13,6 +13,16 @@
   },
   "sections": [
     {
+      "id": "files",
+      "name": "Image & PDF tools",
+      "blurb": "Resize photos, make PDFs, convert iPhone pictures and print passport photos. Your files stay on your device."
+    },
+    {
+      "id": "everyday",
+      "name": "Everyday tools",
+      "blurb": "Quick helpers for daily life: QR codes and more on the way."
+    },
+    {
       "id": "developer",
       "name": "Developer tools",
       "blurb": "Format, encode, convert and generate — the everyday helpers for code and text."
@@ -36,6 +46,174 @@
     }
   ],
   "tools": [
+    {
+      "slug": "resize-image",
+      "name": "Image Resizer & Compressor",
+      "section": "files",
+      "icon": "image",
+      "island": "resize-image",
+      "preview": "4.2 MB → 180 KB",
+      "accepts": [
+        "image"
+      ],
+      "summary": "Shrink photos to an exact width or to a file-size limit (20 KB, 50 KB, 100 KB) for job, exam and government form uploads.",
+      "title": "Resize & Compress Image Online — Free, Private, No Upload",
+      "description": "Resize images to exact pixels or compress to 20 KB, 50 KB or 100 KB. JPG, PNG and WebP. Free, no signup, and your photos never leave your device.",
+      "intro": "Resize and compress images right in your browser. Set an exact width and height, or type a maximum file size such as 50 KB and the tool finds the best quality that fits, which is handy for exam, job and government forms that reject large photos. Works with JPG, PNG and WebP, one image or a whole batch. Your photos are processed on your device and are never uploaded.",
+      "faq": [
+        {
+          "q": "Are my photos uploaded to a server?",
+          "a": "No. The image is decoded and re-encoded by your own browser on a canvas. Nothing is sent anywhere, and closing the tab discards it."
+        },
+        {
+          "q": "How do I compress a photo to under 50 KB or 20 KB?",
+          "a": "Type the limit in Max file size. The tool lowers the JPG quality step by step and, if that is not enough, reduces the pixel size until the file fits."
+        },
+        {
+          "q": "Will resizing stretch my photo?",
+          "a": "Not while Keep proportions is ticked: change the width and the height follows. Untick it only when a form asks for an exact width and height."
+        },
+        {
+          "q": "Which format should I pick?",
+          "a": "JPG is smallest for photos, WebP is smaller still on modern sites, and PNG keeps every pixel (best for screenshots and logos)."
+        }
+      ]
+    },
+    {
+      "slug": "pdf-tools",
+      "name": "PDF Tools: JPG to PDF, Merge, Split",
+      "section": "files",
+      "icon": "pdf",
+      "island": "pdf-tools",
+      "preview": "3 files → 1 PDF",
+      "accepts": [
+        "pdf",
+        "image"
+      ],
+      "summary": "Turn photos of documents into one PDF, join PDFs, pull out pages, reorder or rotate them, and save pages as JPG.",
+      "title": "JPG to PDF, Merge & Split PDF, PDF to JPG — Free & Private",
+      "description": "Convert JPG to PDF, merge PDFs, split or reorder pages and turn PDF pages into JPG images. Runs in your browser: files are never uploaded.",
+      "intro": "One page for everyday PDF jobs. Add PDFs and photos, arrange the pages in the order you want, rotate or remove any of them, then save a single PDF. You can also extract a page range into its own PDF, split every page into a separate file, or save pages as JPG images. Everything runs inside your browser, so private documents such as ID cards and bank statements never leave your device.",
+      "faq": [
+        {
+          "q": "Is it safe to use with ID cards or bank statements?",
+          "a": "Yes. The PDF is built by JavaScript in your own browser. No file is uploaded, and nothing is kept after you close the tab."
+        },
+        {
+          "q": "How do I convert several JPG photos into one PDF?",
+          "a": "Add the photos, drag them into order with the arrows, choose a page size (A4 is the usual choice) and press Save as PDF."
+        },
+        {
+          "q": "How do I take a few pages out of a PDF?",
+          "a": "Add the PDF, type the pages you want, for example 1-3, 5, and press Extract pages. Split every page saves each page as its own PDF."
+        },
+        {
+          "q": "Can it open password-protected PDFs?",
+          "a": "Not yet. Remove the password in your PDF reader first, then add the file here."
+        }
+      ]
+    },
+    {
+      "slug": "heic-to-jpg",
+      "name": "HEIC to JPG Converter",
+      "section": "files",
+      "icon": "photo",
+      "island": "heic-to-jpg",
+      "preview": "IMG_0042.HEIC → .jpg",
+      "accepts": [
+        "heic"
+      ],
+      "summary": "Open iPhone HEIC photos on Windows, Android or any website by converting them to JPG or PNG.",
+      "title": "HEIC to JPG Converter — Free, Private, Batch, No Upload",
+      "description": "Convert iPhone HEIC and HEIF photos to JPG or PNG in your browser. Batch convert, no signup, and your photos are never uploaded.",
+      "intro": "iPhones save photos as HEIC, which many Windows PCs, Android phones and upload forms cannot open. This converter turns HEIC and HEIF photos into ordinary JPG or PNG files in a few seconds, one at a time or in a batch. The conversion runs on your device, so your personal photos are never uploaded anywhere.",
+      "faq": [
+        {
+          "q": "Why can't I open HEIC files on Windows?",
+          "a": "HEIC uses the HEVC video codec, which Windows does not include by default. Converting to JPG gives you a file every device and website accepts."
+        },
+        {
+          "q": "Does converting reduce quality?",
+          "a": "JPG at the default 92% quality looks the same to the eye. Pick PNG if you need a lossless copy, at the cost of a much larger file."
+        },
+        {
+          "q": "Are my photos uploaded?",
+          "a": "No. Decoding and conversion happen in your browser. Nothing is sent to a server."
+        },
+        {
+          "q": "How do I stop my iPhone saving HEIC?",
+          "a": "On the iPhone open Settings, Camera, Formats and choose Most Compatible. New photos are then saved as JPG."
+        }
+      ]
+    },
+    {
+      "slug": "passport-size-photo",
+      "name": "Passport Size Photo Maker",
+      "section": "files",
+      "icon": "idcard",
+      "island": "passport-photo",
+      "preview": "35×45 mm · 8 on 4×6",
+      "accepts": [
+        "image"
+      ],
+      "summary": "Crop any photo to Indian passport, visa or PAN size and get a ready-to-print 4×6 inch sheet.",
+      "title": "Passport Size Photo Maker — 35×45 mm, 4×6 Sheet, Free",
+      "description": "Make passport size photos online: 35×45 mm, 2×2 inch, PAN and stamp sizes, with a 4×6 inch print sheet at 300 DPI. Free, and photos stay on your device.",
+      "intro": "Make passport size photos at home. Pick a size such as 35×45 mm for an Indian passport, 2×2 inch for a US or Indian visa, or the PAN card size, then drag and zoom your photo to frame the face. You get a single photo for online forms and a 4×6 inch sheet at 300 DPI that any photo shop or home printer can print. Your photo is processed on your device and never uploaded.",
+      "faq": [
+        {
+          "q": "What is the passport photo size in India?",
+          "a": "35 mm wide by 45 mm high with a plain light background, and the face should fill about 70-80% of the height. This tool crops to that size at 300 DPI (413 × 531 pixels)."
+        },
+        {
+          "q": "How many passport photos fit on a 4×6 print?",
+          "a": "Eight 35×45 mm photos, or six 2×2 inch photos. The sheet is laid out for you with thin cutting lines."
+        },
+        {
+          "q": "Can I print the sheet at a photo shop?",
+          "a": "Yes. Download the 4×6 sheet JPG and ask for a normal 4×6 inch (10×15 cm) print. Do not choose fit or fill options that rescale it."
+        },
+        {
+          "q": "Is my photo uploaded?",
+          "a": "No. Cropping and the print sheet are made by your browser on your device."
+        }
+      ]
+    },
+    {
+      "slug": "qr-code-generator",
+      "name": "QR Code Generator & Scanner",
+      "section": "everyday",
+      "icon": "qr",
+      "island": "qr-code",
+      "preview": "upi://pay · Wi-Fi · link",
+      "accepts": [
+        "text",
+        "url",
+        "image"
+      ],
+      "summary": "Make QR codes for links, text, Wi-Fi and UPI payments, and scan QR codes with your camera or from a picture.",
+      "title": "QR Code Generator & Scanner — UPI, Wi-Fi, Links, Free",
+      "description": "Create QR codes for links, text, Wi-Fi and UPI payments, download PNG or SVG, and scan QR codes with your camera. Free, no signup, nothing uploaded.",
+      "intro": "Create a QR code for a website, plain text, your Wi-Fi network or a UPI payment request, then download it as a PNG or a sharp SVG for printing. Press Check it scans to make sure the code reads back correctly before you print it. The scanner reads QR codes from your camera or from a screenshot. Everything happens in your browser, and the camera picture never leaves your device.",
+      "faq": [
+        {
+          "q": "Do these QR codes expire?",
+          "a": "No. The code contains your text or link directly, with no redirect service in between, so it works for as long as the link itself works."
+        },
+        {
+          "q": "How do I make a UPI payment QR code?",
+          "a": "Choose UPI payment, enter your UPI ID (like name@okbank) and your name, and optionally an amount. Any UPI app such as Google Pay, PhonePe or Paytm can scan it."
+        },
+        {
+          "q": "Is the camera video sent anywhere?",
+          "a": "No. Frames from the camera are decoded in your browser and the camera turns off when you stop scanning or leave the page."
+        },
+        {
+          "q": "PNG or SVG?",
+          "a": "PNG for sharing on phones and chats; SVG for print, because it stays sharp at any size."
+        }
+      ]
+    },
     {
       "slug": "word-counter",
       "name": "Word Counter",
