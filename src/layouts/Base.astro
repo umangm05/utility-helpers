@@ -46,6 +46,8 @@ const siblings = moreFromUs.filter((s) => !s.url.startsWith(site.baseUrl));
     <meta name="twitter:description" content={description}>
     <meta name="twitter:image" content={ogImage}>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <script is:inline>document.documentElement.classList.add("js");try{var t=localStorage.getItem("uh-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
     <script is:inline defer src="/assets/site.js"></script>
     {/* AdSense: only on indexable pages. site.js injects adsbygoogle.js ONLY

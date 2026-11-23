@@ -41,6 +41,8 @@ jobs:
         run: python3 scripts/test_tools.py
       - name: Known-answer file-tool tests (image, PDF, HEIC, QR, passport photo; no off-device requests)
         run: python3 scripts/test_file_tools.py
+      - name: Known-answer + offline tests (typing test, money, dates, spin wheel, background remover; service worker; no off-device requests)
+        run: python3 scripts/test_new_tools.py
       - name: Consent + usage-event contract (Reject sends nothing, no tool content)
         run: python3 scripts/test_consent.py
       - name: New UI (Ctrl+K, recents, drop zone, theme; no network)
