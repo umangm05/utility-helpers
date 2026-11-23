@@ -47,6 +47,14 @@ SECRET = "CANARY-do-not-store-7f3a"   # typed into tools; must never leave the p
 RECEIVED: list[str] = []   # bodies POSTed to the local recording server
 
 
+def block_preview_drawer(ctx) -> None:
+    """Netlify injects a collaboration drawer (/.netlify/scripts/cdp -> app.netlify.com
+    iframe) into DEPLOY PREVIEWS only. It is not site code, overlays the footer and
+    intercepts clicks, so tests against a preview block it. No effect locally."""
+    ctx.route("**/.netlify/scripts/cdp*", lambda r: r.abort())
+    ctx.route("https://app.netlify.com/**", lambda r: r.abort())
+
+
 def serve_recording(root: Path, port: int):
     class Handler(http.server.SimpleHTTPRequestHandler):
         def __init__(self, *a, **kw):
@@ -100,6 +108,7 @@ class Phase:
         self.browser = pw.chromium.launch(args=[f"--log-net-log={self.netlog}",
                                                 "--net-log-capture-mode=Default"])
         self.ctx = self.browser.new_context()
+        block_preview_drawer(self.ctx)
         self.page = self.ctx.new_page()
         self.start = len(RECEIVED)
         self.netlog_count: int | None = None

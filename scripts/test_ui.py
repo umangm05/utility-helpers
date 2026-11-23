@@ -7,7 +7,7 @@ Serves dist/ locally and drives Chromium with Playwright. Every request the
 page makes is recorded; any request that is not a same-origin GET for a static
 file is a failure (tool input must never leave the device).
 
-Usage:  python3 scripts/test_ui.py   (after `npm run build`)
+Usage:  python3 scripts/test_ui.py [BASE_URL]   (no URL: serves dist/ after `npm run build`)
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from verify import free_port, serve  # noqa: E402
+from test_consent import block_preview_drawer  # noqa: E402
 
 from playwright.sync_api import sync_playwright  # noqa: E402
 
@@ -25,9 +26,12 @@ CANARY = '{"canary": "ui-7f3a-do-not-send"}'
 
 
 def main() -> int:
-    port = free_port(8097)
-    base = f"http://127.0.0.1:{port}"
-    httpd = serve(ROOT / "dist", port)
+    if len(sys.argv) > 1:                      # e.g. a Netlify deploy preview
+        base, httpd = sys.argv[1].rstrip("/"), None
+    else:
+        port = free_port(8097)
+        base = f"http://127.0.0.1:{port}"
+        httpd = serve(ROOT / "dist", port)
     failures: list[str] = []
 
     def check(cond: bool, label: str, observed=""):
@@ -38,6 +42,7 @@ def main() -> int:
     with sync_playwright() as pw:
         browser = pw.chromium.launch()
         ctx = browser.new_context(viewport={"width": 1280, "height": 900})
+        block_preview_drawer(ctx)
         requests: list[str] = []
         ctx.on("request", lambda r: requests.append(f"{r.method} {r.url} {r.post_data or ''}"))
         # "Essential only": usage beacons DO fire, so the canary check below also
@@ -89,13 +94,17 @@ def main() -> int:
         check(page.evaluate("localStorage.getItem('uh-recent')") is None, "Reject -> uh-recent removed / not written")
 
         print("\n=== network ===")
+        print(f"  requests made during the run: {len(requests)}")
+        for r in requests:
+            print(f"    {r[:160]}")
         bad = [r for r in requests if not r.startswith(f"GET {base}/") and "/api/e" not in r]
         leaked = [r for r in requests if "ui-7f3a" in r]
         check(not leaked, "dropped/typed canary never appears in any request", leaked)
         check(not bad, "UI makes no non-GET or cross-origin requests (besides consented /api/e)", bad[:5])
         ctx.close()
         browser.close()
-    httpd.shutdown()
+    if httpd:
+        httpd.shutdown()
 
     print("\n=== RESULT ===")
     print("ALL UI CHECKS PASS" if not failures else f"{len(failures)} FAILURE(S): {failures}")
