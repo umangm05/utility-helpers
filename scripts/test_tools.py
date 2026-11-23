@@ -215,7 +215,7 @@ def main() -> int:
 
     port = free_port(args.port)
     base = f"http://127.0.0.1:{port}"
-    httpd = serve(ROOT, port)
+    httpd = serve(ROOT / "dist", port)  # Astro output (npm run build)
     time.sleep(0.4)
 
     print(f"Running known-answer tests against {base}\n")

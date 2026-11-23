@@ -13,5 +13,9 @@ Thumbs.db
 # Local Netlify folder
 .netlify
 
+# Astro build output + cache (Netlify builds it on deploy)
+dist/
+.astro/
+
 # Node deps for netlify/functions (bundled by the Netlify CLI at deploy time)
 node_modules/

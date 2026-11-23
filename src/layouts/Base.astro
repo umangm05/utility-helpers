@@ -1,0 +1,123 @@
+---
+// Shared page shell. The <head> meta set, the consent banner markup and the
+// /assets/site.js loader are carried over unchanged from the pre-Astro
+// generator (scripts/build.py @ 7476590) — consent, usage events, the
+// suggestion form and AdSense gating all live in public/assets/site.js.
+import "../styles/site.css";
+import Icon from "../components/Icon.astro";
+import { site, moreFromUs, clientTools, pageUrl } from "../lib/site";
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  jsonld?: object[];
+  noindex?: boolean;
+  toolSlug?: string;
+}
+const { title, description, path, jsonld = [], noindex = false, toolSlug } = Astro.props;
+const canonical = pageUrl(path);
+const ogImage = pageUrl("/assets/og.png");
+// Serialise JSON-LD, escaping the closing-tag sequence for safe inlining.
+const ld = (o: object) => JSON.stringify(o, null, 2).replace(/<\//g, "<\\/");
+const toolsJson = JSON.stringify(clientTools).replace(/<\//g, "<\\/");
+const siblings = moreFromUs.filter((s) => !s.url.startsWith(site.baseUrl));
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <link rel="canonical" href={canonical}>
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow"}>
+    <meta name="theme-color" content={site.themeColor}>
+    <meta name="color-scheme" content="light dark">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content={site.name}>
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={canonical}>
+    <meta property="og:image" content={ogImage}>
+    <meta property="og:locale" content={site.locale}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={ogImage}>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <script is:inline>document.documentElement.classList.add("js");try{var t=localStorage.getItem("uh-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+    <script is:inline defer src="/assets/site.js"></script>
+    {/* AdSense: only on indexable pages. site.js injects adsbygoogle.js ONLY
+        after "Accept all" (D-UH-CONSENT-ANALYTICS); this meta names the client. */}
+    {site.adsenseClient && !noindex && <meta name="uh-ads-client" content={site.adsenseClient}>}
+    {jsonld.map((o) => <script type="application/ld+json" is:inline set:html={ld(o)} />)}
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>Utility<span>Helpers</span></a>
+    <nav aria-label="Primary">
+      <a href="/" class="hide-sm">All tools</a>
+      <a href="/suggest/">Suggest</a>
+      <a href={site.github} rel="noopener" class="hide-sm">GitHub</a>
+      <button type="button" class="icon-btn cmd-open" data-js-only aria-label="Search tools (Ctrl+K)" aria-haspopup="dialog">
+        <Icon name="search" size={18} /><span class="hide-sm">Search</span><kbd class="hide-sm">Ctrl K</kbd>
+      </button>
+      <button type="button" class="icon-btn theme-toggle" data-js-only aria-label="Switch colour theme">
+        <Icon name="sun" size={18} class="i-sun" /><Icon name="moon" size={18} class="i-moon" />
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main" data-uh-tool={toolSlug}>
+  <div class="wrap">
+    <slot />
+  </div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <nav class="more" aria-labelledby="more-heading">
+      <p class="more-title" id="more-heading">More from us</p>
+      <ul>
+        {siblings.map((s) => (
+          <li><a href={s.url} rel="noopener">{s.name}</a> <span class="muted">— {s.blurb}</span></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="legal">
+      <p>&copy; <span data-year>2026</span> {site.author}. Tools run in your browser &mdash; what you type never leaves your device.</p>
+      <p><a href="/privacy/">Privacy</a><span data-uh-js hidden> &middot; <button type="button" class="linkbtn" data-uh-consent-open>Privacy choices</button></span> &middot; <a href="/suggest/">Suggest a feature</a></p>
+    </div>
+  </div>
+</footer>
+<section class="consent" id="uh-consent" aria-label="Privacy choices" hidden>
+  <p class="consent-title">Help us decide which tools to improve?</p>
+  <p>We would like to count which tools, options and buttons get used, and for how long.
+  What you type and the results stay on your device &mdash; we never see them.
+  <a href="/privacy/">How this works</a></p>
+  <p class="consent-note"><strong>Essential only</strong>: anonymous counts, no ID kept between visits.
+  <strong>Accept all</strong>: adds a random ID so we can tell when you come back, and shows
+  Google ads, which use cookies.
+  <strong>Reject</strong>: nothing is sent.</p>
+  <div class="actions">
+    <button type="button" data-uh-choice="all">Accept all</button>
+    <button type="button" class="btn-ghost" data-uh-choice="essential">Essential only</button>
+    <button type="button" class="btn-ghost" data-uh-choice="reject">Reject</button>
+  </div>
+</section>
+<dialog class="cmd" id="uh-cmd" aria-label="Search tools">
+  <div class="cmd-box">
+    <Icon name="search" size={20} />
+    <input id="uh-cmd-input" type="text" role="combobox" aria-expanded="true" aria-controls="uh-cmd-list"
+      aria-autocomplete="list" placeholder="Search tools…" autocomplete="off" spellcheck="false">
+    <kbd>Esc</kbd>
+  </div>
+  <ul id="uh-cmd-list" role="listbox" aria-label="Tools"></ul>
+  <p class="cmd-empty" hidden>No tool matches. <a href="/suggest/">Suggest it</a></p>
+</dialog>
+<script type="application/json" id="uh-tools" is:inline set:html={toolsJson}></script>
+<script>import "../scripts/ui.ts";</script>
+</body>
+</html>
