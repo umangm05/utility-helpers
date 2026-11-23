@@ -8,10 +8,13 @@ but it now checks what is actually SHIPPED rather than the templates:
     description (WARN past 60 / 155 chars)
   * tool slugs: unique, lowercase-kebab, required fields present
   * every tool in site.config.json has dist/<slug>/index.html, and the sitemap
-    lists exactly home + tools + /privacy/ + /suggest/
+    lists exactly home + tools + /about/ + /contact/ + /privacy/ + /suggest/
   * netlify/lib/tool-slugs.mjs matches site.config.json (no drift)
-  * consent: /assets/site.js is shipped, every indexable page loads it and
-    carries the uh-ads-client meta; NO page loads adsbygoogle.js statically
+  * consent: /assets/site.js is shipped and every page loads it
+  * ads: every indexable page carries Google's standard AdSense tag in <head>
+    (unmodified, exactly once) + the google-adsense-account meta; noindex pages
+    (404) carry neither
+  * every page links /about/, /contact/ and /privacy/ (AdSense site review)
 
 Usage:  python3 scripts/check_dist.py [--dist DIR]
 """
@@ -82,13 +85,24 @@ def main() -> int:
             errors.append(f"{route}: missing <!DOCTYPE html>")
         if 'src="/assets/site.js"' not in doc:
             errors.append(f"{route}: does not load /assets/site.js (consent/analytics)")
-        if "adsbygoogle.js" in doc:
-            errors.append(f"{route}: adsbygoogle.js referenced statically (must be consent-gated)")
         noindex = 'content="noindex' in doc
-        if not noindex and meta(doc, "uh-ads-client") != cfg["site"].get("adsenseClient", ""):
-            errors.append(f"{route}: uh-ads-client meta missing/wrong")
-        if noindex and meta(doc, "uh-ads-client"):
-            errors.append(f"{route}: noindex page must not carry uh-ads-client")
+        client = cfg["site"].get("adsenseClient", "")
+        ad_tag = (f'<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={client}" '
+                  'crossorigin="anonymous"></script>')
+        head = doc.split("</head>", 1)[0]
+        if not noindex and client:
+            # Google's standard tag, unmodified, exactly once, in <head>.
+            if head.count(ad_tag) != 1 or doc.count("adsbygoogle.js") != 1:
+                errors.append(f"{route}: standard AdSense tag missing from <head>, altered, or duplicated")
+            if meta(doc, "google-adsense-account") != client:
+                errors.append(f"{route}: google-adsense-account meta missing/wrong")
+        if noindex and ("adsbygoogle.js" in doc or meta(doc, "google-adsense-account")):
+            errors.append(f"{route}: noindex page must not carry the AdSense tag")
+        for link in ("/about/", "/contact/", "/privacy/"):
+            if f'href="{link}"' not in doc:
+                errors.append(f"{route}: no link to {link}")
+        if "uh-ads-client" in doc:
+            errors.append(f"{route}: stale uh-ads-client meta (ads are no longer injected by site.js)")
 
     seen: set[str] = set()
     for t in tools:
@@ -106,7 +120,7 @@ def main() -> int:
         elif f'data-uh-tool="{slug}"' not in found[f"/{slug}/"]:
             errors.append(f"tool {slug!r}: <main> lacks data-uh-tool (usage events need it)")
 
-    want = ["/"] + [f"/{t['slug']}/" for t in tools] + ["/privacy/", "/suggest/"]
+    want = ["/"] + [f"/{t['slug']}/" for t in tools] + ["/about/", "/contact/", "/privacy/", "/suggest/"]
     sm = (dist / "sitemap.xml").read_text(encoding="utf-8") if (dist / "sitemap.xml").exists() else ""
     locs = [l.removeprefix(cfg["site"]["baseUrl"].rstrip("/")) for l in re.findall(r"<loc>(.*?)</loc>", sm)]
     if locs != want:

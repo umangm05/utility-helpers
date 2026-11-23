@@ -31,7 +31,7 @@ from urllib.parse import urlparse
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from test_tools import free_port, serve  # noqa: E402
-from test_consent import block_preview_drawer  # noqa: E402
+from test_consent import block_preview_drawer, is_ad_loader  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 PREVIEW_ONLY = ("/.netlify/scripts/cdp", "https://app.netlify.com/")
@@ -250,7 +250,10 @@ def main() -> int:
         for r in runs:
             reqs = r["reqs"]
             injected = [u for m, u in reqs if u.startswith(PREVIEW_ONLY) or urlparse(u).path.startswith(PREVIEW_ONLY[0])]
-            reqs = [(m, u) for m, u in reqs if u not in injected]
+            # AdSense loader GET (standard tag in <head>, aborted in tests): expected, but it
+            # must never carry tool content.
+            ads = [u for m, u in reqs if m == "GET" and is_ad_loader(u) and "?client=ca-pub-" in u and "&" not in u]
+            reqs = [(m, u) for m, u in reqs if u not in injected and u not in ads]
             bad = [f"{m} {u}" for m, u in reqs
                    if not u.startswith(("blob:", "data:")) and (m != "GET" or not u.startswith(origin))]
             ok = r["online"][1] and r["offline"][1] and not bad and not r["errors"]

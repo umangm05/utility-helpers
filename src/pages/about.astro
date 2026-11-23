@@ -1,0 +1,60 @@
+---
+import Base from "../layouts/Base.astro";
+import { site, tools, sections, TITLE_MAX } from "../lib/site";
+const TITLE = "About Utility Helpers — who builds it and why";
+const DESC = "Utility Helpers is a free set of browser tools built by Umang Mittal. " +
+  "Why it exists, how the tools keep your files on your device, and how it is paid for.";
+const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const list = sections.map((s) => {
+  const items = tools.filter((t) => t.section === s.id)
+    .map((t) => `<li><a href="/${esc(t.slug)}/">${esc(t.name)}</a></li>`).join("");
+  return `<h3>${esc(s.name)}</h3>\n    <p>${esc(s.blurb)}</p>\n    <ul>${items}</ul>`;
+}).join("\n    ");
+const body = `    <h1>About Utility Helpers</h1>
+    <p class="lede">Utility Helpers is a free collection of ${tools.length} small tools for jobs that come up
+    every week: shrinking a photo for a form, joining two PDFs, working out a loan EMI,
+    formatting JSON. Each tool runs inside your browser, so your files and text stay on your device.</p>
+    <div class="prose">
+    <h2>Who builds it</h2>
+    <p>The site is designed, written and maintained by ${esc(site.author)}, a full-stack
+    software engineer who works with JavaScript, TypeScript, Node.js and React. It started as a
+    handful of developer helpers (a JSON formatter, a Base64 encoder, a timestamp converter) and
+    grew into everyday tools as people asked for them.</p>
+
+    <h2>Why it exists</h2>
+    <p>Most &ldquo;free online&rdquo; converters ask you to upload a file to someone else&rsquo;s
+    server, wait in a queue, then sign up to download the result. For a passport photo, a bank
+    statement PDF or a password, that is a bad trade. Modern browsers can do this work
+    themselves, so every tool here does it locally: no upload, no account, no waiting.</p>
+
+    <h2>Our privacy promise</h2>
+    <ul>
+      <li><strong>Your input stays on your device.</strong> What you type, paste, drop or convert is
+      processed in your browser and is never sent to us.</li>
+      <li><strong>No accounts.</strong> There is nothing to sign up for and no email to hand over.</li>
+      <li><strong>You choose about usage counts.</strong> With your consent we count which tools and
+      buttons get used, never what you put into them. Reject and we receive nothing.</li>
+      <li><strong>Open source.</strong> The code is public on
+      <a href="${site.github}" rel="noopener">GitHub</a>, so anyone can check these claims.</li>
+    </ul>
+    <p>The details are on the <a href="/privacy/">privacy page</a>.</p>
+
+    <h2>How it is paid for</h2>
+    <p>The site is free to use and is funded by ads served by Google AdSense. There are no paid
+    tiers and no tool is locked behind a sign-up.</p>
+
+    <h2>How tools get added or removed</h2>
+    <p>Every week we look at which tools are used and at the suggestions people send in, then
+    decide what to build next and what to drop. If something is missing or broken,
+    <a href="/suggest/">suggest a change</a> or <a href="/contact/">get in touch</a>.</p>
+
+    <h2>The tools</h2>
+    ${list}
+    </div>`;
+---
+<Base title={TITLE.slice(0, TITLE_MAX)} description={DESC} path="/about/"
+  jsonld={[{ "@context": "https://schema.org", "@type": "AboutPage", name: TITLE, url: site.baseUrl.replace(/\/$/, "") + "/about/",
+    isPartOf: { "@type": "WebSite", name: site.name, url: site.baseUrl },
+    author: { "@type": "Person", name: site.author } }]}>
+  <Fragment set:html={body} />
+</Base>

@@ -11,6 +11,10 @@ to /api/e. Asserts, per consent choice:
   * always         -> text typed into a tool never appears in any payload;
                       content inputs (e.g. the unit-converter value) never
                       produce an option event
+  * ads            -> Google's standard AdSense tag is on every indexable page
+                      for every choice (ad consent is Google's certified CMP,
+                      not this banner); the loader is requested with the site's
+                      client id and never with any tool content
 
 How requests are observed: Playwright does NOT report beacons sent from a page
 that is unloading (pagehide), which is exactly when most batches go out. So the
@@ -42,17 +46,32 @@ from verify import free_port  # noqa: E402
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 SECRET = "CANARY-do-not-store-7f3a"   # typed into tools; must never leave the page
+ADS_CLIENT = json.loads((Path(__file__).resolve().parent.parent / "site.config.json")
+                        .read_text(encoding="utf-8"))["site"]["adsenseClient"]
 
 
 RECEIVED: list[str] = []   # bodies POSTed to the local recording server
 
 
+# Google's AdSense loader. Every indexable page carries the standard tag in <head>;
+# tests abort it so runs stay hermetic (no Google CMP / ad iframes overlaying the
+# UI, no flaky third-party network). The request itself is still observed, so
+# tests can assert WHAT was requested (never any tool content).
+AD_LOADER = "https://pagead2.googlesyndication.com/"
+
+
+def is_ad_loader(url: str) -> bool:
+    return url.startswith(AD_LOADER)
+
+
 def block_preview_drawer(ctx) -> None:
     """Netlify injects a collaboration drawer (/.netlify/scripts/cdp -> app.netlify.com
     iframe) into DEPLOY PREVIEWS only. It is not site code, overlays the footer and
-    intercepts clicks, so tests against a preview block it. No effect locally."""
+    intercepts clicks, so tests against a preview block it. No effect locally.
+    Also aborts the AdSense loader (see AD_LOADER)."""
     ctx.route("**/.netlify/scripts/cdp*", lambda r: r.abort())
     ctx.route("https://app.netlify.com/**", lambda r: r.abort())
+    ctx.route(AD_LOADER + "**", lambda r: r.abort())
 
 
 def serve_recording(root: Path, port: int):
@@ -91,11 +110,6 @@ def netlog_api_requests(path: Path) -> int:
     return netlog_requests(path, lambda u: u.split("?")[0].endswith("/api/e"))
 
 
-def netlog_ads_requests(path: Path) -> int:
-    """Requests to Google's AdSense loader (pagead2.googlesyndication.com)."""
-    return netlog_requests(path, lambda u: "googlesyndication.com" in u or "adsbygoogle" in u)
-
-
 def ads_tag(page) -> int:
     return page.evaluate("() => document.querySelectorAll('script[src*=adsbygoogle]').length")
 
@@ -109,6 +123,8 @@ class Phase:
                                                 "--net-log-capture-mode=Default"])
         self.ctx = self.browser.new_context()
         block_preview_drawer(self.ctx)
+        self.ad_requests: list[str] = []
+        self.ctx.on("request", lambda r: self.ad_requests.append(r.url) if is_ad_loader(r.url) else None)
         self.page = self.ctx.new_page()
         self.start = len(RECEIVED)
         self.netlog_count: int | None = None
@@ -131,7 +147,6 @@ class Phase:
         self.ctx.close()
         self.browser.close()          # flushes and closes the net-log file
         self.netlog_count = netlog_api_requests(self.netlog)
-        self.ads_count = netlog_ads_requests(self.netlog)
         return self.netlog_count
 
 
@@ -170,6 +185,15 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
         if not cond:
             failures.append(label)
 
+    want_loader = AD_LOADER + "pagead/js/adsbygoogle.js?client=" + ADS_CLIENT
+
+    def check_ads(ph: Phase, label: str) -> None:
+        reqs = ph.ad_requests
+        check(bool(reqs) and all(u == want_loader for u in reqs),
+              f"{label}: AdSense loader requested with the site client id only", reqs[:3])
+        check(all(SECRET not in u and "4242" not in u for u in reqs),
+              f"{label}: no tool content in any ad request")
+
     with sync_playwright() as pw:
         # ---- 1. no choice: banner shows, nothing is sent -------------------
         print("\n=== no choice yet ===")
@@ -180,7 +204,7 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
         check(page.is_visible("#uh-consent"), "banner still shown on later pages until chosen")
         n = ph.close()
         check(n == 0, "network log: zero /api/e requests before a choice", n)
-        check(ph.ads_count == 0, "network log: adsbygoogle NOT requested before a choice", ph.ads_count)
+        check_ads(ph, "no choice")
         if local:
             check(len(ph.bodies) == 0, "server: zero /api/e bodies received", len(ph.bodies))
 
@@ -196,7 +220,7 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
               "Reject -> only the choice itself is stored", st)
         n = ph.close()
         check(n == 0, "network log: Reject -> zero /api/e requests", n)
-        check(ph.ads_count == 0, "network log: Reject -> adsbygoogle never requested", ph.ads_count)
+        check_ads(ph, "Reject")
         if local:
             check(len(ph.bodies) == 0, "server: Reject -> zero /api/e bodies received", len(ph.bodies))
 
@@ -210,7 +234,7 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
         check(st["vid"] is None and st["sid"] is not None, "Essential -> session id only in storage", st)
         n = ph.close()
         check(n > 0, "network log: Essential -> /api/e requests sent", n)
-        check(ph.ads_count == 0, "network log: Essential -> adsbygoogle never requested", ph.ads_count)
+        check_ads(ph, "Essential")
         if local:
             batches = ph.batches
             evs = [e for b in batches for e in b.get("ev", [])]
@@ -230,7 +254,7 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
         ph = Phase(pw, "accept", netlog_dir); page = ph.page
         page.goto(base + "/", wait_until="domcontentloaded")
         page.click("[data-uh-choice=all]")
-        check(ads_tag(page) == 1, "Accept -> adsbygoogle loader injected once", ads_tag(page))
+        check(ads_tag(page) == 1, "Accept -> exactly one AdSense tag (site.js adds none)", ads_tag(page))
         use_tools(page, base)
         vid1 = storage(page)["vid"]
         page.reload(wait_until="domcontentloaded")
@@ -251,10 +275,11 @@ def run(base: str, local: bool, netlog_dir: Path) -> list[str]:
         use_tools(page, base)
         st = storage(page)
         check(st["vid"] is None and st["sid"] is None, "switching to Reject deletes both ids", st)
-        check(ads_tag(page) == 0, "after switching to Reject the next page has no adsbygoogle tag", ads_tag(page))
+        check(ads_tag(page) == 1, "after switching to Reject the ad tag is unchanged (Google CMP owns ad consent)",
+              ads_tag(page))
         n = ph.close()
         check(n > 0, "network log: Accept phase sent /api/e requests", n)
-        check(ph.ads_count > 0, "network log: Accept -> adsbygoogle requested", ph.ads_count)
+        check_ads(ph, "Accept then Reject")
         if local:
             check(len(RECEIVED) == before, "after switching to Reject nothing more is sent", len(RECEIVED) - before)
     return failures

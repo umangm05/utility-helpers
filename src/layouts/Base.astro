@@ -1,8 +1,8 @@
 ---
 // Shared page shell. The <head> meta set, the consent banner markup and the
-// /assets/site.js loader are carried over unchanged from the pre-Astro
-// generator (scripts/build.py @ 7476590) — consent, usage events, the
-// suggestion form and AdSense gating all live in public/assets/site.js.
+// /assets/site.js loader are carried over from the pre-Astro generator
+// (scripts/build.py @ 7476590) — consent, usage events and the suggestion
+// form live in public/assets/site.js. The AdSense tag is in <head> below.
 import "../styles/site.css";
 import Icon from "../components/Icon.astro";
 import { site, moreFromUs, clientTools, pageUrl } from "../lib/site";
@@ -50,9 +50,13 @@ const siblings = moreFromUs.filter((s) => !s.url.startsWith(site.baseUrl));
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
     <script is:inline>document.documentElement.classList.add("js");try{var t=localStorage.getItem("uh-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
     <script is:inline defer src="/assets/site.js"></script>
-    {/* AdSense: only on indexable pages. site.js injects adsbygoogle.js ONLY
-        after "Accept all" (D-UH-CONSENT-ANALYTICS); this meta names the client. */}
-    {site.adsenseClient && !noindex && <meta name="uh-ads-client" content={site.adsenseClient}>}
+    {/* AdSense: Google's standard, unmodified ad tag on every indexable page
+        (never on noindex pages such as 404). Ad consent for EEA/UK/CH visitors is
+        collected by Google's own certified CMP (AdSense "Privacy & messaging"),
+        which only works when this tag is on the page. The site's own banner
+        (site.js, D-UH-CONSENT-ANALYTICS) governs first-party usage counts only. */}
+    {site.adsenseClient && !noindex && <meta name="google-adsense-account" content={site.adsenseClient}>}
+    {site.adsenseClient && !noindex && <script is:inline async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${site.adsenseClient}`} crossorigin="anonymous"></script>}
     {jsonld.map((o) => <script type="application/ld+json" is:inline set:html={ld(o)} />)}
 </head>
 <body>
@@ -62,6 +66,7 @@ const siblings = moreFromUs.filter((s) => !s.url.startsWith(site.baseUrl));
     <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>Utility<span>Helpers</span></a>
     <nav aria-label="Primary">
       <a href="/" class="hide-sm">All tools</a>
+      <a href="/about/" class="hide-sm">About</a>
       <a href="/suggest/">Suggest</a>
       <a href={site.github} rel="noopener" class="hide-sm">GitHub</a>
       <button type="button" class="icon-btn cmd-open" data-js-only aria-label="Search tools (Ctrl+K)" aria-haspopup="dialog">
@@ -90,7 +95,7 @@ const siblings = moreFromUs.filter((s) => !s.url.startsWith(site.baseUrl));
     </nav>
     <div class="legal">
       <p>&copy; <span data-year>2026</span> {site.author}. Tools run in your browser &mdash; what you type never leaves your device.</p>
-      <p><a href="/privacy/">Privacy</a><span data-uh-js hidden> &middot; <button type="button" class="linkbtn" data-uh-consent-open>Privacy choices</button></span> &middot; <a href="/suggest/">Suggest a feature</a></p>
+      <p><a href="/about/">About</a> &middot; <a href="/contact/">Contact</a> &middot; <a href="/privacy/">Privacy</a><span data-uh-js hidden> &middot; <button type="button" class="linkbtn" data-uh-consent-open>Privacy choices</button></span> &middot; <a href="/suggest/">Suggest a feature</a></p>
     </div>
   </div>
 </footer>
@@ -100,9 +105,9 @@ const siblings = moreFromUs.filter((s) => !s.url.startsWith(site.baseUrl));
   What you type and the results stay on your device &mdash; we never see them.
   <a href="/privacy/">How this works</a></p>
   <p class="consent-note"><strong>Essential only</strong>: anonymous counts, no ID kept between visits.
-  <strong>Accept all</strong>: adds a random ID so we can tell when you come back, and shows
-  Google ads, which use cookies.
-  <strong>Reject</strong>: nothing is sent.</p>
+  <strong>Accept all</strong>: adds a random ID so we can tell when you come back.
+  <strong>Reject</strong>: none of our usage counts are sent.
+  Ads are provided by Google, which asks separately where the law requires it.</p>
   <div class="actions">
     <button type="button" data-uh-choice="all">Accept all</button>
     <button type="button" class="btn-ghost" data-uh-choice="essential">Essential only</button>

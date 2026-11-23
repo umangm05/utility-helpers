@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
 import { tools, pageUrl } from "../lib/site";
 
-// Indexable paths: home + tool pages + privacy + suggest. 404 is noindex, excluded.
-export const indexablePaths = ["/", ...tools.map((t) => `/${t.slug}/`), "/privacy/", "/suggest/"];
+// Indexable paths: home + tool pages + about + contact + privacy + suggest. 404 is noindex, excluded.
+export const indexablePaths = ["/", ...tools.map((t) => `/${t.slug}/`), "/about/", "/contact/", "/privacy/", "/suggest/"];
 
 const xml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
   .replace(/"/g, "&quot;").replace(/'/g, "&apos;");

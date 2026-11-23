@@ -17,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from verify import free_port, serve  # noqa: E402
-from test_consent import block_preview_drawer  # noqa: E402
+from test_consent import block_preview_drawer, is_ad_loader  # noqa: E402
 
 from playwright.sync_api import sync_playwright  # noqa: E402
 
@@ -112,10 +112,11 @@ def main() -> int:
         print(f"  requests made during the run: {len(requests)}")
         for r in requests:
             print(f"    {r[:160]}")
-        bad = [r for r in requests if not r.startswith(f"GET {base}/") and "/api/e" not in r]
+        bad = [r for r in requests if not r.startswith(f"GET {base}/") and "/api/e" not in r
+               and not (r.startswith("GET ") and is_ad_loader(r[4:]))]
         leaked = [r for r in requests if "ui-7f3a" in r]
         check(not leaked, "dropped/typed canary never appears in any request", leaked)
-        check(not bad, "UI makes no non-GET or cross-origin requests (besides consented /api/e)", bad[:5])
+        check(not bad, "UI makes no non-GET or cross-origin requests (besides consented /api/e and the AdSense loader)", bad[:5])
         ctx.close()
         browser.close()
     if httpd:
