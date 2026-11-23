@@ -19,6 +19,3 @@ dist/
 
 # Node deps for netlify/functions (bundled by the Netlify CLI at deploy time)
 node_modules/
-
-# LGPL libheif copied from node_modules at build time (scripts/copy-vendor.mjs)
-public/vendor/
