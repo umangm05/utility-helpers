@@ -62,8 +62,9 @@ const toolUi = tool.body_html ||
     <h1>{tool.name}</h1>
   </div>
   <p class="badge"><Icon name="shield" size={16} /> Runs on your device — nothing you enter is uploaded</p>
-  <p class="lede">{tool.intro || tool.summary}</p>
+  {/* Tool first (D1): the tool is the first thing under the title; the intro copy follows it. */}
   {Island ? <Island /> : <Fragment set:html={toolUi} />}
+  <p class="lede tool-intro">{tool.intro || tool.summary}</p>
   <p class="suggest-cta"><a href={`/suggest/?tool=${tool.slug}`}>Suggest an improvement to this tool</a></p>
   {faqs.length > 0 && (
     <section class="faq" aria-labelledby="faq-heading">

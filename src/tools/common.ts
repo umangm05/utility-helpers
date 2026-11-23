@@ -182,27 +182,22 @@ export async function takeHandoff(slug: string): Promise<File[]> {
   return [];
 }
 
-/** A synthetic sample photo drawn on a canvas (no network): gradient sky, sun, hills. */
-export function samplePhoto(w = 1600, h = 1200): Promise<File> {
-  const c = document.createElement("canvas");
-  c.width = w;
-  c.height = h;
-  const g = c.getContext("2d")!;
-  const sky = g.createLinearGradient(0, 0, 0, h);
-  sky.addColorStop(0, "#1e3a8a");
-  sky.addColorStop(0.6, "#f59e0b");
-  sky.addColorStop(1, "#fde68a");
-  g.fillStyle = sky;
-  g.fillRect(0, 0, w, h);
-  g.fillStyle = "#fff7d6";
-  g.beginPath();
-  g.arc(w * 0.7, h * 0.45, h * 0.12, 0, Math.PI * 2);
-  g.fill();
-  g.fillStyle = "#14532d";
-  g.beginPath();
-  g.moveTo(0, h);
-  for (let x = 0; x <= w; x += w / 16) g.lineTo(x, h * 0.72 + Math.sin(x / w * 9) * h * 0.06);
-  g.lineTo(w, h);
-  g.fill();
-  return canvasToBlob(c, "image/jpeg", 0.92).then((b) => new File([b], "sample-photo.jpg", { type: "image/jpeg" }));
+/**
+ * The bundled "Try a sample" files in public/samples/. All self-made by
+ * scripts/make_samples.py and scripts/make_heic_sample.py (no third-party assets).
+ */
+export const SAMPLES = {
+  photo: { url: "/samples/sample-portrait.jpg", type: "image/jpeg" },
+  pdf: { url: "/samples/sample.pdf", type: "application/pdf" },
+  heic: { url: "/samples/sample.heic", type: "image/heic" },
+  qr: { url: "/samples/sample-qr.png", type: "image/png" },
+} as const;
+export type SampleKind = keyof typeof SAMPLES;
+
+/** Fetch one bundled sample as a File (a same-origin GET; nothing is sent). */
+export async function fetchSample(kind: SampleKind): Promise<File> {
+  const { url, type } = SAMPLES[kind];
+  const r = await fetch(url).catch(() => null);
+  if (!r?.ok) throw new Error("Could not load the sample. Check your connection and try again.");
+  return new File([await r.blob()], url.slice(url.lastIndexOf("/") + 1), { type });
 }

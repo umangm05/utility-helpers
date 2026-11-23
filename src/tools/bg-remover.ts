@@ -4,7 +4,7 @@
 // is decoded, segmented and composited on canvases in this tab. Nothing is uploaded.
 // Not the WebAssembly backend: its binary statically links MPL-2.0 (Eigen) code, and this
 // site ships no copyleft code to browsers (SPEC; same rule as D-UH-NO-COPYLEFT-HEIC).
-import { byId, baseName, decodeImage, canvasToBlob, download, status, filePicker } from "./common";
+import { byId, baseName, decodeImage, canvasToBlob, download, status, filePicker, fetchSample } from "./common";
 import { play, wireToggles } from "./sfx";
 import type { InferenceSession } from "onnxruntime-web";
 
@@ -217,27 +217,12 @@ dl.addEventListener("click", async () => {
   download(blob, `${baseName(src.name)}-no-bg.${jpg ? "jpg" : "png"}`);
 });
 
-/** Sample: an orange ball with a shadow on a light, textured studio backdrop (drawn locally). */
-async function sample(): Promise<File> {
-  const c = document.createElement("canvas");
-  c.width = 1200; c.height = 900;
-  const g = c.getContext("2d")!;
-  const sky = g.createLinearGradient(0, 0, 0, 900);
-  sky.addColorStop(0, "#e8eef5");
-  sky.addColorStop(1, "#c9d3de");
-  g.fillStyle = sky;
-  g.fillRect(0, 0, 1200, 900);
-  g.fillStyle = "rgba(0,0,0,.18)";
-  g.beginPath(); g.ellipse(600, 760, 230, 40, 0, 0, Math.PI * 2); g.fill();
-  const ball = g.createRadialGradient(540, 360, 40, 600, 450, 280);
-  ball.addColorStop(0, "#ffd08a");
-  ball.addColorStop(0.5, "#f97316");
-  ball.addColorStop(1, "#9a3412");
-  g.fillStyle = ball;
-  g.beginPath(); g.arc(600, 450, 280, 0, Math.PI * 2); g.fill();
-  const b = await canvasToBlob(c, "image/jpeg", 0.92);
-  return new File([b], "sample-ball.jpg", { type: "image/jpeg" });
-}
-byId("bg-sample").addEventListener("click", async () => { status(inInfo, "Making a sample photo…"); await load([await sample()]); });
+// Try a sample: load the bundled portrait and remove its background in one click.
+byId("bg-sample").addEventListener("click", async () => {
+  status(inInfo, "Loading the sample…");
+  try { await load([await fetchSample("photo")]); }
+  catch (e) { status(inInfo, (e as Error).message, "error"); return; }
+  if (src) await run();
+});
 filePicker(byId("bg-drop"), fileIn, load, "background-remover");
 wireToggles();

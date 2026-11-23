@@ -1,6 +1,6 @@
 // Image resize & compress. Everything happens on a <canvas> in this tab.
 import { byId, fmtBytes, baseName, decodeImage, drawToCanvas, canvasToBlob, encodeUnder, status, resultRow,
-  filePicker, samplePhoto } from "./common";
+  filePicker, fetchSample } from "./common";
 
 interface Item { file: File; bmp: ImageBitmap }
 const EXT: Record<string, string> = { "image/jpeg": "jpg", "image/webp": "webp", "image/png": "png" };
@@ -104,8 +104,11 @@ async function run() {
 }
 go.addEventListener("click", run);
 
+// Try a sample: load the bundled photo and compress it with the current settings in one click.
 byId("ri-sample").addEventListener("click", async () => {
-  status(inInfo, "Making a sample photo…");
-  await load([await samplePhoto()]);
+  status(inInfo, "Loading the sample…");
+  try { await load([await fetchSample("photo")]); }
+  catch (e) { status(inInfo, (e as Error).message, "error"); return; }
+  if (items.length) await run();
 });
 filePicker(byId("ri-drop"), fileIn, load, "resize-image");

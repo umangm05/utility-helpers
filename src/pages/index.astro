@@ -50,6 +50,13 @@ const blurb = (d: string) => (d.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? d);
         <label class="sr-only" for="drop-text">Paste text</label>
         <textarea id="drop-text" rows="1" placeholder="paste text here"></textarea>
       </div>
+      <div class="drop-samples" role="group" aria-labelledby="drop-samples-label">
+        <span class="muted" id="drop-samples-label">No file handy? Try a sample:</span>
+        <button type="button" class="btn-ghost" data-sample="photo">Photo</button>
+        <button type="button" class="btn-ghost" data-sample="pdf">PDF</button>
+        <button type="button" class="btn-ghost" data-sample="heic">iPhone HEIC</button>
+        <button type="button" class="btn-ghost" data-sample="qr">QR code</button>
+      </div>
     </div>
     <div class="drop-result" id="drop-result" role="status" aria-live="polite"></div>
   </section>
@@ -102,7 +109,7 @@ const blurb = (d: string) => (d.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? d);
 
 <script>
 import { tools } from "../scripts/ui.ts";
-import { putHandoff } from "../tools/common";
+import { putHandoff, fetchSample, type SampleKind } from "../tools/common";
 
 // ---- drop anything ---------------------------------------------------------
 // Everything is read locally (FileReader / DataTransfer). Text handed to a tool
@@ -227,6 +234,13 @@ zone.addEventListener("drop", (e) => {
     if (t) offer(t, "Your text");
   }
 });
+// Try a sample: a bundled, self-made file goes through exactly the same path as a dropped one.
+for (const b of document.querySelectorAll<HTMLButtonElement>("[data-sample]")) {
+  b.addEventListener("click", async () => {
+    try { handleFiles([await fetchSample(b.dataset.sample as SampleKind)]); }
+    catch (e) { result.textContent = (e as Error).message; }
+  });
+}
 fileInput.addEventListener("change", () => { if (fileInput.files?.length) handleFiles(fileInput.files); });
 textInput.addEventListener("input", () => {
   if (textInput.value.trim()) offer(textInput.value, "Your text");

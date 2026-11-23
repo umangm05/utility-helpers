@@ -1,6 +1,6 @@
 // QR code maker + scanner. qrcode-generator (MIT) and jsQR (Apache-2.0) are
 // lazy-loaded; the camera stream and pictures are decoded in this tab only.
-import { byId, decodeImage, drawToCanvas, canvasToBlob, status, download, takeHandoff } from "./common";
+import { byId, decodeImage, drawToCanvas, canvasToBlob, status, download, takeHandoff, fetchSample } from "./common";
 
 type QrFactory = typeof import("qrcode-generator").default;
 type QrCode = ReturnType<QrFactory>;
@@ -243,6 +243,12 @@ camBtn.addEventListener("click", () => (stream ? stopCamera() : startCamera()));
 addEventListener("pagehide", stopCamera);
 
 const imgIn = byId<HTMLInputElement>("qr-img");
+// Try a sample: read the bundled QR code picture (it opens this site's home page).
+byId("qr-sample").addEventListener("click", async () => {
+  status(scanSt, "Loading the sample…");
+  try { await scanFile(await fetchSample("qr")); }
+  catch (e) { status(scanSt, (e as Error).message, "error"); }
+});
 imgIn.addEventListener("change", async () => {
   const f = imgIn.files?.[0];
   imgIn.value = "";
