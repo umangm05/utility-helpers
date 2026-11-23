@@ -18,6 +18,12 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# LGPL libheif (HEIC fallback), copied unmodified per build; versioned by package.json pin.
+[[headers]]
+  for = "/vendor/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
 # Unhashed static assets (site.js, og.png, favicon.svg).
 [[headers]]
   for = "/assets/*"
