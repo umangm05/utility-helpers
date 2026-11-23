@@ -77,9 +77,24 @@ def main() -> int:
         check(page.input_value("#jf-input") == CANARY, "tool page is prefilled with the dropped text")
         check(page.evaluate("sessionStorage.getItem('uh-drop')") is None, "hand-off key removed after use")
         page.goto(base + "/", wait_until="load")
-        page.set_input_files("#drop-file", files=[{"name": "photo.png", "mimeType": "image/png", "buffer": b"\x89PNG"}])
+        # UH-T2: a dropped photo is offered to the image tools and handed over in-browser (IndexedDB).
+        from test_file_tools import png_bytes  # noqa: PLC0415
+        page.set_input_files("#drop-file", files=[{"name": "photo.png", "mimeType": "image/png",
+                                                   "buffer": png_bytes(320, 240)}])
+        offered = page.locator("#drop-result a").all_inner_texts()
+        check({"Image Resizer & Compressor", "Passport Size Photo Maker"} <= set(offered),
+              "photo -> image tools offered", offered)
+        page.locator("#drop-result a", has_text="Image Resizer").click()
+        page.wait_for_url("**/resize-image/")
+        page.wait_for_function("document.getElementById('ri-in').textContent.includes('320 × 240')")
+        check("photo.png · 320 × 240" in page.inner_text("#ri-in"), "dropped photo opens in the tool", page.inner_text("#ri-in"))
+        page.goto(base + "/", wait_until="load")
+        page.set_input_files("#drop-file", files=[{"name": "doc.pdf", "mimeType": "application/pdf", "buffer": b"%PDF-1.4"}])
+        offered = page.locator("#drop-result a").all_inner_texts()
+        check(offered == ["PDF Tools: JPG to PDF, Merge, Split"], "PDF -> PDF tools offered", offered)
+        page.set_input_files("#drop-file", files=[{"name": "x.zip", "mimeType": "application/zip", "buffer": b"PK"}])
         msg = page.locator("#drop-result").inner_text()
-        check("on the way" in msg, "image file -> honest 'not yet' + suggest link", msg)
+        check("no tool opens this kind of file yet" in msg, "unknown file -> honest 'not yet' + suggest link", msg)
 
         print("\n=== theme ===")
         page.click(".theme-toggle")

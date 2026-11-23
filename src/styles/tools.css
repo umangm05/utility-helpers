@@ -1,0 +1,46 @@
+/* Shared styles for the file tools (src/tools/*.astro). Uses the site tokens
+   from site.css. Loaded only on pages that render one of these tools. */
+
+.ft { display: grid; gap: 1.25rem; }
+.ft-pick {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem;
+  padding: 1.5rem 1rem; text-align: center; border-radius: var(--radius);
+  border: 2px dashed color-mix(in srgb, var(--accent) 50%, var(--border));
+  background: linear-gradient(180deg, var(--accent-soft), transparent 85%), var(--panel-2);
+  transition: border-color .2s var(--ease), background-color .2s var(--ease);
+}
+.ft-pick.over { border-color: var(--accent); }
+.ft-pick p { margin: 0; flex-basis: 100%; color: var(--muted); font-size: .9375rem; }
+.ft input[type=file]:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ft .btn-ghost, .ft-pick .btn-ghost {
+  min-height: 44px; padding: 0 1rem; border-radius: 10px; font-weight: 600;
+  background: var(--panel); color: var(--fg); border: 1px solid var(--border);
+}
+.ft button { min-height: 44px; }
+.ft-opts { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); align-items: end; }
+.ft-opts input, .ft-opts select { width: 100%; min-height: 44px; }
+.ft-opts .ft-check { display: flex; align-items: center; gap: .6rem; min-height: 44px; margin: 0; color: var(--fg); cursor: pointer; }
+.ft-opts .ft-check input { width: 22px; height: 22px; min-height: 0; margin: 0; accent-color: var(--accent); }
+.ft-row { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+.ft-status { margin: 0; min-height: 1.5em; color: var(--muted); font-size: .9375rem; }
+.ft { --err: #b42318; }
+:root[data-theme="dark"] .ft { --err: #fca5a5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ft { --err: #fca5a5; } }
+.ft-status[data-kind="error"] { color: var(--err); }
+.ft-status[data-kind="ok"] { color: var(--ok); }
+.ft-results { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.ft-results:empty { display: none; }
+.ft-results li {
+  display: flex; align-items: center; gap: .75rem; padding: .5rem .75rem; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--panel-2);
+}
+.ft-results img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex: none; background: var(--panel); }
+.ft-results .res-text { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: .9375rem; }
+.ft-results .res-text b { font-weight: 650; }
+.ft-tabs { display: flex; flex-wrap: wrap; gap: .5rem; }
+.ft-tabs button { background: var(--panel-2); color: var(--fg); border-color: var(--border); }
+.ft-tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.ft-panel[hidden] { display: none; }
+.ft-note { margin: 0; color: var(--muted); font-size: .875rem; }
+.ft-note a { text-decoration: underline; }
+@media (prefers-reduced-motion: reduce) { .ft-pick { transition: none; } }

@@ -1,0 +1,98 @@
+---
+// QR code maker + scanner (UH-T2 tool 4).
+// qrcode-generator (MIT) makes codes; jsQR (Apache-2.0) reads them. Both lazy-loaded.
+// Camera frames are decoded in this tab and never sent anywhere.
+import "../styles/tools.css";
+---
+<div class="tool ft" id="qr">
+  <div class="ft-tabs" role="tablist" aria-label="QR code mode">
+    <button type="button" role="tab" id="qr-tab-make" aria-controls="qr-make" aria-selected="true">Make a QR code</button>
+    <button type="button" role="tab" id="qr-tab-scan" aria-controls="qr-scan" aria-selected="false" tabindex="-1">Scan a QR code</button>
+  </div>
+
+  <section class="ft-panel ft" id="qr-make" role="tabpanel" aria-labelledby="qr-tab-make">
+    <div class="ft-opts">
+      <div>
+        <label for="qr-kind">What should it open?</label>
+        <select id="qr-kind">
+          <option value="text">Link or text</option>
+          <option value="wifi">Wi-Fi network</option>
+          <option value="upi">UPI payment</option>
+        </select>
+      </div>
+      <div>
+        <label for="qr-ecc">Error correction</label>
+        <select id="qr-ecc">
+          <option value="L">Low (smallest)</option>
+          <option value="M" selected>Medium</option>
+          <option value="Q">High</option>
+          <option value="H">Highest (logo-safe)</option>
+        </select>
+      </div>
+      <div>
+        <label for="qr-px">PNG size</label>
+        <select id="qr-px">
+          <option value="512">512 px</option>
+          <option value="1024" selected>1024 px</option>
+          <option value="2048">2048 px (print)</option>
+        </select>
+      </div>
+    </div>
+    <div class="qr-fields" data-kind="text">
+      <label for="qr-text">Link or text</label>
+      <textarea id="qr-text" rows="3" placeholder="https://example.com" spellcheck="false"></textarea>
+    </div>
+    <div class="qr-fields ft-opts" data-kind="wifi" hidden>
+      <div><label for="qr-ssid">Network name (SSID)</label><input id="qr-ssid" type="text" autocomplete="off"></div>
+      <div><label for="qr-pass">Password</label><input id="qr-pass" type="text" autocomplete="off" spellcheck="false"></div>
+      <div>
+        <label for="qr-sec">Security</label>
+        <select id="qr-sec"><option value="WPA">WPA / WPA2 / WPA3</option><option value="WEP">WEP</option><option value="nopass">None (open)</option></select>
+      </div>
+    </div>
+    <div class="qr-fields ft-opts" data-kind="upi" hidden>
+      <div><label for="qr-vpa">UPI ID</label><input id="qr-vpa" type="text" placeholder="name@okbank" autocomplete="off" spellcheck="false"></div>
+      <div><label for="qr-payee">Payee name</label><input id="qr-payee" type="text" autocomplete="off"></div>
+      <div><label for="qr-amt">Amount in ₹ (optional)</label><input id="qr-amt" type="number" min="0" step="0.01" inputmode="decimal"></div>
+      <div><label for="qr-note">Note (optional)</label><input id="qr-note" type="text" maxlength="50" autocomplete="off"></div>
+    </div>
+    <div class="qr-out">
+      <canvas id="qr-canvas" width="232" height="232" role="img" aria-label="QR code preview (empty)"></canvas>
+      <div class="ft">
+        <p class="ft-status" id="qr-meta" role="status" aria-live="polite">Type something to make a code.</p>
+        <div class="ft-row">
+          <button type="button" id="qr-png" disabled>Download PNG</button>
+          <button type="button" class="btn-ghost" id="qr-svg" disabled>Download SVG</button>
+          <button type="button" class="btn-ghost" id="qr-verify" disabled>Check it scans</button>
+        </div>
+        <p class="ft-status" id="qr-check" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ft-panel ft" id="qr-scan" role="tabpanel" aria-labelledby="qr-tab-scan" hidden>
+    <div class="ft-row">
+      <button type="button" id="qr-cam">Scan with camera</button>
+      <input id="qr-img" class="sr-only" type="file" accept="image/*">
+      <label class="btn btn-ghost-l" for="qr-img">Read from a picture</label>
+    </div>
+    <video id="qr-video" playsinline muted hidden></video>
+    <p class="ft-status" id="qr-scan-status" role="status" aria-live="polite">Point the camera at a QR code, or pick a screenshot.</p>
+    <div class="qr-result" id="qr-result-box" hidden>
+      <label for="qr-result">QR code says</label>
+      <textarea id="qr-result" rows="3" readonly></textarea>
+      <div class="ft-row" id="qr-result-acts"></div>
+    </div>
+  </section>
+</div>
+<style>
+  .qr-out { display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center; }
+  .qr-out > .ft { flex: 1 1 16rem; }
+  #qr-canvas { width: 232px; height: 232px; border-radius: 12px; background: #fff; border: 1px solid var(--border); }
+  #qr-video { width: 100%; max-width: 28rem; border-radius: var(--radius-sm); background: #000; }
+  .qr-fields[hidden] { display: none; }
+  .btn-ghost-l { background: var(--panel); color: var(--fg); border: 1px solid var(--border); }
+  .qr-result[hidden] { display: none; }
+  .qr-result textarea { min-height: 5rem; font-family: var(--mono); }
+</style>
+<script>import "./qr-code.ts";</script>

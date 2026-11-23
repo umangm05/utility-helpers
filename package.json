@@ -2,10 +2,10 @@
   "name": "utility-helpers",
   "private": true,
   "type": "module",
-  "description": "Utility Helpers: Astro static site (dist/) generated from site.config.json, plus Netlify Functions for consent-gated usage counts and the suggestion form.",
+  "description": "Utility Helpers: Astro static site (dist/, installable + offline via a generated service worker) generated from site.config.json, plus Netlify Functions for consent-gated usage counts and the suggestion form.",
   "scripts": {
     "gen": "node scripts/gen-tool-slugs.mjs",
-    "build": "node scripts/gen-tool-slugs.mjs && astro build",
+    "build": "node scripts/gen-tool-slugs.mjs && astro build && node scripts/gen-sw.mjs",
     "dev": "astro dev",
     "preview": "astro preview",
     "test": "node --test netlify/tests/*.test.mjs",
@@ -13,7 +13,12 @@
   },
   "dependencies": {
     "@netlify/blobs": "^10.0.0",
-    "astro": "^7.4.13"
+    "astro": "^7.4.13",
+    "jsqr": "^1.4.0",
+    "onnxruntime-web": "^1.31.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.5.438",
+    "qrcode-generator": "^2.0.4"
   },
   "engines": {
     "node": ">=22.23.4"

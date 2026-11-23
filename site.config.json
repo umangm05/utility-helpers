@@ -13,6 +13,16 @@
   },
   "sections": [
     {
+      "id": "files",
+      "name": "Image & PDF tools",
+      "blurb": "Resize photos, make PDFs, remove backgrounds, convert iPhone pictures and print passport photos. Your files stay on your device."
+    },
+    {
+      "id": "everyday",
+      "name": "Everyday tools",
+      "blurb": "Daily helpers: EMI and GST maths, age and dates, a typing test, a fair spin wheel and QR codes."
+    },
+    {
       "id": "developer",
       "name": "Developer tools",
       "blurb": "Format, encode, convert and generate — the everyday helpers for code and text."
@@ -36,6 +46,335 @@
     }
   ],
   "tools": [
+    {
+      "slug": "resize-image",
+      "name": "Image Resizer & Compressor",
+      "section": "files",
+      "icon": "image",
+      "island": "resize-image",
+      "preview": "4.2 MB → 180 KB",
+      "accepts": [
+        "image"
+      ],
+      "summary": "Shrink photos to an exact width or to a file-size limit (20 KB, 50 KB, 100 KB) for job, exam and government form uploads.",
+      "title": "Resize & Compress Image Online — Free, Private, No Upload",
+      "description": "Resize images to exact pixels or compress to 20 KB, 50 KB or 100 KB. JPG, PNG and WebP. Free, no signup, and your photos never leave your device.",
+      "intro": "Resize and compress images right in your browser. Set an exact width and height, or type a maximum file size such as 50 KB and the tool finds the best quality that fits, which is handy for exam, job and government forms that reject large photos. Works with JPG, PNG and WebP, one image or a whole batch. Your photos are processed on your device and are never uploaded.",
+      "faq": [
+        {
+          "q": "Are my photos uploaded to a server?",
+          "a": "No. The image is decoded and re-encoded by your own browser on a canvas. Nothing is sent anywhere, and closing the tab discards it."
+        },
+        {
+          "q": "How do I compress a photo to under 50 KB or 20 KB?",
+          "a": "Type the limit in Max file size. The tool lowers the JPG quality step by step and, if that is not enough, reduces the pixel size until the file fits."
+        },
+        {
+          "q": "Will resizing stretch my photo?",
+          "a": "Not while Keep proportions is ticked: change the width and the height follows. Untick it only when a form asks for an exact width and height."
+        },
+        {
+          "q": "Which format should I pick?",
+          "a": "JPG is smallest for photos, WebP is smaller still on modern sites, and PNG keeps every pixel (best for screenshots and logos)."
+        }
+      ]
+    },
+    {
+      "slug": "pdf-tools",
+      "name": "PDF Tools: JPG to PDF, Merge, Split",
+      "section": "files",
+      "icon": "pdf",
+      "island": "pdf-tools",
+      "preview": "3 files → 1 PDF",
+      "accepts": [
+        "pdf",
+        "image"
+      ],
+      "summary": "Turn photos of documents into one PDF, join PDFs, pull out pages, reorder or rotate them, and save pages as JPG.",
+      "title": "JPG to PDF, Merge & Split PDF, PDF to JPG — Free & Private",
+      "description": "Convert JPG to PDF, merge PDFs, split or reorder pages and turn PDF pages into JPG images. Runs in your browser: files are never uploaded.",
+      "intro": "One page for everyday PDF jobs. Add PDFs and photos, arrange the pages in the order you want, rotate or remove any of them, then save a single PDF. You can also extract a page range into its own PDF, split every page into a separate file, or save pages as JPG images. Everything runs inside your browser, so private documents such as ID cards and bank statements never leave your device.",
+      "faq": [
+        {
+          "q": "Is it safe to use with ID cards or bank statements?",
+          "a": "Yes. The PDF is built by JavaScript in your own browser. No file is uploaded, and nothing is kept after you close the tab."
+        },
+        {
+          "q": "How do I convert several JPG photos into one PDF?",
+          "a": "Add the photos, drag them into order with the arrows, choose a page size (A4 is the usual choice) and press Save as PDF."
+        },
+        {
+          "q": "How do I take a few pages out of a PDF?",
+          "a": "Add the PDF, type the pages you want, for example 1-3, 5, and press Extract pages. Split every page saves each page as its own PDF."
+        },
+        {
+          "q": "Can it open password-protected PDFs?",
+          "a": "Not yet. Remove the password in your PDF reader first, then add the file here."
+        }
+      ]
+    },
+    {
+      "slug": "background-remover",
+      "name": "Background Remover",
+      "section": "files",
+      "icon": "wand",
+      "island": "bg-remover",
+      "preview": "photo → transparent PNG",
+      "accepts": [
+        "image"
+      ],
+      "summary": "Remove the background from a photo with on-device AI. Download a transparent PNG or put the subject on white or any colour.",
+      "title": "Remove Background from Image — Free, Private, No Upload",
+      "description": "Remove the background from any photo in your browser with on-device AI. Transparent PNG or a white or coloured background. No upload, no signup.",
+      "intro": "Cut a person, product or pet out of a photo in a few seconds. The AI model runs inside your browser, so the picture is never uploaded to a server, unlike most background removers. Download a transparent PNG, or swap in a white or coloured background for product listings, profile pictures and ID forms. The first run downloads the model once (about 5 MB); after that the tool also works offline.",
+      "faq": [
+        {
+          "q": "Is my photo uploaded?",
+          "a": "No. The photo is decoded and processed on your own device by an AI model that runs in the browser. Nothing is sent to a server, and closing the tab discards it."
+        },
+        {
+          "q": "Which AI model does it use?",
+          "a": "U²-Net (the small u2netp version, Apache-2.0 licence), run on your device's graphics chip with ONNX Runtime Web (MIT). Both are served from this site and cached for offline use."
+        },
+        {
+          "q": "Why is the first run slower?",
+          "a": "The first time, your browser downloads the AI model (about 5 MB) and prepares it for your graphics chip. The model is kept on your device, so later runs start sooner, even offline."
+        },
+        {
+          "q": "What photos work best?",
+          "a": "One clear subject that stands out from the background: a person, a product on a table, a pet. Fine hair and see-through objects may need a cleaner backdrop."
+        }
+      ]
+    },
+    {
+      "slug": "heic-to-jpg",
+      "name": "HEIC to JPG Converter",
+      "section": "files",
+      "icon": "photo",
+      "island": "heic-to-jpg",
+      "preview": "IMG_0042.HEIC → .jpg",
+      "accepts": [
+        "heic"
+      ],
+      "summary": "Open iPhone HEIC photos on Windows, Android or any website by converting them to JPG or PNG.",
+      "title": "HEIC to JPG Converter — Free, Private, Batch, No Upload",
+      "description": "Convert iPhone HEIC and HEIF photos to JPG or PNG in your browser. Batch convert, no signup, and your photos are never uploaded.",
+      "intro": "iPhones save photos as HEIC, which many Windows PCs, Android phones and upload forms cannot open. This converter turns HEIC and HEIF photos into ordinary JPG or PNG files in a few seconds, one at a time or in a batch. The conversion runs on your device, so your personal photos are never uploaded anywhere.",
+      "faq": [
+        {
+          "q": "Why can't I open HEIC files on Windows?",
+          "a": "HEIC uses the HEVC video codec, which Windows does not include by default. Converting to JPG gives you a file every device and website accepts."
+        },
+        {
+          "q": "Does converting reduce quality?",
+          "a": "JPG at the default 92% quality looks the same to the eye. Pick PNG if you need a lossless copy, at the cost of a much larger file."
+        },
+        {
+          "q": "Are my photos uploaded?",
+          "a": "No. Decoding and conversion happen in your browser. Nothing is sent to a server."
+        },
+        {
+          "q": "How do I stop my iPhone saving HEIC?",
+          "a": "On the iPhone open Settings, Camera, Formats and choose Most Compatible. New photos are then saved as JPG."
+        }
+      ]
+    },
+    {
+      "slug": "passport-size-photo",
+      "name": "Passport Size Photo Maker",
+      "section": "files",
+      "icon": "idcard",
+      "island": "passport-photo",
+      "preview": "35×45 mm · 8 on 4×6",
+      "accepts": [
+        "image"
+      ],
+      "summary": "Crop any photo to Indian passport, visa or PAN size and get a ready-to-print 4×6 inch sheet.",
+      "title": "Passport Size Photo Maker — 35×45 mm, 4×6 Sheet, Free",
+      "description": "Make passport size photos online: 35×45 mm, 2×2 inch, PAN and stamp sizes, with a 4×6 inch print sheet at 300 DPI. Free, and photos stay on your device.",
+      "intro": "Make passport size photos at home. Pick a size such as 35×45 mm for an Indian passport, 2×2 inch for a US or Indian visa, or the PAN card size, then drag and zoom your photo to frame the face. You get a single photo for online forms and a 4×6 inch sheet at 300 DPI that any photo shop or home printer can print. Your photo is processed on your device and never uploaded.",
+      "faq": [
+        {
+          "q": "What is the passport photo size in India?",
+          "a": "35 mm wide by 45 mm high with a plain light background, and the face should fill about 70-80% of the height. This tool crops to that size at 300 DPI (413 × 531 pixels)."
+        },
+        {
+          "q": "How many passport photos fit on a 4×6 print?",
+          "a": "Eight 35×45 mm photos, or six 2×2 inch photos. The sheet is laid out for you with thin cutting lines."
+        },
+        {
+          "q": "Can I print the sheet at a photo shop?",
+          "a": "Yes. Download the 4×6 sheet JPG and ask for a normal 4×6 inch (10×15 cm) print. Do not choose fit or fill options that rescale it."
+        },
+        {
+          "q": "Is my photo uploaded?",
+          "a": "No. Cropping and the print sheet are made by your browser on your device."
+        }
+      ]
+    },
+    {
+      "slug": "emi-calculator",
+      "name": "EMI, SIP, GST & % Calculator",
+      "section": "everyday",
+      "icon": "rupee",
+      "island": "money-calc",
+      "preview": "EMI ₹9,650 / month",
+      "accepts": [],
+      "summary": "Loan EMI with a year-by-year schedule, SIP returns with step-up, GST add or remove with CGST/SGST, and quick percentage maths.",
+      "title": "EMI Calculator + SIP, GST & Percentage Calculator, Free",
+      "description": "Calculate loan EMI with a yearly schedule, SIP returns with step-up, GST inclusive or exclusive with CGST/SGST, and percentages. Free, instant, private.",
+      "intro": "Four everyday money calculators on one page. EMI shows the monthly instalment for a home, car or personal loan, the total interest and a year-by-year repayment schedule. SIP estimates what a monthly mutual fund investment could grow to, with an optional yearly step-up. GST adds or removes GST at any rate and splits it into CGST and SGST. Percentage answers the three questions people ask most. Numbers are shown in lakh and crore, and nothing you enter leaves your device.",
+      "faq": [
+        {
+          "q": "How is EMI calculated?",
+          "a": "EMI = P × r × (1 + r)^n ÷ ((1 + r)^n − 1), where P is the loan amount, r the monthly interest rate (annual rate ÷ 12 ÷ 100) and n the number of months. This is the reducing-balance method banks use."
+        },
+        {
+          "q": "How does the SIP calculator work?",
+          "a": "It assumes you invest the same amount at the start of every month and earn a steady yearly return, compounded monthly, the same convention most fund house calculators use. Real returns vary year to year."
+        },
+        {
+          "q": "How do I remove GST from a price?",
+          "a": "Choose Including GST. The tool divides the price by (1 + rate), so ₹1,180 at 18% is ₹1,000 before tax plus ₹180 GST (₹90 CGST + ₹90 SGST)."
+        },
+        {
+          "q": "Are my numbers saved or sent anywhere?",
+          "a": "No. Everything is calculated in your browser and disappears when you close the tab."
+        }
+      ]
+    },
+    {
+      "slug": "age-calculator",
+      "name": "Age & Date Calculator",
+      "section": "everyday",
+      "icon": "calendar",
+      "island": "date-tools",
+      "preview": "30 y · 3 m · 8 d",
+      "accepts": [],
+      "summary": "Exact age in years, months and days, days between two dates with weekdays, add or subtract days, and a live countdown.",
+      "title": "Age Calculator — Exact Age, Days Between Dates, Countdown",
+      "description": "Find your exact age in years, months and days, count days between two dates (with weekdays), add days to a date or run a live countdown. Free.",
+      "intro": "Work out an exact age in years, months and days, on today or any date, along with total months, weeks and days, the weekday you were born and how long until your next birthday. Handy for exam and job forms that ask for age as on a cut-off date. The second tab counts the days between two dates, including weekdays only, and adds or subtracts days from a date. The third is a live countdown to any date and time that you can share as a link.",
+      "faq": [
+        {
+          "q": "How do I find my age on a specific date?",
+          "a": "Enter your date of birth and change Age on to the date you need, for example the cut-off date in an exam notification. The result updates instantly."
+        },
+        {
+          "q": "How are leap-year birthdays handled?",
+          "a": "Someone born on 29 February turns a year older on 28 February in years that are not leap years, the convention most forms use."
+        },
+        {
+          "q": "Does the day count include the end date?",
+          "a": "Not by default: 1 January to 31 December is 364 days. Tick Count the end date too to include it (365 days)."
+        },
+        {
+          "q": "Is the countdown link private?",
+          "a": "The date sits after the # in the link, which browsers never send to the server. Anyone you share it with sees the same countdown."
+        }
+      ]
+    },
+    {
+      "slug": "typing-speed-test",
+      "name": "Typing Speed Test",
+      "section": "everyday",
+      "icon": "keyboard",
+      "island": "typing-test",
+      "preview": "62 WPM · 97%",
+      "accepts": [
+        "text"
+      ],
+      "summary": "Check your typing speed in words per minute and your accuracy with a 15-second to 2-minute test, or practise on your own text.",
+      "title": "Typing Speed Test — Check Your WPM & Accuracy, Free",
+      "description": "Free typing speed test: words per minute and accuracy in 15 s, 30 s, 1 or 2 minutes. Practise with common words, punctuation or your own text.",
+      "intro": "Find out how fast you type. Pick a test length, start typing and the timer begins with your first key. You get your speed in words per minute (WPM), your accuracy and how many words you typed without a mistake. Mistakes stay highlighted so you can see where you slip. Practise with common English words, sentences with capitals and punctuation, or paste your own text. Your best score for each test length is kept on this device only.",
+      "faq": [
+        {
+          "q": "How is WPM calculated?",
+          "a": "Every 5 correctly typed characters (spaces included) count as one word. WPM is those words divided by the minutes spent. Raw WPM counts every character you typed, right or wrong."
+        },
+        {
+          "q": "What is a good typing speed?",
+          "a": "Around 40 WPM is average. 60 to 80 WPM is fast enough for most office jobs, and many government typing tests in India ask for 35 WPM in English."
+        },
+        {
+          "q": "Does it work on a phone?",
+          "a": "Yes. Tap the typing box to open your keyboard. Phone keyboards are slower than laptop keyboards, so compare scores on the same device."
+        },
+        {
+          "q": "Is what I type sent anywhere?",
+          "a": "No. Your typing is compared with the text inside the page and never leaves your device."
+        }
+      ]
+    },
+    {
+      "slug": "spin-the-wheel",
+      "name": "Spin the Wheel & Random Picker",
+      "section": "everyday",
+      "icon": "dice",
+      "island": "random-picker",
+      "preview": "Winner: Dosa",
+      "accepts": [
+        "text"
+      ],
+      "summary": "Spin a wheel of names, pick random names or numbers, split a list into teams, roll dice and flip a coin. Fair, instant and private.",
+      "title": "Spin the Wheel — Random Name Picker, Dice & Coin Flip",
+      "description": "Spin the wheel to pick a random name, choose names or numbers, split a class into teams, roll dice or flip a coin. Fair random results, no signup.",
+      "intro": "Settle it fairly. Type or paste a list of names and spin the wheel for a winner, then remove the winner and spin again for the next turn. The random picker chooses one or more names, a number in any range, or splits a list into equal teams for class activities and games. Dice and coin roll any number of d4 to d20 dice or flip a coin. Every result uses your browser's secure random number generator, so each option has exactly the same chance, and your list never leaves your device.",
+      "faq": [
+        {
+          "q": "Is the wheel really random?",
+          "a": "Yes. The winner is chosen with crypto.getRandomValues, the browser's secure random generator, using rejection sampling so every slice has exactly the same chance. The animation then lands on that slice."
+        },
+        {
+          "q": "Can I remove a name after it wins?",
+          "a": "Yes. Press Remove winner and spin again, which is handy for taking turns or drawing prizes one by one."
+        },
+        {
+          "q": "How many names can I add?",
+          "a": "Up to 500, one per line. With many names the labels get small, but the pick stays fair."
+        },
+        {
+          "q": "How are teams made?",
+          "a": "The list is shuffled and dealt one by one into the number of teams you choose, so team sizes differ by at most one."
+        }
+      ]
+    },
+    {
+      "slug": "qr-code-generator",
+      "name": "QR Code Generator & Scanner",
+      "section": "everyday",
+      "icon": "qr",
+      "island": "qr-code",
+      "preview": "upi://pay · Wi-Fi · link",
+      "accepts": [
+        "text",
+        "url",
+        "image"
+      ],
+      "summary": "Make QR codes for links, text, Wi-Fi and UPI payments, and scan QR codes with your camera or from a picture.",
+      "title": "QR Code Generator & Scanner — UPI, Wi-Fi, Links, Free",
+      "description": "Create QR codes for links, text, Wi-Fi and UPI payments, download PNG or SVG, and scan QR codes with your camera. Free, no signup, nothing uploaded.",
+      "intro": "Create a QR code for a website, plain text, your Wi-Fi network or a UPI payment request, then download it as a PNG or a sharp SVG for printing. Press Check it scans to make sure the code reads back correctly before you print it. The scanner reads QR codes from your camera or from a screenshot. Everything happens in your browser, and the camera picture never leaves your device.",
+      "faq": [
+        {
+          "q": "Do these QR codes expire?",
+          "a": "No. The code contains your text or link directly, with no redirect service in between, so it works for as long as the link itself works."
+        },
+        {
+          "q": "How do I make a UPI payment QR code?",
+          "a": "Choose UPI payment, enter your UPI ID (like name@okbank) and your name, and optionally an amount. Any UPI app such as Google Pay, PhonePe or Paytm can scan it."
+        },
+        {
+          "q": "Is the camera video sent anywhere?",
+          "a": "No. Frames from the camera are decoded in your browser and the camera turns off when you stop scanning or leave the page."
+        },
+        {
+          "q": "PNG or SVG?",
+          "a": "PNG for sharing on phones and chats; SVG for print, because it stays sharp at any size."
+        }
+      ]
+    },
     {
       "slug": "word-counter",
       "name": "Word Counter",

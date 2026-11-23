@@ -1,0 +1,47 @@
+---
+// Image resize & compress (UH-T2 tool 1). Canvas only: no third-party library.
+import "../styles/tools.css";
+---
+<div class="tool ft" id="ri">
+  <div class="ft-pick" id="ri-drop">
+    <input id="ri-file" class="sr-only" type="file" accept="image/*" multiple>
+    <label class="btn" for="ri-file">Choose images</label>
+    <button type="button" class="btn-ghost" id="ri-sample">Try a sample</button>
+    <p>or drop JPG, PNG or WebP files here. Several at once is fine.</p>
+  </div>
+  <p class="ft-status" id="ri-in" role="status" aria-live="polite">No image chosen yet.</p>
+  <div class="ft-opts">
+    <div>
+      <label for="ri-w">Width (px)</label>
+      <input id="ri-w" type="number" min="1" max="20000" inputmode="numeric" placeholder="original">
+    </div>
+    <div>
+      <label for="ri-h">Height (px)</label>
+      <input id="ri-h" type="number" min="1" max="20000" inputmode="numeric" placeholder="original">
+    </div>
+    <label class="ft-check"><input id="ri-lock" type="checkbox" checked> Keep proportions</label>
+    <div>
+      <label for="ri-format">Save as</label>
+      <select id="ri-format">
+        <option value="image/jpeg">JPG (smallest for photos)</option>
+        <option value="image/webp">WebP</option>
+        <option value="image/png">PNG (lossless)</option>
+      </select>
+    </div>
+    <div>
+      <label for="ri-q">Quality: <output id="ri-qv" for="ri-q">80</output>%</label>
+      <input id="ri-q" type="range" min="10" max="100" step="5" value="80">
+    </div>
+    <div>
+      <label for="ri-target">Max file size (KB, optional)</label>
+      <input id="ri-target" type="number" min="5" max="50000" inputmode="numeric" placeholder="e.g. 50" list="ri-targets">
+      <datalist id="ri-targets"><option value="20"></option><option value="50"></option><option value="100"></option><option value="200"></option><option value="500"></option></datalist>
+    </div>
+  </div>
+  <div class="ft-row">
+    <button type="button" id="ri-go">Resize &amp; compress</button>
+  </div>
+  <p class="ft-status" id="ri-status" role="status" aria-live="polite"></p>
+  <ul class="ft-results" id="ri-out" aria-label="Resized images"></ul>
+</div>
+<script>import "./resize-image.ts";</script>

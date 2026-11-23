@@ -1,0 +1,79 @@
+---
+// Typing speed test (UH-T3 tool 6, swapped in for Screen recorder per TOOLS.md).
+// Pure client-side: what you type is compared with the passage in this tab and never sent anywhere.
+import "../styles/tools.css";
+---
+<div class="tool ft" id="tt">
+  <div class="ft-opts">
+    <div>
+      <label for="tt-dur">Test length</label>
+      <select id="tt-dur">
+        <option value="15">15 seconds</option>
+        <option value="30">30 seconds</option>
+        <option value="60" selected>1 minute</option>
+        <option value="120">2 minutes</option>
+      </select>
+    </div>
+    <div>
+      <label for="tt-words">Words</label>
+      <select id="tt-words">
+        <option value="common" selected>Common English words</option>
+        <option value="punct">With capitals &amp; punctuation</option>
+        <option value="custom">My own text (below)</option>
+      </select>
+    </div>
+    <div class="ft-row tt-acts">
+      <button type="button" class="btn-ghost" id="tt-new">New text</button>
+      <button type="button" class="btn-ghost sfx-toggle" aria-pressed="true">Sound: on</button>
+    </div>
+  </div>
+  <details class="tt-own" id="tt-own">
+    <summary>Practise with your own text</summary>
+    <label for="tt-text">Paste any text to practise (it stays on this page)</label>
+    <textarea id="tt-text" rows="3" spellcheck="false" placeholder="Paste a paragraph you want to practise…"></textarea>
+  </details>
+  <div class="tt-bar" aria-hidden="true"><span id="tt-bar"></span></div>
+  <div class="tt-stats" aria-live="off">
+    <div><span class="muted">Time left</span><strong id="tt-time">60</strong></div>
+    <div><span class="muted">Speed</span><strong id="tt-wpm-live">0</strong></div>
+    <div><span class="muted">Accuracy</span><strong id="tt-acc-live">100%</strong></div>
+  </div>
+  <p class="tt-passage" id="tt-passage" aria-label="Text to type"></p>
+  <div>
+    <label for="tt-input">Type the text above here. The timer starts with your first key.</label>
+    <textarea id="tt-input" rows="3" autocomplete="off" autocapitalize="off" spellcheck="false"
+      data-gramm="false" placeholder="Start typing…"></textarea>
+  </div>
+  <div class="ft-row">
+    <button type="button" id="tt-restart">Restart</button>
+  </div>
+  <section class="tt-result" id="tt-result" aria-labelledby="tt-result-h" hidden tabindex="-1">
+    <h2 id="tt-result-h">Your result</h2>
+    <p class="tt-big"><strong id="tt-wpm">0</strong> WPM</p>
+    <p class="ft-status" id="tt-summary" role="status" aria-live="polite"></p>
+  </section>
+</div>
+<style>
+  .tt-acts { align-self: end; }
+  .tt-own summary { cursor: pointer; color: var(--accent-ink); font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+  .tt-own textarea { width: 100%; }
+  .tt-bar { height: 6px; border-radius: 99px; background: var(--panel-2); overflow: hidden; }
+  .tt-bar span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s linear; }
+  .tt-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+  .tt-stats div { display: grid; padding: .5rem .75rem; border-radius: var(--radius-sm); background: var(--panel-2); }
+  .tt-stats strong { font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+  .tt-passage {
+    margin: 0; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--panel-2);
+    font: 1.25rem/1.7 var(--mono); overflow-wrap: anywhere; max-height: 9.5em; overflow: hidden; color: var(--muted);
+  }
+  .tt-passage .ok { color: var(--fg); }
+  .tt-passage .bad { color: var(--err); background: color-mix(in srgb, var(--err) 15%, transparent); border-radius: 3px; }
+  .tt-passage .cur { box-shadow: inset 0 -3px 0 var(--accent); color: var(--fg); }
+  #tt-input { width: 100%; font: 1.125rem/1.5 var(--mono); }
+  .tt-result { border-top: 1px solid var(--border); padding-top: 1rem; }
+  .tt-result h2 { margin: 0 0 .25rem; font-size: 1.125rem; }
+  .tt-big { margin: 0; font-size: 1.25rem; }
+  .tt-big strong { font-size: 3rem; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+  @media (prefers-reduced-motion: reduce) { .tt-bar span { transition: none; } }
+</style>
+<script>import "./typing-test.ts";</script>

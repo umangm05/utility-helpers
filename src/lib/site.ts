@@ -17,6 +17,8 @@ export interface Tool {
   intro?: string;
   faq?: Faq[];
   body_html?: string;
+  /** Name of a component in src/tools/ that renders this tool instead of body_html. */
+  island?: string;
 }
 export interface Section { id: string; name: string; blurb: string }
 export interface Site {

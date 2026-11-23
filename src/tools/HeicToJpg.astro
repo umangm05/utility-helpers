@@ -1,0 +1,33 @@
+---
+// HEIC -> JPG/PNG (UH-T2 tool 3). Decodes with the browser's own HEIC support
+// where it exists (Safari / iOS); see heic-decoder.ts for other browsers.
+import "../styles/tools.css";
+---
+<div class="tool ft" id="heic">
+  <div class="ft-pick" id="heic-drop">
+    <input id="heic-file" class="sr-only" type="file" multiple accept=".heic,.heif,image/heic,image/heif">
+    <label class="btn" for="heic-file">Choose HEIC photos</label>
+    <button type="button" class="btn-ghost" id="heic-sample">Try a sample</button>
+    <p>or drop iPhone photos (.HEIC / .HEIF) here. Many at once is fine.</p>
+  </div>
+  <div class="ft-opts">
+    <div>
+      <label for="heic-format">Convert to</label>
+      <select id="heic-format">
+        <option value="image/jpeg">JPG</option>
+        <option value="image/png">PNG (lossless, larger)</option>
+      </select>
+    </div>
+    <div>
+      <label for="heic-q">JPG quality: <output id="heic-qv" for="heic-q">92</output>%</label>
+      <input id="heic-q" type="range" min="50" max="100" step="1" value="92">
+    </div>
+  </div>
+  <p class="ft-status" id="heic-status" role="status" aria-live="polite">Photos are converted as soon as you add them.</p>
+  <ul class="ft-results" id="heic-out" aria-label="Converted photos"></ul>
+  <div class="ft-row" id="heic-all-row" hidden>
+    <button type="button" id="heic-all">Download all</button>
+  </div>
+  <p class="ft-note" id="heic-note"></p>
+</div>
+<script>import "./heic-to-jpg.ts";</script>

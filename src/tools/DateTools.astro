@@ -1,0 +1,76 @@
+---
+// Age calculator + date difference + countdown (UH-T3 tool 8). Calendar maths in this tab only.
+import "../styles/tools.css";
+---
+<div class="tool ft" id="dt">
+  <div class="ft-tabs" role="tablist" aria-label="Date tool">
+    <button type="button" role="tab" id="dt-tab-age" aria-controls="dt-age" data-hash="age" aria-selected="true">Age</button>
+    <button type="button" role="tab" id="dt-tab-diff" aria-controls="dt-diff" data-hash="difference" aria-selected="false" tabindex="-1">Days between dates</button>
+    <button type="button" role="tab" id="dt-tab-cd" aria-controls="dt-cd" data-hash="countdown" aria-selected="false" tabindex="-1">Countdown</button>
+  </div>
+
+  <section class="ft-panel ft" id="dt-age" role="tabpanel" aria-labelledby="dt-tab-age">
+    <div class="ft-opts">
+      <div><label for="age-dob">Date of birth</label><input id="age-dob" type="date" min="1900-01-01" value="1995-08-15"></div>
+      <div><label for="age-on">Age on</label><input id="age-on" type="date"></div>
+    </div>
+    <p class="dt-big" id="age-out" role="status" aria-live="polite">—</p>
+    <dl class="dt-figs" id="age-figs">
+      <div><dt>Total months</dt><dd id="age-months">—</dd></div>
+      <div><dt>Total weeks</dt><dd id="age-weeks">—</dd></div>
+      <div><dt>Total days</dt><dd id="age-days">—</dd></div>
+      <div><dt>Born on a</dt><dd id="age-wd">—</dd></div>
+      <div><dt>Next birthday</dt><dd id="age-next">—</dd></div>
+    </dl>
+  </section>
+
+  <section class="ft-panel ft" id="dt-diff" role="tabpanel" aria-labelledby="dt-tab-diff" hidden>
+    <div class="ft-opts">
+      <div><label for="diff-a">Start date</label><input id="diff-a" type="date"></div>
+      <div><label for="diff-b">End date</label><input id="diff-b" type="date"></div>
+      <label class="ft-check"><input id="diff-incl" type="checkbox"> Count the end date too</label>
+    </div>
+    <p class="dt-big" id="diff-out" role="status" aria-live="polite">—</p>
+    <dl class="dt-figs">
+      <div><dt>Years, months, days</dt><dd id="diff-ymd">—</dd></div>
+      <div><dt>Weeks</dt><dd id="diff-weeks">—</dd></div>
+      <div><dt>Weekdays (Mon–Fri)</dt><dd id="diff-wd">—</dd></div>
+    </dl>
+    <div class="ft-opts">
+      <div><label for="add-n">Add or subtract days from the start date</label><input id="add-n" type="number" step="1" inputmode="numeric" value="90"></div>
+      <p class="ft-status" id="add-out" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="ft-panel ft" id="dt-cd" role="tabpanel" aria-labelledby="dt-tab-cd" hidden>
+    <div class="ft-opts">
+      <div><label for="cd-name">Counting down to</label><input id="cd-name" type="text" maxlength="60" placeholder="e.g. Exam day" autocomplete="off"></div>
+      <div><label for="cd-date">Date</label><input id="cd-date" type="date"></div>
+      <div><label for="cd-time">Time</label><input id="cd-time" type="time" value="00:00"></div>
+    </div>
+    <div class="cd-clock" aria-hidden="true">
+      <div><strong id="cd-d">0</strong><span>days</span></div>
+      <div><strong id="cd-h">00</strong><span>hours</span></div>
+      <div><strong id="cd-m">00</strong><span>minutes</span></div>
+      <div><strong id="cd-s">00</strong><span>seconds</span></div>
+    </div>
+    <p class="ft-status" id="cd-out" role="status" aria-live="polite"></p>
+    <div class="ft-row">
+      <button type="button" class="btn-ghost" id="cd-ny">Next New Year</button>
+      <button type="button" class="btn-ghost" id="cd-link">Copy link to this countdown</button>
+      <button type="button" class="btn-ghost sfx-toggle" aria-pressed="true">Sound: on</button>
+    </div>
+  </section>
+</div>
+<style>
+  .dt-big { margin: 0; font-size: 1.6rem; font-weight: 700; color: var(--accent-ink); line-height: 1.3; }
+  .dt-figs { margin: 0; display: grid; gap: .5rem 1.5rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+  .dt-figs div { display: flex; justify-content: space-between; gap: 1rem; padding: .4rem 0; border-bottom: 1px solid var(--border); }
+  .dt-figs dt { color: var(--muted); }
+  .dt-figs dd { margin: 0; font-weight: 650; font-variant-numeric: tabular-nums; text-align: right; }
+  .cd-clock { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; }
+  .cd-clock div { display: grid; justify-items: center; padding: .75rem .25rem; border-radius: var(--radius-sm); background: var(--panel-2); }
+  .cd-clock strong { font-size: clamp(1.6rem, 7vw, 2.75rem); font-variant-numeric: tabular-nums; color: var(--accent-ink); line-height: 1.1; }
+  .cd-clock span { color: var(--muted); font-size: .875rem; }
+</style>
+<script>import "./date-tools.ts";</script>

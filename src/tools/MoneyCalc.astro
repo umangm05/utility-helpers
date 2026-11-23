@@ -1,0 +1,122 @@
+---
+// Money calculators (UH-T3 tool 7): EMI, SIP, GST, percentage. Pure arithmetic in this tab.
+import "../styles/tools.css";
+---
+<div class="tool ft" id="mc">
+  <div class="ft-tabs" role="tablist" aria-label="Calculator">
+    <button type="button" role="tab" id="mc-tab-emi" aria-controls="mc-emi" data-hash="emi" aria-selected="true">EMI</button>
+    <button type="button" role="tab" id="mc-tab-sip" aria-controls="mc-sip" data-hash="sip" aria-selected="false" tabindex="-1">SIP</button>
+    <button type="button" role="tab" id="mc-tab-gst" aria-controls="mc-gst" data-hash="gst" aria-selected="false" tabindex="-1">GST</button>
+    <button type="button" role="tab" id="mc-tab-pct" aria-controls="mc-pct" data-hash="percentage" aria-selected="false" tabindex="-1">Percentage</button>
+  </div>
+
+  <section class="ft-panel ft" id="mc-emi" role="tabpanel" aria-labelledby="mc-tab-emi">
+    <div class="ft-opts">
+      <div><label for="emi-p">Loan amount (₹)</label><input id="emi-p" type="number" min="0" step="1000" inputmode="decimal" value="1000000"></div>
+      <div><label for="emi-r">Interest rate (% a year)</label><input id="emi-r" type="number" min="0" max="50" step="0.05" inputmode="decimal" value="10"></div>
+      <div><label for="emi-t">Tenure</label><input id="emi-t" type="number" min="1" max="600" step="1" inputmode="numeric" value="20"></div>
+      <div>
+        <label for="emi-u">Tenure in</label>
+        <select id="emi-u"><option value="y" selected>Years</option><option value="m">Months</option></select>
+      </div>
+    </div>
+    <div class="mc-out">
+      <div class="mc-donut" id="emi-donut" role="img" aria-label="Principal and interest share"></div>
+      <dl class="mc-figs">
+        <div class="mc-main"><dt>Monthly EMI</dt><dd id="emi-out">—</dd></div>
+        <div><dt><span class="key k1"></span>Principal</dt><dd id="emi-prin">—</dd></div>
+        <div><dt><span class="key k2"></span>Total interest</dt><dd id="emi-int">—</dd></div>
+        <div><dt>Total payment</dt><dd id="emi-total">—</dd></div>
+      </dl>
+    </div>
+    <details class="mc-sched">
+      <summary>Year-by-year schedule</summary>
+      <div class="mc-scroll" tabindex="0" role="region" aria-label="Year-by-year schedule">
+        <table><thead><tr><th scope="col">Year</th><th scope="col">Principal paid</th><th scope="col">Interest paid</th><th scope="col">Balance</th></tr></thead>
+        <tbody id="emi-rows"></tbody></table>
+      </div>
+    </details>
+  </section>
+
+  <section class="ft-panel ft" id="mc-sip" role="tabpanel" aria-labelledby="mc-tab-sip" hidden>
+    <div class="ft-opts">
+      <div><label for="sip-p">Monthly investment (₹)</label><input id="sip-p" type="number" min="0" step="500" inputmode="decimal" value="5000"></div>
+      <div><label for="sip-r">Expected return (% a year)</label><input id="sip-r" type="number" min="0" max="50" step="0.5" inputmode="decimal" value="12"></div>
+      <div><label for="sip-y">Years</label><input id="sip-y" type="number" min="1" max="60" step="1" inputmode="numeric" value="10"></div>
+      <div><label for="sip-s">Yearly step-up (%)</label><input id="sip-s" type="number" min="0" max="100" step="1" inputmode="decimal" value="0"></div>
+    </div>
+    <div class="mc-out">
+      <div class="mc-donut" id="sip-donut" role="img" aria-label="Invested amount and gains share"></div>
+      <dl class="mc-figs">
+        <div class="mc-main"><dt>Estimated value</dt><dd id="sip-out">—</dd></div>
+        <div><dt><span class="key k1"></span>Invested</dt><dd id="sip-inv">—</dd></div>
+        <div><dt><span class="key k2"></span>Estimated gains</dt><dd id="sip-gain">—</dd></div>
+      </dl>
+    </div>
+    <p class="ft-note">Assumes the same return every year and investing at the start of each month. Real fund returns vary.</p>
+  </section>
+
+  <section class="ft-panel ft" id="mc-gst" role="tabpanel" aria-labelledby="mc-tab-gst" hidden>
+    <div class="ft-opts">
+      <div><label for="gst-a">Amount (₹)</label><input id="gst-a" type="number" min="0" step="any" inputmode="decimal" value="1000"></div>
+      <div>
+        <label for="gst-r">GST rate</label>
+        <select id="gst-r">
+          <option value="0.25">0.25%</option><option value="3">3%</option><option value="5">5%</option>
+          <option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option><option value="40">40%</option>
+        </select>
+      </div>
+      <div>
+        <label for="gst-m">Amount is</label>
+        <select id="gst-m"><option value="add" selected>Before GST (add GST)</option><option value="remove">Including GST (remove GST)</option></select>
+      </div>
+    </div>
+    <dl class="mc-figs mc-grid">
+      <div><dt>Amount before GST</dt><dd id="gst-net">—</dd></div>
+      <div><dt>GST</dt><dd id="gst-tax">—</dd></div>
+      <div class="mc-main"><dt>Total with GST</dt><dd id="gst-gross">—</dd></div>
+      <div><dt>CGST + SGST (each)</dt><dd id="gst-half">—</dd></div>
+    </dl>
+  </section>
+
+  <section class="ft-panel ft" id="mc-pct" role="tabpanel" aria-labelledby="mc-tab-pct" hidden>
+    <div class="mc-pct">
+      <p><label for="p1-a" class="sr-only">Percent</label><input id="p1-a" type="number" step="any" inputmode="decimal" value="15">
+        <span>% of</span> <label for="p1-b" class="sr-only">Number</label><input id="p1-b" type="number" step="any" inputmode="decimal" value="200">
+        <span>is</span> <output id="p1-out" for="p1-a p1-b">—</output></p>
+      <p><label for="p2-a" class="sr-only">Part</label><input id="p2-a" type="number" step="any" inputmode="decimal" value="30">
+        <span>is what % of</span> <label for="p2-b" class="sr-only">Whole</label><input id="p2-b" type="number" step="any" inputmode="decimal" value="200">
+        <span>?</span> <output id="p2-out" for="p2-a p2-b">—</output></p>
+      <p><span>Change from</span> <label for="p3-a" class="sr-only">From</label><input id="p3-a" type="number" step="any" inputmode="decimal" value="200">
+        <span>to</span> <label for="p3-b" class="sr-only">To</label><input id="p3-b" type="number" step="any" inputmode="decimal" value="250">
+        <span>is</span> <output id="p3-out" for="p3-a p3-b">—</output></p>
+    </div>
+  </section>
+</div>
+<style>
+  .mc-out { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; }
+  .mc-donut {
+    --a: 50%; width: 9rem; height: 9rem; border-radius: 50%; flex: none;
+    background: conic-gradient(var(--accent) 0 var(--a), color-mix(in srgb, var(--accent-ink) 55%, var(--panel-2)) var(--a) 100%);
+    -webkit-mask: radial-gradient(circle, transparent 54%, #000 55%); mask: radial-gradient(circle, transparent 54%, #000 55%);
+  }
+  .mc-figs { margin: 0; display: grid; gap: .5rem; flex: 1 1 14rem; }
+  .mc-figs div { display: flex; justify-content: space-between; gap: 1rem; padding: .4rem 0; border-bottom: 1px solid var(--border); }
+  .mc-figs dt { color: var(--muted); display: flex; align-items: center; gap: .4rem; }
+  .mc-figs dd { margin: 0; font-weight: 650; font-variant-numeric: tabular-nums; text-align: right; }
+  .mc-figs .mc-main dd { font-size: 1.6rem; color: var(--accent-ink); }
+  .mc-grid { grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); column-gap: 1.5rem; }
+  .key { width: .75rem; height: .75rem; border-radius: 3px; display: inline-block; }
+  .k1 { background: var(--accent); }
+  .k2 { background: color-mix(in srgb, var(--accent-ink) 55%, var(--panel-2)); }
+  .mc-sched summary { cursor: pointer; color: var(--accent-ink); font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+  .mc-scroll { max-height: 20rem; overflow: auto; }
+  .mc-sched table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: .9375rem; }
+  .mc-sched th, .mc-sched td { padding: .4rem .5rem; text-align: right; border-bottom: 1px solid var(--border); }
+  .mc-sched th:first-child, .mc-sched td:first-child { text-align: left; }
+  .mc-pct { display: grid; gap: .75rem; }
+  .mc-pct p { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+  .mc-pct input { width: 7.5rem; min-height: 44px; }
+  .mc-pct output { font-weight: 700; font-size: 1.25rem; color: var(--accent-ink); font-variant-numeric: tabular-nums; }
+</style>
+<script>import "./money-calc.ts";</script>

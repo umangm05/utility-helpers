@@ -1,0 +1,67 @@
+---
+// Passport / ID photo maker (UH-T2 tool 5): crop to an official size at 300 DPI
+// and lay copies out on a 4×6 in (or A4) print sheet. Canvas only, no library.
+import "../styles/tools.css";
+---
+<div class="tool ft" id="pp">
+  <div class="ft-pick" id="pp-drop">
+    <input id="pp-file" class="sr-only" type="file" accept="image/*">
+    <label class="btn" for="pp-file">Choose a photo</label>
+    <button type="button" class="btn-ghost" id="pp-sample">Try a sample</button>
+    <p>Use a front-facing photo against a plain, light wall. It stays on your device.</p>
+  </div>
+  <div class="ft-opts">
+    <div>
+      <label for="pp-size">Photo size</label>
+      <select id="pp-size">
+        <option value="35x45">35 × 45 mm: Indian passport, Schengen, UK</option>
+        <option value="50.8x50.8">2 × 2 in (51 × 51 mm): US visa, Indian visa, OCI</option>
+        <option value="25x35">25 × 35 mm: PAN card</option>
+        <option value="20x25">20 × 25 mm: stamp size</option>
+      </select>
+    </div>
+    <div>
+      <label for="pp-sheet">Print sheet</label>
+      <select id="pp-sheet">
+        <option value="4x6">4 × 6 in (10 × 15 cm photo print)</option>
+        <option value="a4">A4 (home printer)</option>
+      </select>
+    </div>
+    <div>
+      <label for="pp-kb">Max size of single photo (KB, optional)</label>
+      <input id="pp-kb" type="number" min="5" max="5000" inputmode="numeric" placeholder="e.g. 50" list="pp-kbs">
+      <datalist id="pp-kbs"><option value="20"></option><option value="50"></option><option value="100"></option><option value="200"></option></datalist>
+    </div>
+    <label class="ft-check"><input id="pp-lines" type="checkbox" checked> Cutting lines on the sheet</label>
+  </div>
+  <div class="pp-work" id="pp-work" hidden>
+    <div class="pp-editor">
+      <canvas id="pp-edit" tabindex="0" role="img"
+        aria-label="Crop area. Drag or use the arrow keys to move the photo; use the zoom slider or + and - to zoom."></canvas>
+      <label for="pp-zoom">Zoom</label>
+      <input id="pp-zoom" type="range" min="100" max="400" step="1" value="100">
+      <p class="ft-note">Line up the face with the oval: top of the head near the top line, chin near the bottom one.</p>
+    </div>
+    <div class="ft pp-side">
+      <p class="ft-status" id="pp-meta" role="status" aria-live="polite"></p>
+      <img id="pp-sheet-preview" alt="Print sheet preview" width="300" height="200">
+      <div class="ft-row">
+        <button type="button" id="pp-single">Download photo</button>
+        <button type="button" class="btn-ghost" id="pp-sheetbtn">Download print sheet</button>
+      </div>
+      <p class="ft-status" id="pp-status" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</div>
+<style>
+  .pp-work { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; }
+  .pp-work[hidden] { display: none; }
+  .pp-editor { flex: 0 1 18rem; display: grid; gap: .5rem; }
+  .pp-editor input[type=range] { width: 100%; }
+  #pp-edit { width: 100%; max-width: 18rem; border-radius: 8px; background: var(--panel-2); cursor: grab; touch-action: none;
+    border: 1px solid var(--border); }
+  #pp-edit:active { cursor: grabbing; }
+  .pp-side { flex: 1 1 16rem; }
+  #pp-sheet-preview { width: 100%; max-width: 24rem; height: auto; border-radius: 6px; border: 1px solid var(--border); background: #fff; }
+</style>
+<script>import "./passport-photo.ts";</script>
