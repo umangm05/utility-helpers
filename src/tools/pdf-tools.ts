@@ -1,8 +1,8 @@
 // PDF tools: one ordered page list built from PDFs and photos, then
 //   Make one PDF  |  Extract pages (range)  |  Split every page  |  Convert pages to JPG.
 // pdf-lib (MIT) and pdf.js (Apache-2.0) load on first use, from this site only.
-import { byId, fmtBytes, baseName, decodeImage, drawToCanvas, canvasToBlob, status, resultRow, filePicker }
-  from "./common";
+import { byId, fmtBytes, baseName, decodeImage, drawToCanvas, canvasToBlob, status, resultRow, filePicker,
+  fetchSample } from "./common";
 import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
 type PdfLib = typeof import("pdf-lib");
@@ -338,28 +338,16 @@ byId("pdf-clear").addEventListener("click", () => {
   render();
 });
 
-// ---- sample: two small PDFs made right here with pdf-lib ----------------------
-async function samplePdf(name: string, labels: string[], landscape: boolean): Promise<File> {
-  const { PDFDocument, StandardFonts, rgb } = await pdfLib();
-  const d = await PDFDocument.create();
-  const font = await d.embedFont(StandardFonts.HelveticaBold);
-  for (const label of labels) {
-    const [w, h] = landscape ? [PAGE.a4[1], PAGE.a4[0]] : [PAGE.a4[0], PAGE.a4[1]];
-    const page = d.addPage([w, h]);
-    page.drawRectangle({ x: 0, y: h - 90, width: w, height: 90, color: rgb(0.96, 0.62, 0.04) });
-    page.drawText(label, { x: 48, y: h / 2, size: 44, font, color: rgb(0.1, 0.1, 0.12) });
-  }
-  return new File([(await d.save()) as BlobPart], name, { type: "application/pdf" });
-}
-
+// ---- Try a sample: the bundled 2-page PDF + photo, combined into one PDF in one click ----
 byId("pdf-sample").addEventListener("click", async () => {
   busy(true);
-  try {
-    const files = [await samplePdf("sample-a.pdf", ["Sample A, page 1", "Sample A, page 2"], false),
-      await samplePdf("sample-b.pdf", ["Sample B, page 1"], true)];
-    busy(false);
-    await addFiles(files);
-  } finally { busy(false); }
+  status(st, "Loading the sample…");
+  let files: File[];
+  try { files = await Promise.all([fetchSample("pdf"), fetchSample("photo")]); }
+  catch (e) { status(st, (e as Error).message, "error"); busy(false); return; }
+  busy(false);
+  await addFiles(files);
+  if (pages.length) byId<HTMLButtonElement>("pdf-build").click();
 });
 
 filePicker(byId("pdf-drop"), byId<HTMLInputElement>("pdf-file"), addFiles, "pdf-tools");

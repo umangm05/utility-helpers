@@ -144,9 +144,8 @@ def png_header(data: bytes) -> tuple[int, int, int]:
 
 
 def ka_bg(page) -> tuple[dict, bool]:
-    page.click("#bg-sample")
-    wait_text(page, "#bg-in", "1200 × 900")
-    page.click("#bg-go")
+    page.click("#bg-sample")          # one click: loads the bundled portrait AND removes the background
+    wait_text(page, "#bg-in", "1200 × 1600")
     page.wait_for_function("['ok','error'].includes(document.getElementById('bg-status').dataset.kind)", timeout=120000)
     st = text(page, "#bg-status")
     ca = int(page.get_attribute("#bg-after", "data-center-alpha") or -1)
@@ -155,7 +154,7 @@ def ka_bg(page) -> tuple[dict, bool]:
         page.click("#bg-dl")
     w, h, ct = png_header(Path(d.value.path()).read_bytes())
     obs = {"status": st[:60], "center_alpha": ca, "corner_alpha": ka, "png": [w, h, f"colour type {ct}"]}
-    ok = st.startswith("Background removed · 1200 × 900") and ca >= 200 and ka <= 20 and (w, h, ct) == (1200, 900, 6)
+    ok = st.startswith("Background removed · 1200 × 1600") and ca >= 200 and ka <= 20 and (w, h, ct) == (1200, 1600, 6)
     return obs, ok
 
 
@@ -172,8 +171,8 @@ TOOLS = [  # name, path, known-answer fn, description of input -> expected
      "wheel ['Only One'] then 6 names; number 7..7; 6 names into 2 teams; 3d6",
      "winner 'Only One'; winner in list; 7; teams [3, 3]; 3 faces 1-6 summing to the total"),
     ("background-remover", "/background-remover/", ka_bg,
-     "sample: orange ball on a light studio backdrop, 1200x900",
-     "'Background removed · 1200 × 900'; centre alpha >= 200, corner alpha <= 20; RGBA PNG 1200x900"),
+     "Try a sample (one click): bundled public/samples/sample-portrait.jpg, 1200x1600",
+     "'Background removed · 1200 × 1600'; centre alpha >= 200, corner alpha <= 20; RGBA PNG 1200x1600"),
 ]
 
 

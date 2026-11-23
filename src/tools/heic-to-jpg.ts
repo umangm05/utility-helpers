@@ -1,6 +1,6 @@
 // HEIC -> JPG/PNG. Native decode first (Safari/iOS, some Chromium builds with
 // HEVC), then heic-decoder.ts. The photo never leaves the browser.
-import { byId, fmtBytes, baseName, drawToCanvas, canvasToBlob, status, resultRow, filePicker, download } from "./common";
+import { byId, fmtBytes, baseName, drawToCanvas, canvasToBlob, status, resultRow, filePicker, download, fetchSample } from "./common";
 import { decodeHeicFallback, FALLBACK_NOTE } from "./heic-decoder";
 
 const st = byId("heic-status");
@@ -59,8 +59,7 @@ byId("heic-all").addEventListener("click", async () => {
 byId("heic-sample").addEventListener("click", async () => {
   status(st, "Loading the sample…");
   // Same-origin static file (a 640 × 480 test pattern made by scripts/make_heic_sample.py).
-  const r = await fetch("/samples/sample.heic").catch(() => null);
-  if (!r?.ok) { status(st, "Could not load the sample. Check your connection and try again.", "error"); return; }
-  convert([new File([await r.blob()], "sample.heic", { type: "image/heic" })]);
+  try { await convert([await fetchSample("heic")]); }
+  catch (e) { status(st, (e as Error).message, "error"); }
 });
 filePicker(byId("heic-drop"), byId<HTMLInputElement>("heic-file"), convert, "heic-to-jpg");

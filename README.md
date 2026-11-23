@@ -166,8 +166,13 @@ python3 scripts/test_consent.py    # consent contract (Reject sends nothing, no 
 python3 scripts/test_ui.py         # Ctrl+K, recents, drop zone, theme; no network for any of it
 python3 scripts/test_file_tools.py # image/PDF/HEIC/QR/passport known answers, same-origin GETs only
 python3 scripts/test_new_tools.py  # typing/money/date/wheel/background-remover known answers, online AND offline
+python3 scripts/test_samples.py    # tool-above-intro on every tool page + every "Try a sample" button (one click -> result)
 npm test                           # function handlers + tool maths (money, dates, typing, randomness)
 ```
+
+"Try a sample" files live in `public/samples/` and are all self-made (no third-party assets):
+`python3 scripts/make_samples.py` rebuilds `sample-portrait.jpg`, `sample.pdf` and `sample-qr.png`
+deterministically; `python3 scripts/make_heic_sample.py` rebuilds `sample.heic`.
 
 The Python tests need `pip install playwright && python3 -m playwright install chromium`
 and serve `dist/` themselves.

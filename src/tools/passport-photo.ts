@@ -1,6 +1,6 @@
 // Passport / ID photo maker. Crop -> single photo at 300 DPI -> print sheet.
 // Everything is drawn on canvases in this tab; nothing is uploaded.
-import { byId, decodeImage, canvasToBlob, encodeUnder, status, download, filePicker, fmtBytes } from "./common";
+import { byId, decodeImage, canvasToBlob, encodeUnder, status, download, filePicker, fmtBytes, fetchSample } from "./common";
 
 const DPI = 300;
 const mmToPx = (mm: number) => Math.round((mm / 25.4) * DPI);
@@ -246,33 +246,11 @@ byId("pp-sheetbtn").addEventListener("click", async () => {
   status(st, `Saved a sheet of ${n} photos (${fmtBytes(blob.size)}). Print it at actual size.`, "ok");
 });
 
-// ---- sample: a simple illustrated portrait (drawn here, no network) --------------
-async function samplePortrait(): Promise<ImageBitmap> {
-  const c = document.createElement("canvas");
-  c.width = 900;
-  c.height = 1200;
-  const g = c.getContext("2d")!;
-  g.fillStyle = "#eef2f7";
-  g.fillRect(0, 0, 900, 1200);
-  g.fillStyle = "#1f3b63";                          // shoulders
-  g.beginPath();
-  g.ellipse(450, 1240, 380, 330, 0, Math.PI, 0);
-  g.fill();
-  g.fillStyle = "#c68a5c";                          // neck + face
-  g.fillRect(395, 760, 110, 150);
-  g.beginPath();
-  g.ellipse(450, 560, 190, 250, 0, 0, Math.PI * 2);
-  g.fill();
-  g.fillStyle = "#2b1d14";                          // hair
-  g.beginPath();
-  g.ellipse(450, 410, 205, 130, 0, Math.PI, 0);
-  g.fill();
-  g.fillStyle = "#1b1b1b";                          // eyes
-  g.beginPath(); g.arc(385, 560, 14, 0, Math.PI * 2); g.arc(515, 560, 14, 0, Math.PI * 2); g.fill();
-  g.strokeStyle = "#7a3b2a"; g.lineWidth = 8; g.lineCap = "round";
-  g.beginPath(); g.arc(450, 660, 60, 0.15 * Math.PI, 0.85 * Math.PI); g.stroke();
-  return createImageBitmap(c);
-}
-byId("pp-sample").addEventListener("click", async () => load(await samplePortrait()));
+// ---- Try a sample: the bundled portrait, cropped to the selected size in one click --------
+byId("pp-sample").addEventListener("click", async () => {
+  status(st, "Loading the sample…");
+  try { await loadFiles([await fetchSample("photo")]); }
+  catch (e) { status(st, (e as Error).message, "error"); }
+});
 
 filePicker(byId("pp-drop"), byId<HTMLInputElement>("pp-file"), loadFiles, "passport-size-photo");
