@@ -264,7 +264,7 @@ def main() -> int:
             pages = [p for p in paths if p.endswith("/")]
             print(f"              {len(paths)} distinct paths: {len(pages)} pages (service-worker precache) + "
                   f"{len(paths) - len(pages)} files; heavy, cached on first use: "
-                  f"{', '.join(p for p in paths if p.startswith('/models/') or p.endswith('.wasm')) or 'none'}")
+                  f"{', '.join(p for p in paths if p.endswith(('.onnx', '.wasm'))) or 'none'}")
             if args.verbose:
                 print(f"              paths: {', '.join(paths)}")
             if bad:
