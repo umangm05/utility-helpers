@@ -1,7 +1,7 @@
 // Spin the wheel / random picker / dice UI. Everything is local to this tab.
 import { byId } from "./common";
 import { tabs } from "./tabs";
-import { randInt, between, pick, teams, roll, shuffle, entries } from "./random";
+import { randInt, between, pick, teams, roll, shuffle, entries, MAX_RANGE } from "./random";
 import { play, wireToggles } from "./sfx";
 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -134,10 +134,15 @@ byId("pk-go").addEventListener("click", () => {
   const xs = entries(byId<HTMLTextAreaElement>("pk-list").value);
   out.replaceChildren();
   delete out.dataset.kind;
+  delete out.dataset.value;
   if (mode.value === "number") {
     let lo = Math.round(Number(byId<HTMLInputElement>("pk-min").value)), hi = Math.round(Number(byId<HTMLInputElement>("pk-max").value));
     if (!Number.isFinite(lo) || !Number.isFinite(hi)) { out.append("Enter two whole numbers."); return; }
     if (lo > hi) [lo, hi] = [hi, lo];
+    if (!Number.isSafeInteger(lo) || !Number.isSafeInteger(hi) || hi - lo + 1 > MAX_RANGE) {
+      out.append("That range is too big. Keep both numbers between -9,007,199,254,740,991 and 9,007,199,254,740,991 and the gap under 9 quadrillion.");
+      return;
+    }
     const v = between(lo, hi);
     out.append(chip(String(v), "big"));
     out.dataset.value = String(v);

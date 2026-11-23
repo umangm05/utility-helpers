@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { emi, sip, gst, pctOf, whatPct, pctChange, inr, words } from "../../src/tools/money-math.ts";
 import { parse, age, ymd, daysBetween, weekdays, split } from "../../src/tools/date-math.ts";
 import { score } from "../../src/tools/typing-math.ts";
-import { randInt, between, pick, teams, roll, shuffle, entries } from "../../src/tools/random.ts";
+import { randInt, between, pick, teams, roll, shuffle, entries, MAX_RANGE } from "../../src/tools/random.ts";
 
 test("EMI: ₹10,00,000 at 10% for 20 years = ₹9,650/month (bank reducing-balance formula)", () => {
   const e = emi(1_000_000, 10, 240);
@@ -93,4 +93,22 @@ test("randomness: in range, unbiased-ish, picks distinct, teams balanced", () =>
   assert.ok(r.every((v) => v >= 1 && v <= 6));
   assert.deepEqual(shuffle([1, 2, 3, 4]).sort(), [1, 2, 3, 4]);
   assert.deepEqual(entries(" Asha \n\n Rahul\r\n"), ["Asha", "Rahul"]);
+});
+
+test("randomness: huge ranges terminate (regression: n > 2^32 froze the tab)", () => {
+  for (const n of [1e10, 2 ** 32 + 1, 2 ** 32, 2 ** 53, 3 * 2 ** 40 + 7]) {
+    for (let i = 0; i < 2000; i++) {
+      const v = randInt(n);
+      assert.ok(Number.isInteger(v) && v >= 0 && v < n, `randInt(${n}) -> ${v}`);
+    }
+  }
+  for (let i = 0; i < 2000; i++) { const v = between(1, 1e10); assert.ok(v >= 1 && v <= 1e10 && Number.isInteger(v)); }
+  // 53-bit path is not stuck in the low half: with n = 2^33 roughly half the draws are >= 2^32.
+  let high = 0;
+  for (let i = 0; i < 4000; i++) if (randInt(2 ** 33) >= 2 ** 32) high++;
+  assert.ok(high > 1700 && high < 2300, `high-half count ${high}`);
+  assert.equal(MAX_RANGE, 2 ** 53);
+  assert.throws(() => randInt(2 ** 53 + 2), RangeError);
+  assert.throws(() => randInt(0), RangeError);
+  assert.throws(() => between(-(2 ** 53), 2 ** 53), RangeError);
 });
