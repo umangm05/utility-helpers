@@ -1,0 +1,38 @@
+---
+import Base from "../layouts/Base.astro";
+import { site, TITLE_MAX } from "../lib/site";
+const TITLE = "Contact Utility Helpers — report a bug or ask a question";
+const DESC = "How to reach the people behind Utility Helpers: open a GitHub issue for a reply, " +
+  "or send a private message through the suggestion form.";
+const body = `    <h1>Contact us</h1>
+    <p class="lede">Found a bug, have a question, or want a tool we do not have yet? There are two
+    ways to reach us. Both go to the team that builds and maintains the site.</p>
+    <div class="prose">
+    <h2>Want a reply? Open a GitHub issue</h2>
+    <p><a href="${site.github}/issues/new" rel="noopener">Open an issue on GitHub</a> and we reply
+    there. You need a free GitHub account, and the issue is public, so please do not include
+    personal details or files you would not want others to see. You can also
+    <a href="${site.github}/issues" rel="noopener">browse existing issues</a> to see if someone has
+    already asked.</p>
+
+    <h2>No account? Send a message</h2>
+    <p>Use the <a href="/suggest/">message form</a>. Pick what it is about (a new tool, a design
+    change, a bug, or something to remove), write your message, and send it. No account or email
+    address is needed. Messages are not published, and they are read every week when we plan what
+    to fix and build next. Because we do not ask who you are, we cannot reply to a form message directly; if
+    you need an answer, use GitHub.</p>
+
+    <h2>Before you write</h2>
+    <ul>
+      <li>For a bug, tell us which tool, which browser and device, and what you expected to happen.</li>
+      <li>Never send us a file, password or document you processed with a tool. We do not need it,
+      and the tools are designed so that we never see your data.</li>
+      <li>Questions about data and cookies are answered on the <a href="/privacy/">privacy page</a>.</li>
+    </ul>
+    </div>`;
+---
+<Base title={TITLE.slice(0, TITLE_MAX)} description={DESC} path="/contact/"
+  jsonld={[{ "@context": "https://schema.org", "@type": "ContactPage", name: TITLE, url: site.baseUrl.replace(/\/$/, "") + "/contact/",
+    isPartOf: { "@type": "WebSite", name: site.name, url: site.baseUrl } }]}>
+  <Fragment set:html={body} />
+</Base>

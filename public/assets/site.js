@@ -205,28 +205,12 @@
     if (b) b.hidden = true;
     renderState();
     begin();
-    loadAds();
   }
   window.uhConsent = { get: consent, set: choose, open: function () { showBanner(true); } };
 
-  // --- ads -----------------------------------------------------------------
-  // Google AdSense sets third-party cookies, so adsbygoogle.js is requested
-  // ONLY after "Accept all". No choice / Essential only / Reject -> never
-  // requested. Withdrawing consent stops it on the next page load (a loaded
-  // third-party script cannot be unloaded from the current page).
-  var adsLoaded = false;
-  function loadAds() {
-    if (adsLoaded || consent() !== "all") return;
-    var meta = document.querySelector('meta[name="uh-ads-client"]');
-    var client = meta && meta.getAttribute("content");
-    if (!client || !/^ca-pub-[0-9]{10,20}$/.test(client)) return;
-    adsLoaded = true;
-    var s = document.createElement("script");
-    s.async = true;
-    s.crossOrigin = "anonymous";
-    s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + client;
-    document.head.appendChild(s);
-  }
+  // Ads are NOT governed by this banner: the standard AdSense tag sits in
+  // <head> (src/layouts/Base.astro) and Google's certified consent message
+  // (AdSense Privacy & messaging) asks EEA/UK/CH visitors about ad cookies.
 
   document.addEventListener("DOMContentLoaded", function () {
     var c = consent();
@@ -246,7 +230,7 @@
     }
     renderState();
     if (!c) showBanner(false);
-    else { begin(); loadAds(); }
+    else begin();
   });
 
   // --- suggestion form (/suggest/) ----------------------------------------

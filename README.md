@@ -10,6 +10,12 @@ on page, errors) so we can see which tools to improve or drop. Reject sends
 nothing. Tool input and output are never collected. Full details:
 [/privacy/](https://utility-helpers.netlify.app/privacy/).
 
+**Ads:** the site is funded by Google AdSense. Google's standard ad tag is in the
+`<head>` of every indexable page. Ad consent for visitors in the EEA, UK and
+Switzerland is collected by Google's own certified consent message (AdSense
+*Privacy & messaging*), not by the banner above, which governs first-party usage
+counts only.
+
 Live site: https://utility-helpers.netlify.app
 
 ## What this is
@@ -34,7 +40,7 @@ or other origins.
 ├── src/
 │   ├── pages/index.astro   ← home: drop-anything zone, recent tools, tool cards
 │   ├── pages/[slug].astro  ← one pre-rendered page per tool (getStaticPaths over site.config.json)
-│   ├── pages/privacy.astro, suggest.astro, 404.astro
+│   ├── pages/about.astro, contact.astro, privacy.astro, suggest.astro, 404.astro
 │   ├── pages/sitemap.xml.ts, robots.txt.ts, ads.txt.ts   ← generated from the manifest
 │   ├── layouts/Base.astro  ← <head> meta, header, footer, consent banner, Ctrl+K dialog
 │   ├── pages/manifest.webmanifest.ts                     ← PWA manifest from the manifest
@@ -43,7 +49,7 @@ or other origins.
 │   ├── components/Icon.astro
 │   └── styles/site.css     ← design tokens (light/dark) + components
 ├── public/assets/
-│   ├── site.js             ← consent banner + usage events + suggestion form + AdSense gate
+│   ├── site.js             ← consent banner + usage events + suggestion form
 │   ├── og.png, favicon.svg, icon-*.png (scripts/make_icons.py)
 ├── public/sfx/             ← uisfx UI sounds (CC0-1.0)
 ├── public/models/          ← background-remover model (U²-Net u2netp, Apache-2.0; scripts/make_bg_model.py)
@@ -108,9 +114,11 @@ or other origins.
 
 `check_dist.py` fails on: duplicate `<title>`/meta description, anything other than
 exactly one `<h1>` per page, a bad slug or missing field, a tool without a built
-page, a sitemap that does not list exactly home + tools + /privacy/ + /suggest/,
-`tool-slugs.mjs` drift, or any page that loads `adsbygoogle.js` statically / skips
-`site.js`. It warns when a title exceeds 60 chars or a description 155.
+page, a sitemap that does not list exactly home + tools + /about/ + /contact/ +
+/privacy/ + /suggest/, `tool-slugs.mjs` drift, a page that skips `site.js` or lacks
+links to /about/, /contact/ and /privacy/, an indexable page without exactly one
+unmodified AdSense tag in `<head>` (+ `google-adsense-account` meta), or a noindex
+page that carries one. It warns when a title exceeds 60 chars or a description 155.
 
 ## Usage analytics and suggestions
 

@@ -31,7 +31,7 @@ from urllib.parse import urlparse
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from test_tools import free_port, serve  # noqa: E402  (same local server as the 10 dev-tool tests)
-from test_consent import block_preview_drawer  # noqa: E402
+from test_consent import block_preview_drawer, is_ad_loader  # noqa: E402
 
 # Netlify injects its collaboration drawer into DEPLOY PREVIEWS only (not site code, absent in production).
 # It is blocked, and its blocked requests are listed separately instead of counting as tool traffic.
@@ -265,7 +265,10 @@ def main() -> int:
             except Exception as e:  # noqa: BLE001
                 name, inp, exp, obs, ok = fn.__name__, "", "", {"error": str(e)[:400]}, False
             injected = [u for m, u in reqs if u.startswith(PREVIEW_ONLY) or urlparse(u).path.startswith(PREVIEW_ONLY[0])]
-            reqs = [(m, u) for m, u in reqs if u not in injected]
+            # AdSense loader GET (standard tag in <head>, aborted in tests): expected, but it
+            # must never carry tool content.
+            ads = [u for m, u in reqs if m == "GET" and is_ad_loader(u) and "?client=ca-pub-" in u and "&" not in u]
+            reqs = [(m, u) for m, u in reqs if u not in injected and u not in ads]
             bad = [f"{m} {u}" for m, u in reqs
                    if not u.startswith(("blob:", "data:")) and (m != "GET" or not u.startswith(origin))]
             # Consent banner analytics are off in a fresh context (no choice made), so nothing else may appear.

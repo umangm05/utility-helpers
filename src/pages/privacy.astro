@@ -2,8 +2,7 @@
 import Base from "../layouts/Base.astro";
 import { site, TITLE_MAX } from "../lib/site";
 const TITLE = "Privacy — what Utility Helpers counts and what it never sees";
-const DESC = "Tool input never leaves your device. With your consent we count which tools, " +
-  "options and buttons get used. Reject and nothing is sent.";
+const DESC = "Tool input never leaves your device. With consent we count which tools and buttons get used; Reject and we get nothing. Ads come from Google AdSense.";
 const body = `    <h1>Privacy</h1>
     <p class="lede">Every tool runs in your browser. What you type, paste, generate or convert
     never leaves your device. If you allow it, we count how the tools are used so we know
@@ -14,17 +13,18 @@ const body = `    <h1>Privacy</h1>
 
     <h2>The three choices</h2>
     <table>
-      <thead><tr><th scope="col">Choice</th><th scope="col">What is sent</th><th scope="col">What is stored in your browser</th></tr></thead>
+      <thead><tr><th scope="col">Choice</th><th scope="col">What we receive</th><th scope="col">What is stored in your browser</th></tr></thead>
       <tbody>
         <tr><td>Reject</td><td>Nothing.</td><td>Only the fact that you chose Reject (and a light/dark theme, if you switch it yourself).</td></tr>
         <tr><td>Essential only</td><td>Anonymous usage events (listed below) with a random session id that is
           forgotten when you close the tab.</td><td>Your choice, plus the per-tab session id.</td></tr>
         <tr><td>Accept all</td><td>The same events, plus a random visitor id so we can see whether people come
-          back and which tools they use together. Google ads are also loaded (see below).</td><td>Your choice, the session id,
-          the random visitor id, and Google&rsquo;s advertising cookies.</td></tr>
+          back and which tools they use together.</td><td>Your choice, the session id and
+          the random visitor id.</td></tr>
       </tbody>
     </table>
-    <p>Nothing is sent before you choose. You can change your mind at any time from the
+    <p>These choices cover our own usage counts. Ads are run by Google and have their own
+    consent step (see <a href="#ads">Ads</a> below). None of our usage counts are sent before you choose. You can change your mind at any time from the
     &ldquo;Privacy choices&rdquo; link at the bottom of every page; switching to Reject or
     Essential only deletes the visitor id from your browser.</p>
 
@@ -43,18 +43,29 @@ const body = `    <h1>Privacy</h1>
       <li>Your name, email or any account. There are no accounts.</li>
       <li>Your IP address, browser fingerprint or user agent. Our code never stores them; the only device detail is mobile, tablet or desktop.</li>
       <li>Data for anyone else. There are no third-party analytics scripts. The only third party
-      is Google AdSense, and only if you choose Accept all.</li>
+      is Google AdSense, which shows the ads (see below).</li>
     </ul>
 
-    <h2>Ads</h2>
-    <p>The site is kept free by Google AdSense. The ad script is loaded <strong>only after you
-    choose Accept all</strong>. With no choice, Essential only or Reject, your browser never
-    contacts Google&rsquo;s ad servers. When it is loaded, Google may set cookies and use them to
-    show and measure ads; that is governed by
-    <a href="https://policies.google.com/technologies/ads">Google&rsquo;s advertising policy</a>,
-    not by us. Ads never see what you type into a tool. If you later switch to Essential only or
-    Reject, ads stop from the next page you open; Google&rsquo;s cookies can be cleared in your
-    browser settings.</p>
+    <h2 id="ads">Ads</h2>
+    <p>The site is kept free by Google AdSense, so pages that show tools also load Google&rsquo;s ad
+    script. We never pass anything you type into a tool, or its result, to Google or anyone
+    else. The ad script is Google&rsquo;s own code and is governed by Google&rsquo;s policies.</p>
+    <ul>
+      <li>Third-party vendors, including Google, use cookies to serve ads based on your earlier
+      visits to this site and to other websites.</li>
+      <li>Google&rsquo;s advertising cookies let Google and its partners show you ads based on
+      those visits. Read <a href="https://policies.google.com/technologies/partner-sites">how Google
+      uses information from sites that use its services</a> and
+      <a href="https://policies.google.com/technologies/ads">how Google uses advertising cookies</a>.</li>
+      <li>You can turn off personalised ads in
+      <a href="https://adssettings.google.com/">Google&rsquo;s Ads Settings</a>, or opt out of some
+      other vendors&rsquo; cookies at <a href="https://www.aboutads.info/choices/">aboutads.info</a>.</li>
+      <li>If you are in the European Economic Area, the UK or Switzerland, Google shows its own
+      consent message before ads use cookies or personal data, and you can change that choice
+      later from the same message.</li>
+    </ul>
+    <p>Your choice in our own banner does not switch ads on or off: it only controls our usage
+    counts. Google&rsquo;s cookies can be cleared in your browser settings at any time.</p>
 
     <h2>Where it goes and for how long</h2>
     <p>Events go to a small first-party function on this site and are stored in the site&rsquo;s own
