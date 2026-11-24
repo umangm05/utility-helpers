@@ -43,6 +43,11 @@
       "name": "Auto Crash Chase",
       "url": "https://auto-crash-chase.netlify.app/",
       "blurb": "Top-down AI car-chase game"
+    },
+    {
+      "name": "Tiny Worlds 3D",
+      "url": "https://3d-world.umangmittal.me/",
+      "blurb": "Tiny 3D worlds you can play in your browser"
     }
   ],
   "tools": [
