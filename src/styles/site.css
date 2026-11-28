@@ -48,7 +48,9 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%;
+  /* keep scrolled-to / focused controls clear of the sticky header (3.75rem + border) */
+  scroll-padding-top: 4.5rem; }
 body {
   margin: 0;
   background: radial-gradient(60rem 30rem at 85% -10%, var(--bg-glow), transparent 70%) no-repeat, var(--bg);
