@@ -73,8 +73,7 @@ import "../styles/tools.css";
   <section class="ft-panel ft" id="qr-scan" role="tabpanel" aria-labelledby="qr-tab-scan" hidden>
     <div class="ft-row">
       <button type="button" id="qr-cam">Scan with camera</button>
-      <input id="qr-img" class="sr-only" type="file" accept="image/*">
-      <label class="btn btn-ghost-l" for="qr-img">Read from a picture</label>
+      <label class="btn btn-ghost-l pick">Read from a picture<input id="qr-img" class="pick-input" type="file" accept="image/*"></label>
       <button type="button" class="btn-ghost" id="qr-sample">Try a sample</button>
     </div>
     <video id="qr-video" playsinline muted hidden></video>
