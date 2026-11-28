@@ -2,7 +2,7 @@
 // PDF tools (UH-T2 tool 2): JPG/images -> PDF, merge, reorder/rotate/remove pages,
 // extract a range, split every page, PDF pages -> JPG.
 // pdf-lib (MIT) builds PDFs; pdf.js (Apache-2.0) renders thumbnails and JPGs.
-// Both are lazy-loaded the first time they are needed.
+// Both are lazy-loaded only after a file (or the sample) is chosen; the page itself ships neither.
 import "../styles/tools.css";
 ---
 <div class="tool ft" id="pdf">
@@ -11,7 +11,7 @@ import "../styles/tools.css";
       accept="application/pdf,.pdf,image/jpeg,image/png,image/webp,image/gif,image/bmp">
     <label class="btn" for="pdf-file">Choose PDFs or photos</label>
     <button type="button" class="btn-ghost" id="pdf-sample">Try a sample</button>
-    <p>or drop them here. Pages show up below in order; you can add more files at any time.</p>
+    <p>or drop them here. Pick two or more and they are combined into one PDF straight away; reorder, rotate or remove pages and it updates.</p>
   </div>
   <p class="ft-status" id="pdf-summary" role="status" aria-live="polite">No pages yet.</p>
   <ol class="pdf-pages" id="pdf-pages" aria-label="Pages in order"></ol>
@@ -44,16 +44,20 @@ import "../styles/tools.css";
     <button type="button" class="btn-ghost" id="pdf-clear">Clear all</button>
   </div>
   <p class="ft-status" id="pdf-status" role="status" aria-live="polite"></p>
-  <ul class="ft-results" id="pdf-out" aria-label="Your files"></ul>
+  <ul class="ft-results" id="pdf-out" aria-label="Your files" aria-busy="false"></ul>
 </div>
-<style>
+<!-- is:global: the page list (li, thumbs, buttons) is built by pdf-tools.ts, and Astro's scoped
+     selectors only match elements carrying the template's data-astro-cid attribute -- so scoped
+     rules never reached those nodes and a 1200 px photo thumbnail pushed the page sideways on phones.
+     Every selector here is prefixed with .pdf-pages, so nothing leaks. -->
+<style is:global>
   .pdf-pages { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem;
     grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); }
   .pdf-pages:empty { display: none; }
-  .pdf-pages li { display: grid; gap: .4rem; padding: .5rem; border-radius: var(--radius-sm);
+  .pdf-pages li { display: grid; gap: .4rem; padding: .5rem; border-radius: var(--radius-sm); min-width: 0;
     border: 1px solid var(--border); background: var(--panel-2); }
   .pdf-pages li.dragging { opacity: .5; }
-  .pdf-pages .thumb { display: grid; place-items: center; height: 7.5rem; border-radius: 8px; overflow: hidden;
+  .pdf-pages .thumb { display: grid; place-items: center; height: 7.5rem; border-radius: 8px; overflow: hidden; min-width: 0;
     background: var(--panel); color: var(--muted); font-size: .8125rem; }
   .pdf-pages .thumb img, .pdf-pages .thumb canvas { max-width: 100%; max-height: 100%; transition: transform .2s; }
   .pdf-pages .lab { font-size: .8125rem; overflow-wrap: anywhere; line-height: 1.3; }

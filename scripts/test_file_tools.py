@@ -112,21 +112,34 @@ def t_resize_image(page, base, fx):
     return "resize-image", "1200x900 PNG, width 600; then max 15 KB", "600 × 450 JPG; second file <= 15360 bytes", obs, ok
 
 
+IDLE_OUT = "#pdf-out[aria-busy=false] li"   # a finished result (auto-builds run without a click)
+
+
+def pdf_inspect_bytes(fx, name: str, data: bytes) -> dict:
+    path = Path(fx["dir"]) / name
+    path.write_bytes(data)
+    return pdf_inspect(str(path))
+
+
 def t_pdf_tools(page, base, fx):
     page.goto(base + "/pdf-tools/", wait_until="domcontentloaded")
     page.set_input_files("#pdf-file", [fx["a"], fx["b"]])
     page.wait_for_function("document.getElementById('pdf-summary').textContent === '3 pages from 2 files'")
-    # Move B1 (page 3) to the top: up, up.
+    # 2 files -> the combined PDF builds itself (no button press).
+    page.wait_for_selector(IDLE_OUT, timeout=30000)
+    auto = pdf_inspect_bytes(fx, "auto.pdf", download(page, "#pdf-out li button"))
+    # Move B1 (page 3) to the top: up, up -> the combined PDF rebuilds itself (old row is replaced).
+    old = page.query_selector("#pdf-out li")
     page.click("button[aria-label='Move page 3 up']")
     page.click("button[aria-label='Move page 2 up']")
-    page.click("#pdf-build")
-    page.wait_for_selector("#pdf-out li")
+    page.wait_for_function("el => !el.isConnected", arg=old, timeout=10000)
+    page.wait_for_selector(IDLE_OUT, timeout=30000)
     merged = Path(fx["dir"]) / "merged.pdf"
     merged.write_bytes(download(page, "#pdf-out li button"))
     m = pdf_inspect(str(merged))
     page.fill("#pdf-range", "2-3")
     page.click("#pdf-extract")
-    page.wait_for_selector("#pdf-out li")
+    page.wait_for_selector(IDLE_OUT)
     ext = Path(fx["dir"]) / "ext.pdf"
     ext.write_bytes(download(page, "#pdf-out li button"))
     e = pdf_inspect(str(ext))
@@ -138,16 +151,17 @@ def t_pdf_tools(page, base, fx):
     page.click("#pdf-clear")
     page.set_input_files("#pdf-file", fx["png"])
     page.wait_for_function("document.getElementById('pdf-summary').textContent === '1 page from 1 file'")
-    page.click("#pdf-build")
-    page.wait_for_selector("#pdf-out li")
+    page.wait_for_selector(IDLE_OUT, timeout=30000)   # photos only -> builds itself
     one = Path(fx["dir"]) / "photo.pdf"
     one.write_bytes(download(page, "#pdf-out li button"))
     p = pdf_inspect(str(one))
-    obs = {"merged": m["sizes"], "extract_2_3": e["sizes"], "page1_jpg_150dpi": [jpg["w"], jpg["h"]], "photo_pdf": p["sizes"]}
-    ok = (m["sizes"] == [[400, 400], [200, 200], [300, 300]] and e["sizes"] == [[200, 200], [300, 300]]
+    obs = {"auto": auto["sizes"], "merged": m["sizes"], "extract_2_3": e["sizes"],
+           "page1_jpg_150dpi": [jpg["w"], jpg["h"]], "photo_pdf": p["sizes"]}
+    ok = (auto["sizes"] == [[200, 200], [300, 300], [400, 400]]
+          and m["sizes"] == [[400, 400], [200, 200], [300, 300]] and e["sizes"] == [[200, 200], [300, 300]]
           and (jpg["w"], jpg["h"]) == (833, 833) and p["sizes"] == [[841.89, 595.28]])
-    return ("pdf-tools", "a.pdf (200,300pt) + b.pdf (400pt); move p3 to top; extract 2-3; p1 -> JPG 150 DPI; PNG -> A4",
-            "merged [400,200,300]; extract [200,300]; JPG 833x833; A4 landscape 841.89x595.28", obs, ok)
+    return ("pdf-tools", "a.pdf (200,300pt) + b.pdf (400pt) auto-merged; move p3 to top (auto-rebuild); extract 2-3; p1 -> JPG 150 DPI; PNG -> A4 (auto)",
+            "auto [200,300,400]; merged [400,200,300]; extract [200,300]; JPG 833x833; A4 landscape 841.89x595.28", obs, ok)
 
 
 def t_heic_to_jpg(page, base, fx):

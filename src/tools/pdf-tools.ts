@@ -1,6 +1,9 @@
 // PDF tools: one ordered page list built from PDFs and photos, then
 //   Make one PDF  |  Extract pages (range)  |  Split every page  |  Convert pages to JPG.
-// pdf-lib (MIT) and pdf.js (Apache-2.0) load on first use, from this site only.
+// pdf-lib (MIT) and pdf.js (Apache-2.0) load on first use, from this site only: the page itself
+// ships none of either, so nothing heavy is downloaded until a file (or the sample) is chosen.
+// The combined PDF builds itself when the list holds 2+ files (or only photos), and rebuilds
+// after a reorder, rotate or remove, so the common merge flow needs no extra button press.
 import { byId, fmtBytes, baseName, decodeImage, drawToCanvas, canvasToBlob, status, resultRow, filePicker,
   fetchSample } from "./common";
 import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
@@ -70,6 +73,12 @@ async function addFiles(files: File[]) {
   render();
   status(st, errors.join(". "), errors.length ? "error" : "info");
   busy(false);
+  if (!errors.length && wantsAutoBuild()) makeCombined();
+}
+
+/** Merging is the obvious intent once the list holds 2+ files, or only photos (photos -> PDF). */
+function wantsAutoBuild() {
+  return pages.length > 0 && (new Set(pages.map((p) => p.file)).size > 1 || pages.every((p) => p.kind === "img"));
 }
 
 async function addPdf(f: File) {
@@ -99,6 +108,7 @@ function move(i: number, j: number) {
   const [p] = pages.splice(i, 1);
   pages.splice(j, 0, p);
   render();
+  pagesChanged();
   (listEl.children[j]?.querySelector(`[data-act="${j > i ? "down" : "up"}"]`) as HTMLButtonElement | null)?.focus();
 }
 
@@ -176,8 +186,8 @@ function render() {
     acts.append(
       actButton("up", `Move page ${i + 1} up`, "↑", () => move(i, i - 1)),
       actButton("down", `Move page ${i + 1} down`, "↓", () => move(i, i + 1)),
-      actButton("rot", `Rotate page ${i + 1}`, "⟳", () => { p.rot = (p.rot + 90) % 360; render(); }),
-      actButton("del", `Remove page ${i + 1}`, "✕", () => { pages.splice(i, 1); dropThumb(p.id); render(); }),
+      actButton("rot", `Rotate page ${i + 1}`, "⟳", () => { p.rot = (p.rot + 90) % 360; render(); pagesChanged(); }),
+      actButton("del", `Remove page ${i + 1}`, "✕", () => { pages.splice(i, 1); dropThumb(p.id); render(); pagesChanged(); }),
     );
     li.append(t, lab, acts);
     li.addEventListener("dragstart", () => { dragFrom = i; li.classList.add("dragging"); });
@@ -252,37 +262,65 @@ function pdfRow(bytes: Uint8Array, name: string, n: number) {
 
 function busy(on: boolean) { buttons.forEach((b) => { b.disabled = on; }); }
 
-async function task(label: string, fn: () => Promise<void>) {
-  if (!pages.length) { status(st, "Add a PDF or a photo first (or press Try a sample).", "error"); return; }
-  busy(true);
-  out.replaceChildren();
-  status(st, `${label}…`);
-  try { await fn(); }
-  catch (e) { status(st, `Something went wrong: ${(e as Error).message}`, "error"); }
-  finally { busy(false); }
+// Jobs run one at a time (an auto-rebuild can be queued behind a button press); each works on a
+// snapshot of the page list, so edits made while it runs only affect the next job.
+let queue: Promise<void> = Promise.resolve();
+let shows: "combined" | "other" | null = null;   // what #pdf-out holds, so edits know whether to rebuild
+let rebuildTimer: ReturnType<typeof setTimeout> | undefined;
+
+function task(label: string, kind: "combined" | "other", fn: () => Promise<void>): Promise<void> {
+  clearTimeout(rebuildTimer);
+  if (!pages.length) { status(st, "Add a PDF or a photo first (or press Try a sample).", "error"); return queue; }
+  return (queue = queue.then(async () => {
+    if (!pages.length) return;
+    busy(true);
+    out.setAttribute("aria-busy", "true");
+    out.replaceChildren();
+    shows = kind;
+    status(st, `${label}…`);
+    try { await fn(); }
+    catch (e) { status(st, `Something went wrong: ${(e as Error).message}`, "error"); }
+    finally { busy(false); out.setAttribute("aria-busy", "false"); }
+  }));
 }
 
-byId("pdf-build").addEventListener("click", () => task("Making the PDF", async () => {
-  const multi = new Set(pages.map((p) => p.file)).size > 1;
-  const name = `${stem()}${multi ? "-combined" : "-edited"}.pdf`;
-  pdfRow(await buildPdf(pages), name, pages.length);
-  status(st, "Your PDF is ready.", "ok");
-}));
+function makeCombined() {
+  return task("Making the PDF", "combined", async () => {
+    const sel = [...pages];
+    const multi = new Set(sel.map((p) => p.file)).size > 1;
+    const name = `${stem()}${multi ? "-combined" : "-edited"}.pdf`;
+    pdfRow(await buildPdf(sel), name, sel.length);
+    status(st, "Your PDF is ready.", "ok");
+  });
+}
 
-byId("pdf-extract").addEventListener("click", () => task("Extracting", async () => {
+/** After a reorder/rotate/remove, keep a shown combined PDF in step with the list. */
+function pagesChanged() {
+  if (shows !== "combined") return;
+  clearTimeout(rebuildTimer);
+  if (!pages.length) { out.replaceChildren(); shows = null; status(st, ""); return; }
+  rebuildTimer = setTimeout(makeCombined, 400);
+}
+
+byId("pdf-build").addEventListener("click", () => makeCombined());
+sizeSel.addEventListener("change", () => { if (pages.some((p) => p.kind === "img")) pagesChanged(); });
+
+byId("pdf-extract").addEventListener("click", () => task("Extracting", "other", async () => {
   const r = parseRange(rangeIn.value, pages.length);
   if (typeof r === "string") { status(st, r, "error"); return; }
   const label = rangeIn.value.replace(/\s+/g, "").replace(/,/g, "_");
-  pdfRow(await buildPdf(r.map((i) => pages[i])), `${stem()}-pages-${label}.pdf`, r.length);
+  const sel = [...pages];
+  pdfRow(await buildPdf(r.map((i) => sel[i])), `${stem()}-pages-${label}.pdf`, r.length);
   status(st, "Extracted.", "ok");
 }));
 
-byId("pdf-split").addEventListener("click", () => task("Splitting", async () => {
-  for (const [i, p] of pages.entries()) {
-    status(st, `Splitting… ${i + 1} of ${pages.length}`);
+byId("pdf-split").addEventListener("click", () => task("Splitting", "other", async () => {
+  const sel = [...pages];
+  for (const [i, p] of sel.entries()) {
+    status(st, `Splitting… ${i + 1} of ${sel.length}`);
     pdfRow(await buildPdf([p]), `${stem()}-page-${i + 1}.pdf`, 1);
   }
-  status(st, `Split into ${plural(pages.length, "file")}.`, "ok");
+  status(st, `Split into ${plural(sel.length, "file")}.`, "ok");
 }));
 
 async function pageToCanvas(p: Page, dpi: number): Promise<HTMLCanvasElement> {
@@ -311,17 +349,18 @@ async function pageToCanvas(p: Page, dpi: number): Promise<HTMLCanvasElement> {
   return c;
 }
 
-byId("pdf-jpg").addEventListener("click", () => task("Converting to JPG", async () => {
-  let idx = pages.map((_, i) => i);
+byId("pdf-jpg").addEventListener("click", () => task("Converting to JPG", "other", async () => {
+  const sel = [...pages];
+  let idx = sel.map((_, i) => i);
   if (rangeIn.value.trim()) {
-    const r = parseRange(rangeIn.value, pages.length);
+    const r = parseRange(rangeIn.value, sel.length);
     if (typeof r === "string") { status(st, r, "error"); return; }
     idx = r;
   }
   const dpi = Number(dpiSel.value) || 150;
   for (const [k, i] of idx.entries()) {
     status(st, `Converting… ${k + 1} of ${idx.length}`);
-    const c = await pageToCanvas(pages[i], dpi);
+    const c = await pageToCanvas(sel[i], dpi);
     const blob = await canvasToBlob(c, "image/jpeg", 0.9);
     const name = `${stem()}-page-${i + 1}.jpg`;
     out.append(resultRow({ text: `${name} · ${c.width} × ${c.height} · ${fmtBytes(blob.size)}`, blob, name, thumb: blob }));
@@ -330,6 +369,8 @@ byId("pdf-jpg").addEventListener("click", () => task("Converting to JPG", async 
 }));
 
 byId("pdf-clear").addEventListener("click", () => {
+  clearTimeout(rebuildTimer);
+  shows = null;
   pages = [];
   [...thumbs.keys()].forEach(dropThumb);
   fileCount = 0;
@@ -338,7 +379,7 @@ byId("pdf-clear").addEventListener("click", () => {
   render();
 });
 
-// ---- Try a sample: the bundled 2-page PDF + photo, combined into one PDF in one click ----
+// ---- Try a sample: the bundled 2-page PDF + photo, combined into one PDF in one click (auto-build) ----
 byId("pdf-sample").addEventListener("click", async () => {
   busy(true);
   status(st, "Loading the sample…");
@@ -347,7 +388,6 @@ byId("pdf-sample").addEventListener("click", async () => {
   catch (e) { status(st, (e as Error).message, "error"); busy(false); return; }
   busy(false);
   await addFiles(files);
-  if (pages.length) byId<HTMLButtonElement>("pdf-build").click();
 });
 
 filePicker(byId("pdf-drop"), byId<HTMLInputElement>("pdf-file"), addFiles, "pdf-tools");
