@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { tools, TITLE_MAX } from "../lib/site";
+import { tools, clampTitle } from "../lib/site";
 const TITLE = "Suggest a feature or change — Utility Helpers";
 const DESC = "Ask for a new tool, a design change, report a bug, or tell us what to remove. " +
   "Suggestions go straight to the people who decide what gets built.";
@@ -45,6 +45,6 @@ ${toolOpts}
       </div>
     </form>`;
 ---
-<Base title={TITLE.slice(0, TITLE_MAX)} description={DESC} path="/suggest/">
+<Base title={clampTitle(TITLE)} description={DESC} path="/suggest/">
   <Fragment set:html={body} />
 </Base>

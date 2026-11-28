@@ -104,6 +104,14 @@ def main() -> int:
         if "uh-ads-client" in doc:
             errors.append(f"{route}: stale uh-ads-client meta (ads are no longer injected by site.js)")
 
+    # Source titles must fit: clampTitle() is only a safety net, and a clamped title reads as broken
+    # (the hard slice it replaced shipped "... entirely on yo" as the home title).
+    src_titles = {"site.homeTitle": cfg["site"].get("homeTitle", f"{cfg['site']['name']} — {cfg['site']['tagline']}")}
+    src_titles.update({f"tool {t['slug']!r} title": t.get("title", "") for t in tools})
+    for where, t in src_titles.items():
+        if len(t) > TITLE_MAX:
+            errors.append(f"{where} is {len(t)} chars (> {TITLE_MAX}); shorten it instead of letting the build clamp it")
+
     seen: set[str] = set()
     for t in tools:
         slug = t["slug"]

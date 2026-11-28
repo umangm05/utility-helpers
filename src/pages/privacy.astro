@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { site, TITLE_MAX } from "../lib/site";
+import { site, clampTitle } from "../lib/site";
 const TITLE = "Privacy — what Utility Helpers counts and what it never sees";
 const DESC = "Tool input never leaves your device. With consent we count which tools and buttons get used; Reject and we get nothing. Ads come from Google AdSense.";
 const body = `    <h1>Privacy</h1>
@@ -94,6 +94,6 @@ const body = `    <h1>Privacy</h1>
     <a href="${site.github}/blob/master/netlify/lib/core.mjs" rel="noopener">netlify/lib/core.mjs</a>.</p>
     </div>`;
 ---
-<Base title={TITLE.slice(0, TITLE_MAX)} description={DESC} path="/privacy/">
+<Base title={clampTitle(TITLE)} description={DESC} path="/privacy/">
   <Fragment set:html={body} />
 </Base>

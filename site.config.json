@@ -4,6 +4,7 @@
     "name": "Utility Helpers",
     "baseUrl": "https://utility-helpers.netlify.app",
     "tagline": "Free browser tools that run entirely on your device.",
+    "homeTitle": "Utility Helpers — Free tools that run on your device",
     "description": "Free, fast, private browser tools. Every utility runs entirely in your browser — what you type is never uploaded, and no account is required.",
     "author": "Umang Mittal",
     "github": "https://github.com/umangm05/utility-helpers",

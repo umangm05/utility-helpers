@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { site, tools, sections, TITLE_MAX } from "../lib/site";
+import { site, tools, sections, clampTitle } from "../lib/site";
 const TITLE = "About Utility Helpers — who builds it and why";
 const DESC = "Utility Helpers is a free set of browser tools built by Umang Mittal. " +
   "Why it exists, how the tools keep your files on your device, and how it is paid for.";
@@ -52,7 +52,7 @@ const body = `    <h1>About Utility Helpers</h1>
     ${list}
     </div>`;
 ---
-<Base title={TITLE.slice(0, TITLE_MAX)} description={DESC} path="/about/"
+<Base title={clampTitle(TITLE)} description={DESC} path="/about/"
   jsonld={[{ "@context": "https://schema.org", "@type": "AboutPage", name: TITLE, url: site.baseUrl.replace(/\/$/, "") + "/about/",
     isPartOf: { "@type": "WebSite", name: site.name, url: site.baseUrl },
     author: { "@type": "Person", name: site.author } }]}>
