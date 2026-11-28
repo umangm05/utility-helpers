@@ -144,7 +144,12 @@ h2 { font-size: 1.3rem; margin: 2.5rem 0 .75rem; letter-spacing: -.015em; }
   display: inline-flex; align-items: center; min-height: 44px; padding: 0 1.1rem; cursor: pointer;
   border-radius: 10px; background: var(--accent); color: var(--accent-fg); font-weight: 650; margin: 0; font-size: 1rem;
 }
-.drop-actions input[type=file]:focus-visible + .btn, .btn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* File pickers: the native <input type=file> sits inside its "Choose ..." label
+   and fills it, invisible. The visible 44px button is then the input's own hit
+   area, instead of a 1px visually-hidden input reached only through the label. */
+.pick { position: relative; overflow: hidden; }
+.pick-input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; opacity: 0; cursor: pointer; }
 .drop-samples { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .5rem; margin-top: 1rem; }
 .drop-samples button { min-height: 44px; padding: .4rem .9rem; font-size: .9375rem; }
 .drop-result:not(:empty) { margin-top: 1rem; padding: 1rem 1.25rem; border-radius: var(--radius); background: var(--panel); border: 1px solid var(--border); }
@@ -224,6 +229,11 @@ footer.site .wrap { display: grid; gap: 1.25rem; }
   font: inherit; font-weight: inherit; text-decoration: underline; cursor: pointer;
 }
 [data-uh-js][hidden] { display: none; }
+/* Touch screens: text-styled buttons (footer "Privacy choices", privacy page)
+   get a 44px-tall hit area. Desktop keeps the plain inline link look. */
+@media (max-width: 40rem), (pointer: coarse) {
+  .linkbtn { display: inline-flex; align-items: center; min-height: 44px; padding: 0 .25rem; vertical-align: middle; }
+}
 
 /* ---- consent banner (markup unchanged) ------------------------------ */
 .consent {

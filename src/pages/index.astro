@@ -44,8 +44,7 @@ const blurb = (d: string) => (d.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? d);
       <h2 id="drop-heading">Drop anything</h2>
       <p class="muted">Drop a photo, PDF, iPhone HEIC or some text and we will suggest the right tool. Files stay in your browser.</p>
       <div class="drop-actions">
-        <label class="btn" for="drop-file">Choose a file</label>
-        <input id="drop-file" class="sr-only" type="file" multiple>
+        <label class="btn pick">Choose a file<input id="drop-file" class="pick-input" type="file" multiple></label>
         <span class="muted">or</span>
         <label class="sr-only" for="drop-text">Paste text</label>
         <textarea id="drop-text" rows="1" placeholder="paste text here"></textarea>
