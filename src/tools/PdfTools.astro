@@ -2,7 +2,7 @@
 // PDF tools (UH-T2 tool 2): JPG/images -> PDF, merge, reorder/rotate/remove pages,
 // extract a range, split every page, PDF pages -> JPG.
 // pdf-lib (MIT) builds PDFs; pdf.js (Apache-2.0) renders thumbnails and JPGs.
-// Both are lazy-loaded the first time they are needed.
+// Both are lazy-loaded only after a file (or the sample) is chosen; the page itself ships neither.
 import "../styles/tools.css";
 ---
 <div class="tool ft" id="pdf">
@@ -11,7 +11,7 @@ import "../styles/tools.css";
       accept="application/pdf,.pdf,image/jpeg,image/png,image/webp,image/gif,image/bmp">
     <label class="btn" for="pdf-file">Choose PDFs or photos</label>
     <button type="button" class="btn-ghost" id="pdf-sample">Try a sample</button>
-    <p>or drop them here. Pages show up below in order; you can add more files at any time.</p>
+    <p>or drop them here. Pick two or more and they are combined into one PDF straight away; reorder, rotate or remove pages and it updates.</p>
   </div>
   <p class="ft-status" id="pdf-summary" role="status" aria-live="polite">No pages yet.</p>
   <ol class="pdf-pages" id="pdf-pages" aria-label="Pages in order"></ol>
@@ -44,7 +44,7 @@ import "../styles/tools.css";
     <button type="button" class="btn-ghost" id="pdf-clear">Clear all</button>
   </div>
   <p class="ft-status" id="pdf-status" role="status" aria-live="polite"></p>
-  <ul class="ft-results" id="pdf-out" aria-label="Your files"></ul>
+  <ul class="ft-results" id="pdf-out" aria-label="Your files" aria-busy="false"></ul>
 </div>
 <style>
   .pdf-pages { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem;
