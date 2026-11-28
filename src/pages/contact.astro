@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { site, TITLE_MAX } from "../lib/site";
+import { site, clampTitle } from "../lib/site";
 const TITLE = "Contact Utility Helpers — report a bug or ask a question";
 const DESC = "How to reach the people behind Utility Helpers: open a GitHub issue for a reply, " +
   "or send a private message through the suggestion form.";
@@ -31,7 +31,7 @@ const body = `    <h1>Contact us</h1>
     </ul>
     </div>`;
 ---
-<Base title={TITLE.slice(0, TITLE_MAX)} description={DESC} path="/contact/"
+<Base title={clampTitle(TITLE)} description={DESC} path="/contact/"
   jsonld={[{ "@context": "https://schema.org", "@type": "ContactPage", name: TITLE, url: site.baseUrl.replace(/\/$/, "") + "/contact/",
     isPartOf: { "@type": "WebSite", name: site.name, url: site.baseUrl } }]}>
   <Fragment set:html={body} />

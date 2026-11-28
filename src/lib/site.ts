@@ -30,6 +30,8 @@ export interface Site {
   github: string;
   locale: string;
   themeColor: string;
+  /** Home <title>; must fit TITLE_MAX (check_dist enforces it). */
+  homeTitle?: string;
   adsenseClient?: string;
 }
 export interface Sibling { name: string; url: string; blurb: string }
@@ -45,7 +47,17 @@ export const DESC_MAX = 155;
 
 export const pageUrl = (path: string) => site.baseUrl.replace(/\/$/, "") + path;
 
-export const homeTitle = `${site.name} — ${site.tagline}`.slice(0, TITLE_MAX);
+/**
+ * Fit a <title> into TITLE_MAX at a word boundary. A hard slice cut the home title to
+ * "... entirely on yo" in production (UH-D1); write titles that fit, this is only the safety net.
+ */
+export const clampTitle = (s: string) => {
+  if (s.length <= TITLE_MAX) return s;
+  const cut = s.slice(0, TITLE_MAX + 1);
+  return cut.slice(0, cut.lastIndexOf(" ")).replace(/[\s—–\-,:;&|·]+$/u, "");
+};
+
+export const homeTitle = clampTitle(site.homeTitle ?? `${site.name} — ${site.tagline}`);
 
 /** Compact list shipped to the client for the Ctrl+K bar, recents and drop zone. */
 export const clientTools = tools.map((t) => ({

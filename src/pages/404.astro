@@ -1,8 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
-import { site, TITLE_MAX } from "../lib/site";
+import { site, clampTitle } from "../lib/site";
 ---
-<Base title={`Page not found — ${site.name}`.slice(0, TITLE_MAX)}
+<Base title={clampTitle(`Page not found — ${site.name}`)}
   description="That page does not exist. Browse the free browser tools on Utility Helpers instead."
   path="/404.html" noindex>
     <h1>Page not found</h1>
